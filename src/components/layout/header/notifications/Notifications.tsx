@@ -4,7 +4,7 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger
-} from '@/components/ui/common/Popover'
+} from '@/components/ui/commonAuth/Popover'
 
 import { useFindNotificationsUnreadCountQuery } from '@/graphql/generated/output'
 

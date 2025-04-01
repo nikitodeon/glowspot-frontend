@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
-import { Button } from '@/components/ui/common/Button'
+import { Button } from '@/components/ui/commonAuth/Button'
 import { ConfirmModal } from '@/components/ui/elements/ConfirmModal'
 
 import { useDisableTotpMutation } from '@/graphql/generated/output'

@@ -5,8 +5,8 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
 
-import { Button } from '@/components/ui/common/Button'
-import { Input } from '@/components/ui/common/Input'
+import { Button } from '@/components/ui/commonAuth/Button'
+import { Input } from '@/components/ui/commonAuth/Input'
 
 export function Search() {
 	const t = useTranslations('layout.header.search')

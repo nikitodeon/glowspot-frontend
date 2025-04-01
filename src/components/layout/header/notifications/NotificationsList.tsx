@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { Fragment } from 'react'
 
-import { Separator } from '@/components/ui/common/Separator'
+import { Separator } from '@/components/ui/commonAuth/Separator'
 
 import {
 	useFindNotificationsByUserQuery,

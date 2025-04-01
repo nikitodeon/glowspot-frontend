@@ -5,7 +5,7 @@ import {
 	TabsContent,
 	TabsList,
 	TabsTrigger
-} from '@/components/ui/common/Tabs'
+} from '@/components/ui/commonAuth/Tabs'
 import { Heading } from '@/components/ui/elements/Heading'
 
 import { ChangeEmailForm } from './account/ChangeEmailForm'

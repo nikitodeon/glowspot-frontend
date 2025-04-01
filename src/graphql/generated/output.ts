@@ -51,6 +51,32 @@ export type ChangeProfileInfoInput = {
   username: Scalars['String']['input'];
 };
 
+export type Coordinates = {
+  __typename?: 'Coordinates';
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+};
+
+export type CreateEventInput = {
+  address: Scalars['String']['input'];
+  ageRestriction?: InputMaybe<Scalars['Float']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  currency?: InputMaybe<Scalars['String']['input']>;
+  description: Scalars['String']['input'];
+  endTime?: InputMaybe<Scalars['DateTime']['input']>;
+  eventProperties: Array<EventProperty>;
+  eventType: EventType;
+  isPrivate: Scalars['Boolean']['input'];
+  maxParticipants?: InputMaybe<Scalars['Float']['input']>;
+  paymentType: PaymentType;
+  photoUrls: Array<Scalars['String']['input']>;
+  placeName?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
+  startTime: Scalars['DateTime']['input'];
+  tags: Array<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
+};
+
 export type CreateUserInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -75,12 +101,77 @@ export type EnableTotpInput = {
   secret: Scalars['String']['input'];
 };
 
+export type EventModel = {
+  __typename?: 'EventModel';
+  ageRestriction?: Maybe<Scalars['Float']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  currency?: Maybe<Scalars['String']['output']>;
+  description: Scalars['String']['output'];
+  endTime?: Maybe<Scalars['DateTime']['output']>;
+  eventProperties: Array<EventProperty>;
+  eventType: EventType;
+  favoritedBy?: Maybe<Array<UserModel>>;
+  id: Scalars['String']['output'];
+  isPrivate: Scalars['Boolean']['output'];
+  isVerified: Scalars['Boolean']['output'];
+  location: LocationModel;
+  maxParticipants?: Maybe<Scalars['Float']['output']>;
+  organizer: UserModel;
+  participants?: Maybe<Array<UserModel>>;
+  paymentType: PaymentType;
+  photoUrls: Array<Scalars['String']['output']>;
+  postedDate: Scalars['DateTime']['output'];
+  price?: Maybe<Scalars['Float']['output']>;
+  startTime: Scalars['DateTime']['output'];
+  status: EventStatus;
+  tags: Array<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export enum EventProperty {
+  Age_18Plus = 'AGE_18_PLUS',
+  Age_21Plus = 'AGE_21_PLUS',
+  AlcoholFree = 'ALCOHOL_FREE',
+  Charity = 'CHARITY',
+  FamilyFriendly = 'FAMILY_FRIENDLY',
+  HealthyLifestyle = 'HEALTHY_LIFESTYLE',
+  Indoor = 'INDOOR',
+  Online = 'ONLINE',
+  Outdoor = 'OUTDOOR',
+  PetFriendly = 'PET_FRIENDLY'
+}
+
+export enum EventStatus {
+  Archived = 'ARCHIVED',
+  Cancelled = 'CANCELLED',
+  Completed = 'COMPLETED',
+  Ongoing = 'ONGOING',
+  Upcoming = 'UPCOMING'
+}
+
+export enum EventType {
+  Concert = 'CONCERT',
+  Exhibition = 'EXHIBITION',
+  Festival = 'FESTIVAL',
+  Lecture = 'LECTURE',
+  Meetup = 'MEETUP',
+  Other = 'OTHER',
+  Party = 'PARTY',
+  Sport = 'SPORT',
+  Walk = 'WALK',
+  Workshop = 'WORKSHOP'
+}
+
 export type LocationModel = {
   __typename?: 'LocationModel';
+  address?: Maybe<Scalars['String']['output']>;
   city: Scalars['String']['output'];
-  country: Scalars['String']['output'];
-  latidute: Scalars['Float']['output'];
-  longitude: Scalars['Float']['output'];
+  coordinates: Coordinates;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  placeName?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type LoginInput = {
@@ -91,12 +182,14 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addToFavorites: Scalars['Boolean']['output'];
   changeEmail: Scalars['Boolean']['output'];
   changeNotificationsSettings: ChangeNotificationsSettingsResponse;
   changePassword: Scalars['Boolean']['output'];
   changeProfileAvatar: Scalars['Boolean']['output'];
   changeProfileInfo: Scalars['Boolean']['output'];
   clearSessionCookie: Scalars['Boolean']['output'];
+  createEvent: EventModel;
   createSocialLink: Scalars['Boolean']['output'];
   createUser: Scalars['Boolean']['output'];
   deactivateAccount: AuthModel;
@@ -105,6 +198,8 @@ export type Mutation = {
   loginUser: AuthModel;
   logoutUser: Scalars['Boolean']['output'];
   newPassword: Scalars['Boolean']['output'];
+  participateInEvent: Scalars['Boolean']['output'];
+  removeFromFavorites: Scalars['Boolean']['output'];
   removeProfileAvatar: Scalars['Boolean']['output'];
   removeSession: Scalars['Boolean']['output'];
   removeSocialLink: Scalars['Boolean']['output'];
@@ -112,6 +207,11 @@ export type Mutation = {
   resetPassword: Scalars['Boolean']['output'];
   updateSocialLink: Scalars['Boolean']['output'];
   verifyAccount: AuthModel;
+};
+
+
+export type MutationAddToFavoritesArgs = {
+  eventId: Scalars['String']['input'];
 };
 
 
@@ -137,6 +237,11 @@ export type MutationChangeProfileAvatarArgs = {
 
 export type MutationChangeProfileInfoArgs = {
   data: ChangeProfileInfoInput;
+};
+
+
+export type MutationCreateEventArgs = {
+  input: CreateEventInput;
 };
 
 
@@ -167,6 +272,16 @@ export type MutationLoginUserArgs = {
 
 export type MutationNewPasswordArgs = {
   data: NewPasswordInput;
+};
+
+
+export type MutationParticipateInEventArgs = {
+  eventId: Scalars['String']['input'];
+};
+
+
+export type MutationRemoveFromFavoritesArgs = {
+  eventId: Scalars['String']['input'];
 };
 
 
@@ -230,7 +345,18 @@ export type NotificationSettingsModel = {
 };
 
 export enum NotificationType {
-  EnableTwoFactor = 'ENABLE_TWO_FACTOR'
+  EnableTwoFactor = 'ENABLE_TWO_FACTOR',
+  EventCancelled = 'EVENT_CANCELLED',
+  EventInvite = 'EVENT_INVITE',
+  EventReminder = 'EVENT_REMINDER',
+  NewEventFromOrganizer = 'NEW_EVENT_FROM_ORGANIZER',
+  PaymentSuccess = 'PAYMENT_SUCCESS'
+}
+
+export enum PaymentType {
+  Donation = 'DONATION',
+  Free = 'FREE',
+  PaymentRequired = 'PAYMENT_REQUIRED'
 }
 
 export type Query = {
@@ -242,6 +368,17 @@ export type Query = {
   findSessionsByUser: Array<SessionModel>;
   findSocialLinks: Array<SocialLinkModel>;
   generateTotpSecret: TotpModel;
+  getAllEvents: Array<EventModel>;
+  getEventById: EventModel;
+  getEventsWhereIParticipate: Array<EventModel>;
+  /** Возвращает список избранных событий пользователя */
+  getFavoriteEvents: Array<EventModel>;
+  getMyOrganizedEvents: Array<EventModel>;
+};
+
+
+export type QueryGetEventByIdArgs = {
+  id: Scalars['String']['input'];
 };
 
 export type ResetPasswordInput = {
@@ -252,7 +389,7 @@ export type SessionMetadataModel = {
   __typename?: 'SessionMetadataModel';
   device: DeviceModel;
   ip: Scalars['String']['output'];
-  location: LocationModel;
+  location: UserLocationModel;
 };
 
 export type SessionModel = {
@@ -290,10 +427,19 @@ export type TotpModel = {
   secret: Scalars['String']['output'];
 };
 
+export type UserLocationModel = {
+  __typename?: 'UserLocationModel';
+  city: Scalars['String']['output'];
+  country: Scalars['String']['output'];
+  latidute: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+};
+
 export type UserModel = {
   __typename?: 'UserModel';
   avatar?: Maybe<Scalars['String']['output']>;
   bio?: Maybe<Scalars['String']['output']>;
+  birthDate?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
   deactivatedAt?: Maybe<Scalars['DateTime']['output']>;
   displayName: Scalars['String']['output'];
@@ -304,9 +450,9 @@ export type UserModel = {
   isTotpEnabled: Scalars['Boolean']['output'];
   isVerified: Scalars['Boolean']['output'];
   notificationSettings?: Maybe<NotificationSettingsModel>;
-  notifications: Array<NotificationModel>;
+  notifications?: Maybe<Array<NotificationModel>>;
   password: Scalars['String']['output'];
-  socialLinks: Array<SocialLinkModel>;
+  socialLinks?: Maybe<Array<SocialLinkModel>>;
   telegramId?: Maybe<Scalars['String']['output']>;
   totpSecret?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
@@ -460,7 +606,7 @@ export type UpdateSocialLinkMutation = { __typename?: 'Mutation', updateSocialLi
 export type FindCurrentSessionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindCurrentSessionQuery = { __typename?: 'Query', findCurrentSession: { __typename?: 'SessionModel', id: string, createdAt: string, metadata: { __typename?: 'SessionMetadataModel', ip: string, location: { __typename?: 'LocationModel', country: string, city: string, latidute: number, longitude: number }, device: { __typename?: 'DeviceModel', browser: string, os: string } } } };
+export type FindCurrentSessionQuery = { __typename?: 'Query', findCurrentSession: { __typename?: 'SessionModel', id: string, createdAt: string, metadata: { __typename?: 'SessionMetadataModel', ip: string, location: { __typename?: 'UserLocationModel', country: string, city: string, latidute: number, longitude: number }, device: { __typename?: 'DeviceModel', browser: string, os: string } } } };
 
 export type FindNotificationsByUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -480,7 +626,7 @@ export type FindProfileQuery = { __typename?: 'Query', findProfile: { __typename
 export type FindSessionsByUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindSessionsByUserQuery = { __typename?: 'Query', findSessionsByUser: Array<{ __typename?: 'SessionModel', id: string, createdAt: string, metadata: { __typename?: 'SessionMetadataModel', ip: string, location: { __typename?: 'LocationModel', country: string, city: string, latidute: number, longitude: number }, device: { __typename?: 'DeviceModel', browser: string, os: string } } }> };
+export type FindSessionsByUserQuery = { __typename?: 'Query', findSessionsByUser: Array<{ __typename?: 'SessionModel', id: string, createdAt: string, metadata: { __typename?: 'SessionMetadataModel', ip: string, location: { __typename?: 'UserLocationModel', country: string, city: string, latidute: number, longitude: number }, device: { __typename?: 'DeviceModel', browser: string, os: string } } }> };
 
 export type FindSocialLinksQueryVariables = Exact<{ [key: string]: never; }>;
 

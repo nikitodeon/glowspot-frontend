@@ -3,14 +3,15 @@ import Link from 'next/link'
 import { PropsWithChildren } from 'react'
 
 import { LogoImage } from '@/components/images/LogoImage'
-import { Button } from '@/components/ui/common/Button'
+import { Button } from '@/components/ui/commonAuth/Button'
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle
-} from '@/components/ui/common/Card'
+} from '@/components/ui/commonAuth/Card'
+import RotatingLogo from '@/components/ui/elements/RotatingLogo'
 
 interface AuthWrapperProps {
 	heading: string
@@ -28,11 +29,15 @@ export function AuthWrapper({
 		<div className='flex h-full items-center justify-center'>
 			<Card className='w-[450px]'>
 				<CardHeader className='flex-row items-center justify-center gap-x-4'>
-					<Image
-						src='/logos/biglogoblgl.png'
+					{/* <Image
+						src='/logos/biglogoblwh.png'
 						alt='Logo'
-						width={180}
+						width={200}
 						height={180}
+					/> */}
+					<RotatingLogo
+						backgroundSrc={'/logos/bglogoblwh.png'}
+						foregroundSrc={'/logos/frlogoblwh.png'}
 					/>
 
 					{/* <LogoImage /> */}

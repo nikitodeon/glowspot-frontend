@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 
-import { Skeleton } from '@/components/ui/common/Skeleton'
+import { Skeleton } from '@/components/ui/commonAuth/Skeleton'
 import { CardContainer } from '@/components/ui/elements/CardContainer'
 
 import { useCurrent } from '@/hooks/useCurrent'

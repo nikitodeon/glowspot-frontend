@@ -7,7 +7,7 @@ import {
 	DialogContent,
 	DialogTitle,
 	DialogTrigger
-} from '@/components/ui/common/Dialog'
+} from '@/components/ui/commonAuth/Dialog'
 
 import type { FindSessionsByUserQuery } from '@/graphql/generated/output'
 

@@ -19,6 +19,8 @@ import { ToastProvider } from '@/providers/ToastProvider'
 import '@/styles/globals.css'
 import '@/styles/themes.css'
 
+// import StoreProvider from "@/state/redux";
+
 export const metadata: Metadata = {
 	title: {
 		absolute: SITE_NAME,
@@ -98,7 +100,9 @@ export default async function RootLayout({
 							disableTransitionOnChange
 						> */}
 						<ToastProvider />
+						{/* <StoreProvider> */}
 						{children}
+						{/* </StoreProvider>	 */}
 						{/* </ThemeProvider> */}
 					</NextIntlClientProvider>
 				</ApolloClientProvider>

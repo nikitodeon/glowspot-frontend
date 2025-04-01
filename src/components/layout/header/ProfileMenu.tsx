@@ -12,7 +12,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@/components/ui/common/DropdownMenu'
+} from '@/components/ui/commonAuth/DropdownMenu'
 import { ChannelAvatar } from '@/components/ui/elements/ChannelAvatar'
 
 import { useLogoutUserMutation } from '@/graphql/generated/output'

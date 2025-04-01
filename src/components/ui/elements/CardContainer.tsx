@@ -4,7 +4,7 @@ import type { IconType } from 'react-icons'
 
 import { cn } from '@/utils/tw-merge'
 
-import { Card } from '../common/Card'
+import { Card } from '../commonAuth/Card'
 
 interface CardContainerProps {
 	heading: string

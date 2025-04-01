@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react'
 
-import { Card, CardContent, CardHeader, CardTitle } from '../common/Card'
+import { Card, CardContent, CardHeader, CardTitle } from '../commonAuth/Card'
 
 interface FormWrapperProps {
 	heading: string

@@ -1,5 +1,5 @@
-import { Skeleton } from '../common/Skeleton'
-import { Switch } from '../common/Switch'
+import { Skeleton } from '../commonAuth/Skeleton'
+import { Switch } from '../commonAuth/Switch'
 
 import { CardContainer } from './CardContainer'
 

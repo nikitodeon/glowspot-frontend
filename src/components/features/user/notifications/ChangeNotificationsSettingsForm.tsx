@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { Form, FormField } from '@/components/ui/common/Form'
+import { Form, FormField } from '@/components/ui/commonAuth/Form'
 import {
 	ToggleCard,
 	ToggleCardSkeleton

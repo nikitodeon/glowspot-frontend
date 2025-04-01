@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { Button } from '@/components/ui/common/Button'
+import { Button } from '@/components/ui/commonAuth/Button'
 import {
 	Form,
 	FormControl,
@@ -13,10 +13,10 @@ import {
 	FormField,
 	FormItem,
 	FormLabel
-} from '@/components/ui/common/Form'
-import { Input } from '@/components/ui/common/Input'
-import { Separator } from '@/components/ui/common/Separator'
-import { Skeleton } from '@/components/ui/common/Skeleton'
+} from '@/components/ui/commonAuth/Form'
+import { Input } from '@/components/ui/commonAuth/Input'
+import { Separator } from '@/components/ui/commonAuth/Separator'
+import { Skeleton } from '@/components/ui/commonAuth/Skeleton'
 import { FormWrapper } from '@/components/ui/elements/FormWrapper'
 
 import {

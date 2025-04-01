@@ -6,14 +6,14 @@ import { useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { Form, FormField } from '@/components/ui/common/Form'
+import { Form, FormField } from '@/components/ui/commonAuth/Form'
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from '@/components/ui/common/Select'
+} from '@/components/ui/commonAuth/Select'
 import { CardContainer } from '@/components/ui/elements/CardContainer'
 
 import { setLanguage } from '@/libs/i18n/language'

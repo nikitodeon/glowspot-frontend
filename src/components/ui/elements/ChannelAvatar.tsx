@@ -5,7 +5,7 @@ import { FindProfileQuery } from '@/graphql/generated/output'
 import { getMediaSource } from '@/utils/get-media-source'
 import { cn } from '@/utils/tw-merge'
 
-import { Avatar, AvatarFallback, AvatarImage } from '../common/Avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '../commonAuth/Avatar'
 
 const avatarSizes = cva('', {
 	variants: {

@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
-import { Button } from '@/components/ui/common/Button'
+import { Button } from '@/components/ui/commonAuth/Button'
 import { CardContainer } from '@/components/ui/elements/CardContainer'
 import { ConfirmModal } from '@/components/ui/elements/ConfirmModal'
 

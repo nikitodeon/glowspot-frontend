@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
-import { Button } from '@/components/ui/common/Button'
+import { Button } from '@/components/ui/commonAuth/Button'
 
 import { useAuth } from '@/hooks/useAuth'
 

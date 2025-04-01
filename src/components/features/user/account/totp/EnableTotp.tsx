@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { Button } from '@/components/ui/common/Button'
+import { Button } from '@/components/ui/commonAuth/Button'
 import {
 	Dialog,
 	DialogContent,
@@ -12,7 +12,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger
-} from '@/components/ui/common/Dialog'
+} from '@/components/ui/commonAuth/Dialog'
 import {
 	Form,
 	FormControl,
@@ -20,12 +20,12 @@ import {
 	FormField,
 	FormItem,
 	FormLabel
-} from '@/components/ui/common/Form'
+} from '@/components/ui/commonAuth/Form'
 import {
 	InputOTP,
 	InputOTPGroup,
 	InputOTPSlot
-} from '@/components/ui/common/InputOTP'
+} from '@/components/ui/commonAuth/InputOTP'
 
 import {
 	useEnableTotpMutation,

@@ -6,14 +6,14 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { Button } from '@/components/ui/common/Button'
+import { Button } from '@/components/ui/commonAuth/Button'
 import {
 	Form,
 	FormControl,
 	FormField,
 	FormItem
-} from '@/components/ui/common/Form'
-import { Input } from '@/components/ui/common/Input'
+} from '@/components/ui/commonAuth/Form'
+import { Input } from '@/components/ui/commonAuth/Input'
 
 import {
 	type FindSocialLinksQuery,

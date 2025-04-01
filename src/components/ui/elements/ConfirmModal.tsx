@@ -13,7 +13,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger
-} from '../common/AlertDialog'
+} from '../commonAuth/AlertDialog'
 
 interface ConfirmModalProps {
 	heading: string

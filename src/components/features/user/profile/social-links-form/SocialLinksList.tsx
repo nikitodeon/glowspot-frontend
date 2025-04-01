@@ -10,7 +10,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
-import { Separator } from '@/components/ui/common/Separator'
+import { Separator } from '@/components/ui/commonAuth/Separator'
 
 import {
 	useFindSocialLinksQuery,
