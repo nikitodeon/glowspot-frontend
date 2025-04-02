@@ -1,0 +1,39 @@
+query GetEventById($getEventByIdId: String!) {
+	getEventById(id: $getEventByIdId) {
+		updatedAt
+		title
+		tags
+		status
+		startTime
+		price
+		postedDate
+		photoUrls
+		paymentType
+		participants {
+			username
+			id
+			avatar
+		}
+		maxParticipants
+		location {
+			placeName
+			id
+
+			city
+			address
+		}
+		isVerified
+		isPrivate
+		id
+		favoritedBy {
+			username
+		}
+		eventType
+		eventProperties
+		endTime
+		description
+		currency
+		createdAt
+		ageRestriction
+	}
+}

@@ -29,7 +29,7 @@ export function UserSettings() {
 			<Heading
 				title={t('header.heading')}
 				description={t('header.description')}
-				size='lg'
+				// size='lg'
 			/>
 			<Tabs defaultValue='profile' className='mt-3 w-full'>
 				<TabsList className='grid max-w-2xl grid-cols-5'>

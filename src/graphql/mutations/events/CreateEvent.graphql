@@ -1,0 +1,29 @@
+mutation CreateEvent($input: CreateEventInput!, $photos: [Upload!]) {
+	createEvent(input: $input, photos: $photos) {
+		id
+		title
+		description
+		startTime
+		endTime
+		photoUrls
+		eventType
+		paymentType
+		price
+		currency
+		isPrivate
+		maxParticipants
+		tags
+		ageRestriction
+		status
+		location {
+			id
+			address
+			city
+			placeName
+		}
+		organizer {
+			id
+			username
+		}
+	}
+}

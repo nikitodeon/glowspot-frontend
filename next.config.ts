@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
 			{
 				protocol: 'https',
 				hostname: 'bb9e1eaf-bd2b-47e4-bdb9-eccd2a5b2245.selstorage.ru'
+			},
+			{
+				protocol: 'https',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/**'
 			}
 		]
 	}

@@ -96,7 +96,7 @@ const FooterSection = () => {
 					</div>
 				</div>
 				<div className='mt-8 flex justify-center space-x-4 text-center text-sm text-gray-500'>
-					<span>© GLOWSPOTS. All rights reserved.</span>
+					<span>© GLOWSPOT. All rights reserved.</span>
 					{/* <Link href='/privacy'>Privacy Policy</Link> */}
 					<Link href='/terms'>Условия использования</Link>
 					<Link href='/cookies'>Политика файлов сookie </Link>

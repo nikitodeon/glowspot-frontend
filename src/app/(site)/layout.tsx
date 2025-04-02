@@ -1,21 +1,46 @@
-import type { PropsWithChildren } from 'react'
+'use client'
 
-// import { LayoutContainer } from '@/components/layout/LayoutContainer'
-import { Header } from '@/components/layout/header/Header'
+import { useParams, usePathname } from 'next/navigation'
+import { type PropsWithChildren, useEffect } from 'react'
 
-// import { Sidebar } from '@/components/layout/sidebar/Sidebar'
+import { HeaderWithProps } from '@/components/layout/header/HeaderWithProps'
+
+import { useGetEventByIdLazyQuery } from '@/graphql/generated/output'
 
 export default function SiteLayout({ children }: PropsWithChildren<unknown>) {
+	const pathname = usePathname()
+	const params = useParams()
+	const eventId = params.id as string | undefined
+
+	// Используем lazy query
+	const [getEventById, { data, loading: eventLoading }] =
+		useGetEventByIdLazyQuery()
+
+	// Вызываем запрос только при изменении eventId
+	useEffect(() => {
+		if (eventId) {
+			getEventById({ variables: { getEventByIdId: eventId } })
+		}
+	}, [eventId, getEventById])
+
+	const title = data?.getEventById?.title || ''
+
+	const headerTexts: Record<string, string> = {
+		'/dashboard/hosting': 'Мои мероприятия',
+		'/favorites': 'Избранное',
+		'/dashboard/settings': 'Настройки',
+		...(eventId ? { [`/dashboard/hosting/${eventId}`]: title } : {})
+	}
+
+	const headerText = headerTexts[pathname] || 'Мои мероприятия'
+
 	return (
 		<div className='flex h-full flex-col'>
 			<div className='flex-1'>
 				<div className='fixed inset-y-0 z-50 h-[65px] w-full'>
-					<Header />
+					<HeaderWithProps text={headerText} />
 				</div>
-				{/* <Sidebar />
-				<LayoutContainer>*/}
 				{children}
-				{/*</LayoutContainer> */}
 			</div>
 		</div>
 	)

@@ -1,0 +1,38 @@
+query GetMyOrganizedEvents {
+	getMyOrganizedEvents {
+		ageRestriction
+		createdAt
+		currency
+		description
+		endTime
+		eventProperties
+		eventType
+		favoritedBy {
+			id
+		}
+		id
+		isPrivate
+		isVerified
+		location {
+			placeName
+			address
+			city
+		}
+		maxParticipants
+		organizer {
+			id
+		}
+		participants {
+			id
+		}
+		paymentType
+		photoUrls
+		postedDate
+		price
+		startTime
+		status
+		tags
+		title
+		updatedAt
+	}
+}

@@ -242,6 +242,7 @@ export type MutationChangeProfileInfoArgs = {
 
 export type MutationCreateEventArgs = {
   input: CreateEventInput;
+  photos?: InputMaybe<Array<Scalars['Upload']['input']>>;
 };
 
 
@@ -510,6 +511,14 @@ export type VerifyAccountMutationVariables = Exact<{
 
 export type VerifyAccountMutation = { __typename?: 'Mutation', verifyAccount: { __typename?: 'AuthModel', message?: string | null, user?: { __typename?: 'UserModel', isEmailVerified: boolean } | null } };
 
+export type CreateEventMutationVariables = Exact<{
+  input: CreateEventInput;
+  photos?: InputMaybe<Array<Scalars['Upload']['input']> | Scalars['Upload']['input']>;
+}>;
+
+
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'EventModel', id: string, title: string, description: string, startTime: any, endTime?: any | null, photoUrls: Array<string>, eventType: EventType, paymentType: PaymentType, price?: number | null, currency?: string | null, isPrivate: boolean, maxParticipants?: number | null, tags: Array<string>, ageRestriction?: number | null, status: EventStatus, location: { __typename?: 'LocationModel', id: string, address?: string | null, city: string, placeName?: string | null }, organizer: { __typename?: 'UserModel', id: string, username: string } } };
+
 export type ChangeEmailMutationVariables = Exact<{
   data: ChangeEmailInput;
 }>;
@@ -602,6 +611,18 @@ export type UpdateSocialLinkMutationVariables = Exact<{
 
 
 export type UpdateSocialLinkMutation = { __typename?: 'Mutation', updateSocialLink: boolean };
+
+export type GetEventByIdQueryVariables = Exact<{
+  getEventByIdId: Scalars['String']['input'];
+}>;
+
+
+export type GetEventByIdQuery = { __typename?: 'Query', getEventById: { __typename?: 'EventModel', updatedAt: any, title: string, tags: Array<string>, status: EventStatus, startTime: any, price?: number | null, postedDate: any, photoUrls: Array<string>, paymentType: PaymentType, maxParticipants?: number | null, isVerified: boolean, isPrivate: boolean, id: string, eventType: EventType, eventProperties: Array<EventProperty>, endTime?: any | null, description: string, currency?: string | null, createdAt: any, ageRestriction?: number | null, participants?: Array<{ __typename?: 'UserModel', username: string, id: string, avatar?: string | null }> | null, location: { __typename?: 'LocationModel', placeName?: string | null, id: string, city: string, address?: string | null }, favoritedBy?: Array<{ __typename?: 'UserModel', username: string }> | null } };
+
+export type GetMyOrganizedEventsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyOrganizedEventsQuery = { __typename?: 'Query', getMyOrganizedEvents: Array<{ __typename?: 'EventModel', ageRestriction?: number | null, createdAt: any, currency?: string | null, description: string, endTime?: any | null, eventProperties: Array<EventProperty>, eventType: EventType, id: string, isPrivate: boolean, isVerified: boolean, maxParticipants?: number | null, paymentType: PaymentType, photoUrls: Array<string>, postedDate: any, price?: number | null, startTime: any, status: EventStatus, tags: Array<string>, title: string, updatedAt: any, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null, location: { __typename?: 'LocationModel', placeName?: string | null, address?: string | null, city: string }, organizer: { __typename?: 'UserModel', id: string }, participants?: Array<{ __typename?: 'UserModel', id: string }> | null }> };
 
 export type FindCurrentSessionQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -870,6 +891,64 @@ export function useVerifyAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type VerifyAccountMutationHookResult = ReturnType<typeof useVerifyAccountMutation>;
 export type VerifyAccountMutationResult = Apollo.MutationResult<VerifyAccountMutation>;
 export type VerifyAccountMutationOptions = Apollo.BaseMutationOptions<VerifyAccountMutation, VerifyAccountMutationVariables>;
+export const CreateEventDocument = gql`
+    mutation CreateEvent($input: CreateEventInput!, $photos: [Upload!]) {
+  createEvent(input: $input, photos: $photos) {
+    id
+    title
+    description
+    startTime
+    endTime
+    photoUrls
+    eventType
+    paymentType
+    price
+    currency
+    isPrivate
+    maxParticipants
+    tags
+    ageRestriction
+    status
+    location {
+      id
+      address
+      city
+      placeName
+    }
+    organizer {
+      id
+      username
+    }
+  }
+}
+    `;
+export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
+
+/**
+ * __useCreateEventMutation__
+ *
+ * To run a mutation, you first call `useCreateEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *      photos: // value for 'photos'
+ *   },
+ * });
+ */
+export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<CreateEventMutation, CreateEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument, options);
+      }
+export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
+export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
+export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
 export const ChangeEmailDocument = gql`
     mutation ChangeEmail($data: ChangeEmailInput!) {
   changeEmail(data: $data)
@@ -1308,6 +1387,151 @@ export function useUpdateSocialLinkMutation(baseOptions?: Apollo.MutationHookOpt
 export type UpdateSocialLinkMutationHookResult = ReturnType<typeof useUpdateSocialLinkMutation>;
 export type UpdateSocialLinkMutationResult = Apollo.MutationResult<UpdateSocialLinkMutation>;
 export type UpdateSocialLinkMutationOptions = Apollo.BaseMutationOptions<UpdateSocialLinkMutation, UpdateSocialLinkMutationVariables>;
+export const GetEventByIdDocument = gql`
+    query GetEventById($getEventByIdId: String!) {
+  getEventById(id: $getEventByIdId) {
+    updatedAt
+    title
+    tags
+    status
+    startTime
+    price
+    postedDate
+    photoUrls
+    paymentType
+    participants {
+      username
+      id
+      avatar
+    }
+    maxParticipants
+    location {
+      placeName
+      id
+      city
+      address
+    }
+    isVerified
+    isPrivate
+    id
+    favoritedBy {
+      username
+    }
+    eventType
+    eventProperties
+    endTime
+    description
+    currency
+    createdAt
+    ageRestriction
+  }
+}
+    `;
+
+/**
+ * __useGetEventByIdQuery__
+ *
+ * To run a query within a React component, call `useGetEventByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEventByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEventByIdQuery({
+ *   variables: {
+ *      getEventByIdId: // value for 'getEventByIdId'
+ *   },
+ * });
+ */
+export function useGetEventByIdQuery(baseOptions: Apollo.QueryHookOptions<GetEventByIdQuery, GetEventByIdQueryVariables> & ({ variables: GetEventByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetEventByIdQuery, GetEventByIdQueryVariables>(GetEventByIdDocument, options);
+      }
+export function useGetEventByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEventByIdQuery, GetEventByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetEventByIdQuery, GetEventByIdQueryVariables>(GetEventByIdDocument, options);
+        }
+export function useGetEventByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetEventByIdQuery, GetEventByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetEventByIdQuery, GetEventByIdQueryVariables>(GetEventByIdDocument, options);
+        }
+export type GetEventByIdQueryHookResult = ReturnType<typeof useGetEventByIdQuery>;
+export type GetEventByIdLazyQueryHookResult = ReturnType<typeof useGetEventByIdLazyQuery>;
+export type GetEventByIdSuspenseQueryHookResult = ReturnType<typeof useGetEventByIdSuspenseQuery>;
+export type GetEventByIdQueryResult = Apollo.QueryResult<GetEventByIdQuery, GetEventByIdQueryVariables>;
+export const GetMyOrganizedEventsDocument = gql`
+    query GetMyOrganizedEvents {
+  getMyOrganizedEvents {
+    ageRestriction
+    createdAt
+    currency
+    description
+    endTime
+    eventProperties
+    eventType
+    favoritedBy {
+      id
+    }
+    id
+    isPrivate
+    isVerified
+    location {
+      placeName
+      address
+      city
+    }
+    maxParticipants
+    organizer {
+      id
+    }
+    participants {
+      id
+    }
+    paymentType
+    photoUrls
+    postedDate
+    price
+    startTime
+    status
+    tags
+    title
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetMyOrganizedEventsQuery__
+ *
+ * To run a query within a React component, call `useGetMyOrganizedEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyOrganizedEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyOrganizedEventsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMyOrganizedEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetMyOrganizedEventsQuery, GetMyOrganizedEventsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyOrganizedEventsQuery, GetMyOrganizedEventsQueryVariables>(GetMyOrganizedEventsDocument, options);
+      }
+export function useGetMyOrganizedEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyOrganizedEventsQuery, GetMyOrganizedEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyOrganizedEventsQuery, GetMyOrganizedEventsQueryVariables>(GetMyOrganizedEventsDocument, options);
+        }
+export function useGetMyOrganizedEventsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMyOrganizedEventsQuery, GetMyOrganizedEventsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMyOrganizedEventsQuery, GetMyOrganizedEventsQueryVariables>(GetMyOrganizedEventsDocument, options);
+        }
+export type GetMyOrganizedEventsQueryHookResult = ReturnType<typeof useGetMyOrganizedEventsQuery>;
+export type GetMyOrganizedEventsLazyQueryHookResult = ReturnType<typeof useGetMyOrganizedEventsLazyQuery>;
+export type GetMyOrganizedEventsSuspenseQueryHookResult = ReturnType<typeof useGetMyOrganizedEventsSuspenseQuery>;
+export type GetMyOrganizedEventsQueryResult = Apollo.QueryResult<GetMyOrganizedEventsQuery, GetMyOrganizedEventsQueryVariables>;
 export const FindCurrentSessionDocument = gql`
     query FindCurrentSession {
   findCurrentSession {
