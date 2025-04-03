@@ -7,7 +7,7 @@ import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
-import Card from '@/components/dashboard/Card'
+import HostCard from '@/components/dashboard/HostCard'
 
 import { useGetMyOrganizedEventsQuery } from '@/graphql/generated/output'
 
@@ -29,12 +29,12 @@ const Events = () => {
 		<div className='px-8 pb-5 pt-8'>
 			<div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
 				{myEvents?.map(event => (
-					<Card
+					<HostCard
 						key={event.id}
 						event={event}
 						isFavorite={false}
 						onFavoriteToggle={() => {}}
-						showFavoriteButton={false}
+						showFavoriteButton={true}
 						propertyLink={`/dashboard/hosting/${event.id}`}
 					/>
 				))}
@@ -91,9 +91,9 @@ const Events = () => {
 				</div>
 			</div>
 
-			{(!myEvents || myEvents.length === 0) && (
+			{/* {(!myEvents || myEvents.length === 0) && (
 				<p>You don&lsquo;t manage any properties</p>
-			)}
+			)} */}
 		</div>
 	)
 }

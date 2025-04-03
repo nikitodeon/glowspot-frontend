@@ -1,19 +1,19 @@
 'use client'
 
-import { ArrowLeft, Trash2 } from 'lucide-react'
+import { ArrowLeft, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import React from 'react'
 
 import {
-	//  useDeleteEventMutation,
 	useGetEventByIdQuery
+	// useLeaveEventMutation
 } from '@/graphql/generated/output'
 
 import { getMediaSource } from '@/utils/get-media-source'
 
-const EventDetailsPage = () => {
+const AttendingEventDetailsPage = () => {
 	const { id } = useParams()
 	const router = useRouter()
 
@@ -23,38 +23,36 @@ const EventDetailsPage = () => {
 		}
 	})
 
-	//   const [deleteEvent] = useDeleteEventMutation()
+	//   const [leaveEvent] = useLeaveEventMutation()
 
-	//   const handleDelete = async () => {
-	//     if (confirm('Вы уверены, что хотите удалить это мероприятие?')) {
-	//       try {
-	//         await deleteEvent({
-	//           variables: {
-	//             eventId: id as string
-	//           }
-	//         })
-	//         router.push('/dashboard/hosting')
-	//       } catch (err) {
-	//         console.error('Error deleting event:', err)
-	//       }
+	//   const handleLeaveEvent = async () => {
+	//     try {
+	//       await leaveEvent({
+	//         variables: {
+	//           eventId: id as string
+	//         }
+	//       })
+	//       router.push('/dashboard/events')
+	//     } catch (err) {
+	//       console.error('Error leaving event:', err)
 	//     }
 	//   }
 
-	if (loading) {
-		return (
-			<div className='flex min-h-screen items-center justify-center bg-black p-8'>
-				<div className='border-t-primary-500 h-12 w-12 animate-spin rounded-full border-4 border-white'></div>
-			</div>
-		)
-	}
+	//   if (loading) {
+	//     return (
+	//       <div className='flex min-h-screen items-center justify-center bg-black p-8'>
+	//         <div className='border-t-primary-500 h-12 w-12 animate-spin rounded-full border-4 border-white'></div>
+	//       </div>
+	//     )
+	//   }
 
-	if (error) {
-		return (
-			<div className='flex min-h-screen items-center justify-center bg-black p-8 text-center text-red-500'>
-				Ошибка загрузки данных мероприятия
-			</div>
-		)
-	}
+	//   if (error) {
+	//     return (
+	//       <div className='flex min-h-screen items-center justify-center bg-black p-8 text-center text-red-500'>
+	//         Ошибка загрузки данных мероприятия
+	//       </div>
+	//     )
+	//   }
 
 	const event = data?.getEventById
 	if (!event) {
@@ -65,6 +63,7 @@ const EventDetailsPage = () => {
 		)
 	}
 
+	// Форматирование даты
 	const formatDate = (dateString: string) => {
 		const date = new Date(dateString)
 		return date.toLocaleDateString('ru-RU', {
@@ -74,6 +73,7 @@ const EventDetailsPage = () => {
 		})
 	}
 
+	// Форматирование времени
 	const formatTime = (dateString: string) => {
 		const date = new Date(dateString)
 		return date.toLocaleTimeString('ru-RU', {
@@ -343,12 +343,12 @@ const EventDetailsPage = () => {
 					//   onClick={handleDelete}
 					className='flex items-center gap-3 rounded-lg border-2 border-white/20 bg-black px-8 py-4 text-xl font-medium text-white transition-colors hover:border-white/40 hover:bg-white/10'
 				>
-					<Trash2 className='h-6 w-6' />
-					Удалить мероприятие
+					{/* <Trash2 className='h-6 w-6' /> */}
+					Покинуть мероприятие
 				</button>
 			</div>
 		</div>
 	)
 }
 
-export default EventDetailsPage
+export default AttendingEventDetailsPage

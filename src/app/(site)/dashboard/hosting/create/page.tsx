@@ -46,11 +46,9 @@ const NewEvent = () => {
 		const files = Array.from(e.target.files || [])
 		if (files.length === 0) return
 
-		// Create previews
 		const newPreviews = files.map(file => URL.createObjectURL(file))
 		setPreviews(prev => [...prev, ...newPreviews])
 
-		// Update form value
 		const currentPhotos = form.getValues('photos') || []
 		form.setValue('photos', [...currentPhotos, ...files], {
 			shouldValidate: true
@@ -58,15 +56,12 @@ const NewEvent = () => {
 	}
 
 	const removeImage = (index: number) => {
-		// Revoke the object URL to avoid memory leaks
 		URL.revokeObjectURL(previews[index])
 
-		// Update previews
 		const updatedPreviews = [...previews]
 		updatedPreviews.splice(index, 1)
 		setPreviews(updatedPreviews)
 
-		// Update form value
 		const updatedPhotos = [...form.getValues('photos')]
 		updatedPhotos.splice(index, 1)
 		form.setValue('photos', updatedPhotos, { shouldValidate: true })
@@ -76,9 +71,7 @@ const NewEvent = () => {
 		setIsSubmitting(true)
 		try {
 			const { photos, ...input } = data
-
-			const eventProperties = input.eventProperties || [] // Ensure it's always an array
-			const photoUrls = previews // Assuming previews contain valid uploaded URLs
+			const eventProperties = input.eventProperties || []
 
 			await createEvent({
 				variables: {
@@ -88,15 +81,17 @@ const NewEvent = () => {
 						endTime: input.endTime
 							? new Date(input.endTime).toISOString()
 							: null,
-						eventProperties, // Include eventProperties
-						photoUrls // Include uploaded image URLs
-					}
+						eventProperties,
+						photoUrls: []
+					},
+					photos: photos
+				},
+				context: {
+					hasUpload: true
 				}
 			})
 
-			// Clean up object URLs
 			previews.forEach(url => URL.revokeObjectURL(url))
-
 			form.reset()
 			setPreviews([])
 		} catch (error) {
@@ -107,8 +102,8 @@ const NewEvent = () => {
 	}
 
 	return (
-		<div className='dashboard-container'>
-			<div className='rounded-xl bg-white p-6'>
+		<div className='min-h-screen bg-black p-4 text-gray-200'>
+			<div className='rounded-xl border border-white/20 bg-black p-6'>
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
@@ -116,21 +111,21 @@ const NewEvent = () => {
 						encType='multipart/form-data'
 					>
 						{/* Basic Information */}
-						<div>
-							<h2 className='mb-4 text-lg font-semibold'>
+						<div className='space-y-4 border-b border-white/20 pb-6'>
+							<h2 className='mb-4 text-lg font-semibold text-white'>
 								Basic Information
 							</h2>
-							<div className='space-y-4'>
-								<CustomFormField
-									name='title'
-									label='Event Title'
-								/>
-								<CustomFormField
-									name='description'
-									label='Description'
-									type='textarea'
-								/>
-							</div>
+							<CustomFormField
+								name='title'
+								label='Event Title'
+								className='border-white/20'
+							/>
+							<CustomFormField
+								name='description'
+								label='Description'
+								type='textarea'
+								className='border-white/20'
+							/>
 						</div>
 
 						{/* Date & Time */}
@@ -142,19 +137,19 @@ const NewEvent = () => {
 								<CustomFormField
 									name='startTime'
 									label='Start Time'
-									type='datetime-local'
+									type='datepicker'
 								/>
 								<CustomFormField
 									name='endTime'
 									label='End Time (optional)'
-									type='datetime-local'
+									type='datepicker'
 								/>
 							</div>
 						</div>
 
 						{/* Event Type */}
-						<div className='space-y-6'>
-							<h2 className='mb-4 text-lg font-semibold'>
+						<div className='space-y-6 border-b pb-6'>
+							<h2 className='mb-4 text-lg font-semibold text-white'>
 								Event Type
 							</h2>
 							<CustomFormField
@@ -165,17 +160,19 @@ const NewEvent = () => {
 									value: type,
 									label: type
 								}))}
+								className=''
 							/>
 							<CustomFormField
 								name='tags'
 								label='Tags (comma separated)'
 								type='multi-input'
+								className='border-white/20'
 							/>
 						</div>
 
 						{/* Payment Information */}
-						<div className='space-y-6'>
-							<h2 className='mb-4 text-lg font-semibold'>
+						<div className='space-y-6 border-b border-white/20 pb-6'>
+							<h2 className='mb-4 text-lg font-semibold text-white'>
 								Payment Information
 							</h2>
 							<CustomFormField
@@ -188,6 +185,7 @@ const NewEvent = () => {
 										label: type
 									})
 								)}
+								className='border-white/20'
 							/>
 							{form.watch('paymentType') !== 'FREE' && (
 								<div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
@@ -196,6 +194,7 @@ const NewEvent = () => {
 										label='Price'
 										type='number'
 										min={0}
+										className='border-white/20'
 									/>
 									<CustomFormField
 										name='currency'
@@ -207,14 +206,15 @@ const NewEvent = () => {
 											{ value: 'EUR', label: 'EUR' },
 											{ value: 'RUB', label: 'RUB' }
 										]}
+										className='border-white/20'
 									/>
 								</div>
 							)}
 						</div>
 
 						{/* Event Settings */}
-						<div className='space-y-6'>
-							<h2 className='mb-4 text-lg font-semibold'>
+						<div className='space-y-6 border-b border-white/20 pb-6'>
+							<h2 className='mb-4 text-lg font-semibold text-white'>
 								Event Settings
 							</h2>
 							<div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
@@ -222,12 +222,14 @@ const NewEvent = () => {
 									name='isPrivate'
 									label='Private Event'
 									type='switch'
+									className='border-white/20'
 								/>
 								<CustomFormField
 									name='maxParticipants'
 									label='Max Participants (optional)'
 									type='number'
 									min={1}
+									className='border-white/20'
 								/>
 							</div>
 							<CustomFormField
@@ -236,37 +238,46 @@ const NewEvent = () => {
 								type='number'
 								min={0}
 								max={21}
+								className='border-white/20'
 							/>
 						</div>
 
 						{/* Location */}
-						<div className='space-y-6'>
-							<h2 className='mb-4 text-lg font-semibold'>
+						<div className='space-y-6 border-b border-white/20 pb-6'>
+							<h2 className='mb-4 text-lg font-semibold text-white'>
 								Location
 							</h2>
-							<CustomFormField name='address' label='Address' />
+							<CustomFormField
+								name='address'
+								label='Address'
+								className='border-white/20'
+							/>
 							<div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-								<CustomFormField name='city' label='City' />
+								<CustomFormField
+									name='city'
+									label='City'
+									className='border-white/20'
+								/>
 								<CustomFormField
 									name='placeName'
 									label='Place/Venue Name (optional)'
+									className='border-white/20'
 								/>
 							</div>
 						</div>
 
 						{/* Photos Section */}
 						<div>
-							<h2 className='mb-4 text-lg font-semibold'>
+							<h2 className='mb-4 text-lg font-semibold text-white'>
 								Event Photos
 							</h2>
 
-							{/* Image Previews */}
 							{previews.length > 0 && (
 								<div className='mb-4 flex flex-wrap gap-4'>
 									{previews.map((preview, index) => (
 										<div
 											key={index}
-											className='group relative'
+											className='group relative rounded-md border border-white/20'
 										>
 											<img
 												src={preview}
@@ -287,7 +298,6 @@ const NewEvent = () => {
 								</div>
 							)}
 
-							{/* File Input */}
 							<input
 								type='file'
 								ref={fileInputRef}
@@ -301,6 +311,7 @@ const NewEvent = () => {
 								type='button'
 								variant='outline'
 								onClick={() => fileInputRef.current?.click()}
+								className='border-white/20 text-white hover:bg-white/10'
 							>
 								Upload Photos
 							</Button>
@@ -318,7 +329,7 @@ const NewEvent = () => {
 
 						<Button
 							type='submit'
-							className='bg-primary-700 mt-8 w-full text-white'
+							className='bg-primary-500 hover:bg-primary-600 mt-8 w-full border-white/20 text-white'
 							disabled={isSubmitting}
 						>
 							{isSubmitting ? 'Creating...' : 'Create Event'}

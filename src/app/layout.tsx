@@ -100,8 +100,10 @@ export default async function RootLayout({
 							disableTransitionOnChange
 						> */}
 						<ToastProvider />
+
 						{/* <StoreProvider> */}
 						{children}
+
 						{/* </StoreProvider>	 */}
 						{/* </ThemeProvider> */}
 					</NextIntlClientProvider>

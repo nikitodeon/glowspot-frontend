@@ -511,6 +511,13 @@ export type VerifyAccountMutationVariables = Exact<{
 
 export type VerifyAccountMutation = { __typename?: 'Mutation', verifyAccount: { __typename?: 'AuthModel', message?: string | null, user?: { __typename?: 'UserModel', isEmailVerified: boolean } | null } };
 
+export type AddToFavoritesMutationVariables = Exact<{
+  eventId: Scalars['String']['input'];
+}>;
+
+
+export type AddToFavoritesMutation = { __typename?: 'Mutation', addToFavorites: boolean };
+
 export type CreateEventMutationVariables = Exact<{
   input: CreateEventInput;
   photos?: InputMaybe<Array<Scalars['Upload']['input']> | Scalars['Upload']['input']>;
@@ -518,6 +525,13 @@ export type CreateEventMutationVariables = Exact<{
 
 
 export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'EventModel', id: string, title: string, description: string, startTime: any, endTime?: any | null, photoUrls: Array<string>, eventType: EventType, paymentType: PaymentType, price?: number | null, currency?: string | null, isPrivate: boolean, maxParticipants?: number | null, tags: Array<string>, ageRestriction?: number | null, status: EventStatus, location: { __typename?: 'LocationModel', id: string, address?: string | null, city: string, placeName?: string | null }, organizer: { __typename?: 'UserModel', id: string, username: string } } };
+
+export type RemoveFromFavoritesMutationVariables = Exact<{
+  eventId: Scalars['String']['input'];
+}>;
+
+
+export type RemoveFromFavoritesMutation = { __typename?: 'Mutation', removeFromFavorites: boolean };
 
 export type ChangeEmailMutationVariables = Exact<{
   data: ChangeEmailInput;
@@ -617,7 +631,12 @@ export type GetEventByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetEventByIdQuery = { __typename?: 'Query', getEventById: { __typename?: 'EventModel', updatedAt: any, title: string, tags: Array<string>, status: EventStatus, startTime: any, price?: number | null, postedDate: any, photoUrls: Array<string>, paymentType: PaymentType, maxParticipants?: number | null, isVerified: boolean, isPrivate: boolean, id: string, eventType: EventType, eventProperties: Array<EventProperty>, endTime?: any | null, description: string, currency?: string | null, createdAt: any, ageRestriction?: number | null, participants?: Array<{ __typename?: 'UserModel', username: string, id: string, avatar?: string | null }> | null, location: { __typename?: 'LocationModel', placeName?: string | null, id: string, city: string, address?: string | null }, favoritedBy?: Array<{ __typename?: 'UserModel', username: string }> | null } };
+export type GetEventByIdQuery = { __typename?: 'Query', getEventById: { __typename?: 'EventModel', id: string, title: string, description: string, startTime: any, endTime?: any | null, photoUrls: Array<string>, eventType: EventType, eventProperties: Array<EventProperty>, paymentType: PaymentType, price?: number | null, currency?: string | null, postedDate: any, isVerified: boolean, isPrivate: boolean, maxParticipants?: number | null, tags: Array<string>, status: EventStatus, ageRestriction?: number | null, createdAt: any, updatedAt: any, participants?: Array<{ __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }> | null, location: { __typename?: 'LocationModel', id: string, placeName?: string | null, city: string, address?: string | null, coordinates: { __typename?: 'Coordinates', longitude: number, latitude: number } }, organizer: { __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }, favoritedBy?: Array<{ __typename?: 'UserModel', id: string, username: string }> | null } };
+
+export type GetEventsWhereIParticipateQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetEventsWhereIParticipateQuery = { __typename?: 'Query', getEventsWhereIParticipate: Array<{ __typename?: 'EventModel', ageRestriction?: number | null, createdAt: any, currency?: string | null, description: string, endTime?: any | null, eventProperties: Array<EventProperty>, eventType: EventType, id: string, isPrivate: boolean, isVerified: boolean, maxParticipants?: number | null, paymentType: PaymentType, photoUrls: Array<string>, postedDate: any, price?: number | null, startTime: any, status: EventStatus, tags: Array<string>, title: string, updatedAt: any, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null, location: { __typename?: 'LocationModel', placeName?: string | null, address?: string | null, city: string }, organizer: { __typename?: 'UserModel', id: string }, participants?: Array<{ __typename?: 'UserModel', id: string }> | null }> };
 
 export type GetMyOrganizedEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -891,6 +910,37 @@ export function useVerifyAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type VerifyAccountMutationHookResult = ReturnType<typeof useVerifyAccountMutation>;
 export type VerifyAccountMutationResult = Apollo.MutationResult<VerifyAccountMutation>;
 export type VerifyAccountMutationOptions = Apollo.BaseMutationOptions<VerifyAccountMutation, VerifyAccountMutationVariables>;
+export const AddToFavoritesDocument = gql`
+    mutation AddToFavorites($eventId: String!) {
+  addToFavorites(eventId: $eventId)
+}
+    `;
+export type AddToFavoritesMutationFn = Apollo.MutationFunction<AddToFavoritesMutation, AddToFavoritesMutationVariables>;
+
+/**
+ * __useAddToFavoritesMutation__
+ *
+ * To run a mutation, you first call `useAddToFavoritesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddToFavoritesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addToFavoritesMutation, { data, loading, error }] = useAddToFavoritesMutation({
+ *   variables: {
+ *      eventId: // value for 'eventId'
+ *   },
+ * });
+ */
+export function useAddToFavoritesMutation(baseOptions?: Apollo.MutationHookOptions<AddToFavoritesMutation, AddToFavoritesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddToFavoritesMutation, AddToFavoritesMutationVariables>(AddToFavoritesDocument, options);
+      }
+export type AddToFavoritesMutationHookResult = ReturnType<typeof useAddToFavoritesMutation>;
+export type AddToFavoritesMutationResult = Apollo.MutationResult<AddToFavoritesMutation>;
+export type AddToFavoritesMutationOptions = Apollo.BaseMutationOptions<AddToFavoritesMutation, AddToFavoritesMutationVariables>;
 export const CreateEventDocument = gql`
     mutation CreateEvent($input: CreateEventInput!, $photos: [Upload!]) {
   createEvent(input: $input, photos: $photos) {
@@ -949,6 +999,37 @@ export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
 export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
 export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
+export const RemoveFromFavoritesDocument = gql`
+    mutation RemoveFromFavorites($eventId: String!) {
+  removeFromFavorites(eventId: $eventId)
+}
+    `;
+export type RemoveFromFavoritesMutationFn = Apollo.MutationFunction<RemoveFromFavoritesMutation, RemoveFromFavoritesMutationVariables>;
+
+/**
+ * __useRemoveFromFavoritesMutation__
+ *
+ * To run a mutation, you first call `useRemoveFromFavoritesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveFromFavoritesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeFromFavoritesMutation, { data, loading, error }] = useRemoveFromFavoritesMutation({
+ *   variables: {
+ *      eventId: // value for 'eventId'
+ *   },
+ * });
+ */
+export function useRemoveFromFavoritesMutation(baseOptions?: Apollo.MutationHookOptions<RemoveFromFavoritesMutation, RemoveFromFavoritesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveFromFavoritesMutation, RemoveFromFavoritesMutationVariables>(RemoveFromFavoritesDocument, options);
+      }
+export type RemoveFromFavoritesMutationHookResult = ReturnType<typeof useRemoveFromFavoritesMutation>;
+export type RemoveFromFavoritesMutationResult = Apollo.MutationResult<RemoveFromFavoritesMutation>;
+export type RemoveFromFavoritesMutationOptions = Apollo.BaseMutationOptions<RemoveFromFavoritesMutation, RemoveFromFavoritesMutationVariables>;
 export const ChangeEmailDocument = gql`
     mutation ChangeEmail($data: ChangeEmailInput!) {
   changeEmail(data: $data)
@@ -1390,40 +1471,52 @@ export type UpdateSocialLinkMutationOptions = Apollo.BaseMutationOptions<UpdateS
 export const GetEventByIdDocument = gql`
     query GetEventById($getEventByIdId: String!) {
   getEventById(id: $getEventByIdId) {
-    updatedAt
-    title
-    tags
-    status
-    startTime
-    price
-    postedDate
-    photoUrls
-    paymentType
-    participants {
-      username
-      id
-      avatar
-    }
-    maxParticipants
-    location {
-      placeName
-      id
-      city
-      address
-    }
-    isVerified
-    isPrivate
     id
-    favoritedBy {
-      username
-    }
+    title
+    description
+    startTime
+    endTime
+    photoUrls
     eventType
     eventProperties
-    endTime
-    description
+    paymentType
+    price
     currency
-    createdAt
+    postedDate
+    isVerified
+    isPrivate
+    maxParticipants
+    tags
+    status
     ageRestriction
+    createdAt
+    updatedAt
+    participants {
+      id
+      username
+      displayName
+      avatar
+    }
+    location {
+      id
+      placeName
+      city
+      address
+      coordinates {
+        longitude
+        latitude
+      }
+    }
+    organizer {
+      id
+      username
+      displayName
+      avatar
+    }
+    favoritedBy {
+      id
+      username
+    }
   }
 }
     `;
@@ -1460,6 +1553,78 @@ export type GetEventByIdQueryHookResult = ReturnType<typeof useGetEventByIdQuery
 export type GetEventByIdLazyQueryHookResult = ReturnType<typeof useGetEventByIdLazyQuery>;
 export type GetEventByIdSuspenseQueryHookResult = ReturnType<typeof useGetEventByIdSuspenseQuery>;
 export type GetEventByIdQueryResult = Apollo.QueryResult<GetEventByIdQuery, GetEventByIdQueryVariables>;
+export const GetEventsWhereIParticipateDocument = gql`
+    query GetEventsWhereIParticipate {
+  getEventsWhereIParticipate {
+    ageRestriction
+    createdAt
+    currency
+    description
+    endTime
+    eventProperties
+    eventType
+    favoritedBy {
+      id
+    }
+    id
+    isPrivate
+    isVerified
+    location {
+      placeName
+      address
+      city
+    }
+    maxParticipants
+    organizer {
+      id
+    }
+    participants {
+      id
+    }
+    paymentType
+    photoUrls
+    postedDate
+    price
+    startTime
+    status
+    tags
+    title
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetEventsWhereIParticipateQuery__
+ *
+ * To run a query within a React component, call `useGetEventsWhereIParticipateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEventsWhereIParticipateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEventsWhereIParticipateQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetEventsWhereIParticipateQuery(baseOptions?: Apollo.QueryHookOptions<GetEventsWhereIParticipateQuery, GetEventsWhereIParticipateQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetEventsWhereIParticipateQuery, GetEventsWhereIParticipateQueryVariables>(GetEventsWhereIParticipateDocument, options);
+      }
+export function useGetEventsWhereIParticipateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEventsWhereIParticipateQuery, GetEventsWhereIParticipateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetEventsWhereIParticipateQuery, GetEventsWhereIParticipateQueryVariables>(GetEventsWhereIParticipateDocument, options);
+        }
+export function useGetEventsWhereIParticipateSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetEventsWhereIParticipateQuery, GetEventsWhereIParticipateQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetEventsWhereIParticipateQuery, GetEventsWhereIParticipateQueryVariables>(GetEventsWhereIParticipateDocument, options);
+        }
+export type GetEventsWhereIParticipateQueryHookResult = ReturnType<typeof useGetEventsWhereIParticipateQuery>;
+export type GetEventsWhereIParticipateLazyQueryHookResult = ReturnType<typeof useGetEventsWhereIParticipateLazyQuery>;
+export type GetEventsWhereIParticipateSuspenseQueryHookResult = ReturnType<typeof useGetEventsWhereIParticipateSuspenseQuery>;
+export type GetEventsWhereIParticipateQueryResult = Apollo.QueryResult<GetEventsWhereIParticipateQuery, GetEventsWhereIParticipateQueryVariables>;
 export const GetMyOrganizedEventsDocument = gql`
     query GetMyOrganizedEvents {
   getMyOrganizedEvents {

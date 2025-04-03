@@ -1,0 +1,3 @@
+mutation RemoveFromFavorites($eventId: String!) {
+	removeFromFavorites(eventId: $eventId)
+}

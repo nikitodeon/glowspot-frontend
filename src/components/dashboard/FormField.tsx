@@ -1,3 +1,5 @@
+'use client'
+
 import { registerPlugin } from 'filepond'
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
@@ -5,6 +7,8 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
 import 'filepond/dist/filepond.min.css'
 import { Edit, Plus, X } from 'lucide-react'
 import React from 'react'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import { FilePond } from 'react-filepond'
 import {
 	ControllerRenderProps,
@@ -49,6 +53,7 @@ interface FormFieldProps {
 		| 'multi-input'
 		| 'datetime-local'
 		| 'tags'
+		| 'datepicker' // Добавлен новый тип
 	placeholder?: string
 	options?: { value: string; label: string }[]
 	accept?: string
@@ -62,6 +67,8 @@ interface FormFieldProps {
 	initialValue?: string | number | boolean | string[]
 	min?: number
 	max?: number
+	showTimeSelect?: boolean // Добавлено для DatePicker
+	dateFormat?: string // Добавлено для DatePicker
 }
 
 export const CustomFormField: React.FC<FormFieldProps> = ({
@@ -79,7 +86,9 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 	isIcon = false,
 	initialValue,
 	min,
-	max
+	max,
+	showTimeSelect = true, // По умолчанию показываем выбор времени
+	dateFormat = 'MMMM d, yyyy h:mm aa' // Формат по умолчанию
 }) => {
 	const { control } = useFormContext()
 
@@ -108,12 +117,12 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 						>
 							<SelectValue placeholder={placeholder} />
 						</SelectTrigger>
-						<SelectContent className='w-full border-gray-200 shadow'>
+						<SelectContent className='w-full border-gray-200 bg-black text-white shadow'>
 							{options?.map(option => (
 								<SelectItem
 									key={option.value}
 									value={option.value}
-									className={`hover:!text-customgreys-darkGrey cursor-pointer hover:!bg-gray-100`}
+									className='cursor-pointer hover:bg-gray-800 focus:bg-gray-800'
 								>
 									{option.label}
 								</SelectItem>
@@ -171,6 +180,69 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 						className={`border-gray-200 p-4 ${inputClassName}`}
 						disabled={disabled}
 					/>
+				)
+			case 'datepicker':
+				return (
+					<div className='dark-datepicker'>
+						<DatePicker
+							selected={
+								field.value ? new Date(field.value) : null
+							}
+							onChange={(date: Date | null) => {
+								if (date) {
+									field.onChange(date.toISOString())
+								} else {
+									field.onChange(null)
+								}
+							}}
+							showTimeSelect={showTimeSelect}
+							timeFormat='HH:mm'
+							timeIntervals={15}
+							dateFormat={dateFormat}
+							className={`w-full rounded-md border border-white bg-black p-4 text-white ${inputClassName}`}
+							placeholderText={placeholder}
+							disabled={disabled}
+							calendarClassName='!bg-black !border-white !text-white'
+							dayClassName={() => 'hover:bg-gray-800 text-white'}
+							weekDayClassName={() => 'text-white'}
+							monthClassName={() => 'text-white'}
+							timeClassName={() =>
+								'bg-black text-white border-t border-white'
+							}
+							popperClassName='!bg-black !border-white'
+							//   headerClassName="!bg-black !border-b-white"
+							//   yearDropdownClassName="!bg-black !text-white"
+							//   monthDropdownClassName="!bg-black !text-white"
+							dropdownMode='select'
+							renderCustomHeader={({
+								monthDate,
+								customHeaderCount,
+								decreaseMonth,
+								increaseMonth
+							}) => (
+								<div className='flex items-center justify-between bg-black px-2 py-1'>
+									<button
+										onClick={decreaseMonth}
+										className='rounded p-1 text-white hover:bg-gray-800'
+									>
+										{'<'}
+									</button>
+									<span className='text-white'>
+										{monthDate.toLocaleString('en-US', {
+											month: 'long',
+											year: 'numeric'
+										})}
+									</span>
+									<button
+										onClick={increaseMonth}
+										className='rounded p-1 text-white hover:bg-gray-800'
+									>
+										{'>'}
+									</button>
+								</div>
+							)}
+						/>
+					</div>
 				)
 			case 'multi-input':
 				return (

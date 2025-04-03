@@ -1,17 +1,22 @@
 'use client'
 
 // import { useGetAuthUserQuery } from "@/state/api";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { Provider } from 'react-redux'
 
 import Sidebar from '@/components/layout/AppSidebar'
 // import Navbar from '@/components/Navbar'
 import { SidebarProvider } from '@/components/ui/commonApp/sidebar'
 
+import { store } from '@/store/redux/store'
+
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 	// const { data: authUser, isLoading: authLoading } = useGetAuthUserQuery();
+	const [queryClient] = useState(() => new QueryClient())
 	const router = useRouter()
 	const pathname = usePathname()
 	const [isLoading, setIsLoading] = useState(true)
@@ -40,22 +45,26 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
 	return (
 		<SidebarProvider>
-			<div className='bg-primary-100 min-h-screen w-full'>
-				{/* <Navbar /> */}
-				<div style={{ marginTop: `${NAVBAR_HEIGHT}px` }}>
-					<main className='flex'>
-						<Sidebar
-							userType={
-								'tenant'
-								// authUser.userRole.toLowerCase()
-							}
-						/>
-						<div className='flex-grow transition-all duration-300'>
-							{children}
+			<Provider store={store}>
+				<QueryClientProvider client={queryClient}>
+					<div className='bg-primary-100 min-h-screen w-full'>
+						{/* <Navbar /> */}
+						<div style={{ marginTop: `${NAVBAR_HEIGHT}px` }}>
+							<main className='flex'>
+								<Sidebar
+									userType={
+										'tenant'
+										// authUser.userRole.toLowerCase()
+									}
+								/>
+								<div className='flex-grow transition-all duration-300'>
+									{children}
+								</div>
+							</main>
 						</div>
-					</main>
-				</div>
-			</div>
+					</div>
+				</QueryClientProvider>
+			</Provider>
 		</SidebarProvider>
 	)
 }

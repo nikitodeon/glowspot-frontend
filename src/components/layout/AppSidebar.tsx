@@ -55,12 +55,12 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
 					},
 					{
 						icon: FileText,
-						label: 'Участвую',
+						label: 'Участие',
 						href: '/dashboard/attending'
 					},
 					{
 						icon: Home,
-						label: 'Организую',
+						label: 'Организация',
 						href: '/dashboard/hosting'
 					},
 					{
@@ -90,16 +90,16 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
 						>
 							{open ? (
 								<>
-									<h1 className='text-xl font-bold text-[#7f8fa3]'>
+									<h1 className='text-xl font-bold text-white'>
 										{userType === 'manager'
 											? 'Manager View'
-											: 'Renter View'}
+											: 'Управление'}
 									</h1>
 									<button
 										className='rounded-md p-2'
 										onClick={() => toggleSidebar()}
 									>
-										<X className='h-6 w-6 text-[#7f8fa3]' />
+										<X className='h-6 w-6 text-white' />
 									</button>
 								</>
 							) : (

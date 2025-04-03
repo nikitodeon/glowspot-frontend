@@ -26,7 +26,8 @@ export default function SiteLayout({ children }: PropsWithChildren<unknown>) {
 	const title = data?.getEventById?.title || ''
 
 	const headerTexts: Record<string, string> = {
-		'/dashboard/hosting': 'Мои мероприятия',
+		'/dashboard/hosting': 'Организация мероприятий',
+		'/dashboard/attending': 'Участие в мероприятиях',
 		'/favorites': 'Избранное',
 		'/dashboard/settings': 'Настройки',
 		...(eventId ? { [`/dashboard/hosting/${eventId}`]: title } : {})
