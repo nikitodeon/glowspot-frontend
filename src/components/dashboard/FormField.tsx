@@ -53,7 +53,9 @@ interface FormFieldProps {
 		| 'multi-input'
 		| 'datetime-local'
 		| 'tags'
-		| 'datepicker' // Добавлен новый тип
+		| 'datepicker'
+		| 'title'
+	// Добавлен новый тип
 	placeholder?: string
 	options?: { value: string; label: string }[]
 	accept?: string
@@ -108,7 +110,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 			case 'select':
 				return (
 					<Select
-						value={field.value || (initialValue as string)}
+						value={field.value ?? (initialValue as string) ?? ''}
 						defaultValue={field.value || (initialValue as string)}
 						onValueChange={field.onChange}
 					>
@@ -262,6 +264,17 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 						inputClassName={inputClassName}
 					/>
 				)
+			case 'title':
+				return (
+					<Input
+						type={type}
+						placeholder={placeholder}
+						{...field}
+						maxLength={30}
+						className={`border-gray-200 p-4 ${inputClassName}`}
+						disabled={disabled}
+					/>
+				)
 			default:
 				return (
 					<Input
@@ -346,7 +359,7 @@ const MultiInputField: React.FC<MultiInputFieldProps> = ({
 								<Input
 									{...field}
 									placeholder={placeholder}
-									className={`bg-customgreys-darkGrey flex-1 border-none p-4 ${inputClassName}`}
+									className={`flex-1 border border-white bg-black p-4 ${inputClassName}`}
 								/>
 							</FormControl>
 						)}

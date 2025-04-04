@@ -3,15 +3,22 @@
 import { useMutation } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import React, { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 import { CustomFormField } from '@/components/dashboard/FormField'
 import { Button } from '@/components/ui/commonApp/button'
 import { Form, FormField, FormMessage } from '@/components/ui/commonApp/form'
 
 import { EventType, PaymentType } from '@/graphql/generated/output'
-import { CreateEventDocument } from '@/graphql/generated/output'
+import {
+	CreateEventDocument,
+	GetEventsWhereIParticipateDocument,
+	GetFavoriteEventsDocument,
+	GetMyOrganizedEventsDocument
+} from '@/graphql/generated/output'
 
 import {
 	EventFormData,
@@ -19,7 +26,68 @@ import {
 } from '@/schemas/events/create-event.schema'
 
 const NewEvent = () => {
-	const [createEvent] = useMutation(CreateEventDocument)
+	const [createEvent] = useMutation(CreateEventDocument, {
+		refetchQueries: [
+			{ query: GetMyOrganizedEventsDocument },
+			// { query: GetFavoriteEventsDocument },
+			{ query: GetEventsWhereIParticipateDocument }
+		]
+		// update: (cache, { data }) => {
+		// 	if (!data?.createEvent) return
+
+		// 	const newEvent = {
+		// 		...data.createEvent,
+		// 		__typename: 'EventModel',
+		// 		updatedAt: new Date().toISOString(),
+		// 		createdAt: new Date().toISOString(),
+		// 		favoritedBy: [],
+		// 		participants: [],
+		// 		eventProperties: [],
+		// 		status: 'UPCOMING',
+		// 		location: {
+		// 			...data.createEvent.location,
+		// 			__typename: 'LocationModel'
+		// 		},
+		// 		organizer: {
+		// 			...data.createEvent.organizer,
+		// 			__typename: 'UserModel'
+		// 		}
+		// 	}
+
+		// 	// Обновляем кэш для организованных мероприятий
+		// 	cache.updateQuery(
+		// 		{ query: GetMyOrganizedEventsDocument },
+		// 		oldData => {
+		// 			return {
+		// 				getMyOrganizedEvents: [
+		// 					data.createEvent,
+		// 					...(oldData?.getMyOrganizedEvents || [])
+		// 				]
+		// 			}
+		// 		}
+		// 	)
+
+		// 	// Обновляем кэш для избранных мероприятий (если новое мероприятие сразу в избранном)
+		// 	cache.updateQuery({ query: GetFavoriteEventsDocument }, oldData => {
+		// 		return {
+		// 			getFavoriteEvents: [...(oldData?.getFavoriteEvents || [])]
+		// 		}
+		// 	})
+
+		// 	// Обновляем кэш для мероприятий, в которых участвуем
+		// 	cache.updateQuery(
+		// 		{ query: GetEventsWhereIParticipateDocument },
+		// 		oldData => {
+		// 			return {
+		// 				getEventsWhereIParticipate: [
+		// 					...(oldData?.getEventsWhereIParticipate || [])
+		// 				]
+		// 			}
+		// 		}
+		// 	)
+		// }
+	})
+	const router = useRouter()
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [previews, setPreviews] = useState<string[]>([])
 	const fileInputRef = useRef<HTMLInputElement>(null)
@@ -73,7 +141,7 @@ const NewEvent = () => {
 			const { photos, ...input } = data
 			const eventProperties = input.eventProperties || []
 
-			await createEvent({
+			const result = await createEvent({
 				variables: {
 					input: {
 						...input,
@@ -90,11 +158,15 @@ const NewEvent = () => {
 					hasUpload: true
 				}
 			})
-
+			if (result.data?.createEvent) {
+				toast.success('Мероприятие успешно создано!')
+				router.push(`/dashboard/hosting/${result.data.createEvent.id}`)
+			}
 			previews.forEach(url => URL.revokeObjectURL(url))
 			form.reset()
 			setPreviews([])
 		} catch (error) {
+			toast.error('Ошибка при создании мероприятия')
 			console.error('Error creating event:', error)
 		} finally {
 			setIsSubmitting(false)
@@ -119,6 +191,7 @@ const NewEvent = () => {
 								name='title'
 								label='Event Title'
 								className='border-white/20'
+								type='title'
 							/>
 							<CustomFormField
 								name='description'
@@ -329,7 +402,7 @@ const NewEvent = () => {
 
 						<Button
 							type='submit'
-							className='bg-primary-500 hover:bg-primary-600 mt-8 w-full border-white/20 text-white'
+							className='text-l ml-[25%] flex w-[50%] items-center gap-3 rounded-lg border-2 border-white/20 bg-black px-8 py-5 font-medium text-white transition-colors hover:border-white/40 hover:bg-white/10'
 							disabled={isSubmitting}
 						>
 							{isSubmitting ? 'Creating...' : 'Create Event'}

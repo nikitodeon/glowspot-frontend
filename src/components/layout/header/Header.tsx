@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { HeaderMenu } from './HeaderMenu'
 
@@ -6,18 +7,20 @@ import { HeaderMenu } from './HeaderMenu'
 // import { Search } from './Search'
 
 export function Header() {
-// { title, subtitle }: HeaderProps
+	// { title, subtitle }: HeaderProps
 	return (
 		<header className='flex h-full items-center gap-x-4 border-b border-border bg-card p-4'>
 			{/* <Logo /> */}
 			<div className='flex items-center'>
-				<Image
-					src='/logos/longlogoblwh.png'
-					alt=' Logo'
-					width={150}
-					height={150}
-					className=''
-				/>
+				<Link href='/search'>
+					<Image
+						src='/logos/longlogoblwh.png'
+						alt=' Logo'
+						width={150}
+						height={150}
+						className=''
+					/>
+				</Link>
 				{/* 
 				<div className='mb-5'>
 					<h1 className='text-xl font-semibold'>{title}</h1>

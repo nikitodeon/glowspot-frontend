@@ -20,12 +20,6 @@ query GetEventById($getEventByIdId: String!) {
 		ageRestriction
 		createdAt
 		updatedAt
-		participants {
-			id
-			username
-			displayName
-			avatar
-		}
 		location {
 			id
 			placeName
@@ -42,9 +36,14 @@ query GetEventById($getEventByIdId: String!) {
 			displayName
 			avatar
 		}
-		favoritedBy {
+		participants {
 			id
 			username
+			displayName
+			avatar
+		}
+		favoritedBy {
+			id
 		}
 	}
 }

@@ -193,6 +193,7 @@ export type Mutation = {
   createSocialLink: Scalars['Boolean']['output'];
   createUser: Scalars['Boolean']['output'];
   deactivateAccount: AuthModel;
+  deleteEvent: Scalars['Boolean']['output'];
   disableTotp: Scalars['Boolean']['output'];
   enableTotp: Scalars['Boolean']['output'];
   loginUser: AuthModel;
@@ -258,6 +259,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationDeactivateAccountArgs = {
   data: DeactivateAccountInput;
+};
+
+
+export type MutationDeleteEventArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -526,6 +532,13 @@ export type CreateEventMutationVariables = Exact<{
 
 export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'EventModel', id: string, title: string, description: string, startTime: any, endTime?: any | null, photoUrls: Array<string>, eventType: EventType, paymentType: PaymentType, price?: number | null, currency?: string | null, isPrivate: boolean, maxParticipants?: number | null, tags: Array<string>, ageRestriction?: number | null, status: EventStatus, location: { __typename?: 'LocationModel', id: string, address?: string | null, city: string, placeName?: string | null }, organizer: { __typename?: 'UserModel', id: string, username: string } } };
 
+export type DeleteEventMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent: boolean };
+
 export type RemoveFromFavoritesMutationVariables = Exact<{
   eventId: Scalars['String']['input'];
 }>;
@@ -626,17 +639,27 @@ export type UpdateSocialLinkMutationVariables = Exact<{
 
 export type UpdateSocialLinkMutation = { __typename?: 'Mutation', updateSocialLink: boolean };
 
+export type GetAllEventsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllEventsQuery = { __typename?: 'Query', getAllEvents: Array<{ __typename?: 'EventModel', ageRestriction?: number | null, createdAt: any, currency?: string | null, description: string, endTime?: any | null, eventProperties: Array<EventProperty>, eventType: EventType, id: string, isPrivate: boolean, isVerified: boolean, maxParticipants?: number | null, paymentType: PaymentType, photoUrls: Array<string>, postedDate: any, price?: number | null, startTime: any, status: EventStatus, tags: Array<string>, title: string, updatedAt: any, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null, location: { __typename?: 'LocationModel', placeName?: string | null, address?: string | null, city: string, coordinates: { __typename?: 'Coordinates', latitude: number, longitude: number } }, organizer: { __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }, participants?: Array<{ __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }> | null }> };
+
 export type GetEventByIdQueryVariables = Exact<{
   getEventByIdId: Scalars['String']['input'];
 }>;
 
 
-export type GetEventByIdQuery = { __typename?: 'Query', getEventById: { __typename?: 'EventModel', id: string, title: string, description: string, startTime: any, endTime?: any | null, photoUrls: Array<string>, eventType: EventType, eventProperties: Array<EventProperty>, paymentType: PaymentType, price?: number | null, currency?: string | null, postedDate: any, isVerified: boolean, isPrivate: boolean, maxParticipants?: number | null, tags: Array<string>, status: EventStatus, ageRestriction?: number | null, createdAt: any, updatedAt: any, participants?: Array<{ __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }> | null, location: { __typename?: 'LocationModel', id: string, placeName?: string | null, city: string, address?: string | null, coordinates: { __typename?: 'Coordinates', longitude: number, latitude: number } }, organizer: { __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }, favoritedBy?: Array<{ __typename?: 'UserModel', id: string, username: string }> | null } };
+export type GetEventByIdQuery = { __typename?: 'Query', getEventById: { __typename?: 'EventModel', id: string, title: string, description: string, startTime: any, endTime?: any | null, photoUrls: Array<string>, eventType: EventType, eventProperties: Array<EventProperty>, paymentType: PaymentType, price?: number | null, currency?: string | null, postedDate: any, isVerified: boolean, isPrivate: boolean, maxParticipants?: number | null, tags: Array<string>, status: EventStatus, ageRestriction?: number | null, createdAt: any, updatedAt: any, location: { __typename?: 'LocationModel', id: string, placeName?: string | null, city: string, address?: string | null, coordinates: { __typename?: 'Coordinates', longitude: number, latitude: number } }, organizer: { __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }, participants?: Array<{ __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }> | null, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null } };
 
 export type GetEventsWhereIParticipateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetEventsWhereIParticipateQuery = { __typename?: 'Query', getEventsWhereIParticipate: Array<{ __typename?: 'EventModel', ageRestriction?: number | null, createdAt: any, currency?: string | null, description: string, endTime?: any | null, eventProperties: Array<EventProperty>, eventType: EventType, id: string, isPrivate: boolean, isVerified: boolean, maxParticipants?: number | null, paymentType: PaymentType, photoUrls: Array<string>, postedDate: any, price?: number | null, startTime: any, status: EventStatus, tags: Array<string>, title: string, updatedAt: any, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null, location: { __typename?: 'LocationModel', placeName?: string | null, address?: string | null, city: string }, organizer: { __typename?: 'UserModel', id: string }, participants?: Array<{ __typename?: 'UserModel', id: string }> | null }> };
+
+export type GetFavoriteEventsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFavoriteEventsQuery = { __typename?: 'Query', getFavoriteEvents: Array<{ __typename?: 'EventModel', ageRestriction?: number | null, createdAt: any, currency?: string | null, description: string, endTime?: any | null, eventProperties: Array<EventProperty>, eventType: EventType, id: string, isPrivate: boolean, isVerified: boolean, maxParticipants?: number | null, paymentType: PaymentType, photoUrls: Array<string>, postedDate: any, price?: number | null, startTime: any, status: EventStatus, tags: Array<string>, title: string, updatedAt: any, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null, location: { __typename?: 'LocationModel', placeName?: string | null, address?: string | null, city: string, coordinates: { __typename?: 'Coordinates', longitude: number, latitude: number } }, organizer: { __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }, participants?: Array<{ __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }> | null }> };
 
 export type GetMyOrganizedEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -999,6 +1022,37 @@ export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
 export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
 export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
+export const DeleteEventDocument = gql`
+    mutation DeleteEvent($id: String!) {
+  deleteEvent(id: $id)
+}
+    `;
+export type DeleteEventMutationFn = Apollo.MutationFunction<DeleteEventMutation, DeleteEventMutationVariables>;
+
+/**
+ * __useDeleteEventMutation__
+ *
+ * To run a mutation, you first call `useDeleteEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteEventMutation, { data, loading, error }] = useDeleteEventMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteEventMutation(baseOptions?: Apollo.MutationHookOptions<DeleteEventMutation, DeleteEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument, options);
+      }
+export type DeleteEventMutationHookResult = ReturnType<typeof useDeleteEventMutation>;
+export type DeleteEventMutationResult = Apollo.MutationResult<DeleteEventMutation>;
+export type DeleteEventMutationOptions = Apollo.BaseMutationOptions<DeleteEventMutation, DeleteEventMutationVariables>;
 export const RemoveFromFavoritesDocument = gql`
     mutation RemoveFromFavorites($eventId: String!) {
   removeFromFavorites(eventId: $eventId)
@@ -1468,6 +1522,88 @@ export function useUpdateSocialLinkMutation(baseOptions?: Apollo.MutationHookOpt
 export type UpdateSocialLinkMutationHookResult = ReturnType<typeof useUpdateSocialLinkMutation>;
 export type UpdateSocialLinkMutationResult = Apollo.MutationResult<UpdateSocialLinkMutation>;
 export type UpdateSocialLinkMutationOptions = Apollo.BaseMutationOptions<UpdateSocialLinkMutation, UpdateSocialLinkMutationVariables>;
+export const GetAllEventsDocument = gql`
+    query GetAllEvents {
+  getAllEvents {
+    ageRestriction
+    createdAt
+    currency
+    description
+    endTime
+    eventProperties
+    eventType
+    favoritedBy {
+      id
+    }
+    id
+    isPrivate
+    isVerified
+    location {
+      placeName
+      address
+      city
+      coordinates {
+        latitude
+        longitude
+      }
+    }
+    maxParticipants
+    organizer {
+      id
+      username
+      displayName
+      avatar
+    }
+    participants {
+      id
+      username
+      displayName
+      avatar
+    }
+    paymentType
+    photoUrls
+    postedDate
+    price
+    startTime
+    status
+    tags
+    title
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetAllEventsQuery__
+ *
+ * To run a query within a React component, call `useGetAllEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllEventsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllEventsQuery, GetAllEventsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllEventsQuery, GetAllEventsQueryVariables>(GetAllEventsDocument, options);
+      }
+export function useGetAllEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllEventsQuery, GetAllEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllEventsQuery, GetAllEventsQueryVariables>(GetAllEventsDocument, options);
+        }
+export function useGetAllEventsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllEventsQuery, GetAllEventsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllEventsQuery, GetAllEventsQueryVariables>(GetAllEventsDocument, options);
+        }
+export type GetAllEventsQueryHookResult = ReturnType<typeof useGetAllEventsQuery>;
+export type GetAllEventsLazyQueryHookResult = ReturnType<typeof useGetAllEventsLazyQuery>;
+export type GetAllEventsSuspenseQueryHookResult = ReturnType<typeof useGetAllEventsSuspenseQuery>;
+export type GetAllEventsQueryResult = Apollo.QueryResult<GetAllEventsQuery, GetAllEventsQueryVariables>;
 export const GetEventByIdDocument = gql`
     query GetEventById($getEventByIdId: String!) {
   getEventById(id: $getEventByIdId) {
@@ -1491,12 +1627,6 @@ export const GetEventByIdDocument = gql`
     ageRestriction
     createdAt
     updatedAt
-    participants {
-      id
-      username
-      displayName
-      avatar
-    }
     location {
       id
       placeName
@@ -1513,9 +1643,14 @@ export const GetEventByIdDocument = gql`
       displayName
       avatar
     }
-    favoritedBy {
+    participants {
       id
       username
+      displayName
+      avatar
+    }
+    favoritedBy {
+      id
     }
   }
 }
@@ -1625,6 +1760,88 @@ export type GetEventsWhereIParticipateQueryHookResult = ReturnType<typeof useGet
 export type GetEventsWhereIParticipateLazyQueryHookResult = ReturnType<typeof useGetEventsWhereIParticipateLazyQuery>;
 export type GetEventsWhereIParticipateSuspenseQueryHookResult = ReturnType<typeof useGetEventsWhereIParticipateSuspenseQuery>;
 export type GetEventsWhereIParticipateQueryResult = Apollo.QueryResult<GetEventsWhereIParticipateQuery, GetEventsWhereIParticipateQueryVariables>;
+export const GetFavoriteEventsDocument = gql`
+    query GetFavoriteEvents {
+  getFavoriteEvents {
+    ageRestriction
+    createdAt
+    currency
+    description
+    endTime
+    eventProperties
+    eventType
+    favoritedBy {
+      id
+    }
+    id
+    isPrivate
+    isVerified
+    location {
+      placeName
+      address
+      city
+      coordinates {
+        longitude
+        latitude
+      }
+    }
+    maxParticipants
+    organizer {
+      id
+      username
+      displayName
+      avatar
+    }
+    participants {
+      id
+      username
+      displayName
+      avatar
+    }
+    paymentType
+    photoUrls
+    postedDate
+    price
+    startTime
+    status
+    tags
+    title
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetFavoriteEventsQuery__
+ *
+ * To run a query within a React component, call `useGetFavoriteEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFavoriteEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFavoriteEventsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetFavoriteEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetFavoriteEventsQuery, GetFavoriteEventsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetFavoriteEventsQuery, GetFavoriteEventsQueryVariables>(GetFavoriteEventsDocument, options);
+      }
+export function useGetFavoriteEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFavoriteEventsQuery, GetFavoriteEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetFavoriteEventsQuery, GetFavoriteEventsQueryVariables>(GetFavoriteEventsDocument, options);
+        }
+export function useGetFavoriteEventsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetFavoriteEventsQuery, GetFavoriteEventsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetFavoriteEventsQuery, GetFavoriteEventsQueryVariables>(GetFavoriteEventsDocument, options);
+        }
+export type GetFavoriteEventsQueryHookResult = ReturnType<typeof useGetFavoriteEventsQuery>;
+export type GetFavoriteEventsLazyQueryHookResult = ReturnType<typeof useGetFavoriteEventsLazyQuery>;
+export type GetFavoriteEventsSuspenseQueryHookResult = ReturnType<typeof useGetFavoriteEventsSuspenseQuery>;
+export type GetFavoriteEventsQueryResult = Apollo.QueryResult<GetFavoriteEventsQuery, GetFavoriteEventsQueryVariables>;
 export const GetMyOrganizedEventsDocument = gql`
     query GetMyOrganizedEvents {
   getMyOrganizedEvents {

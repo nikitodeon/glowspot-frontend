@@ -3,7 +3,11 @@ import {
 	FileText,
 	Heart,
 	Home,
+	House,
+	MapPinned,
 	Menu,
+	NotebookPen,
+	PartyPopper,
 	Settings,
 	X
 } from 'lucide-react'
@@ -29,46 +33,59 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
 	const { toggleSidebar, open } = useSidebar()
 
 	const navLinks =
-		userType === 'manager'
-			? [
-					{
-						icon: Building,
-						label: 'Properties',
-						href: '/managers/properties'
-					},
-					{
-						icon: FileText,
-						label: 'Applications',
-						href: '/managers/applications'
-					},
-					{
-						icon: Settings,
-						label: 'Settings',
-						href: '/managers/settings'
-					}
-				]
-			: [
-					{
-						icon: Heart,
-						label: 'Любимые',
-						href: '/dashboards/favorites'
-					},
-					{
-						icon: FileText,
-						label: 'Участие',
-						href: '/dashboard/attending'
-					},
-					{
-						icon: Home,
-						label: 'Организация',
-						href: '/dashboard/hosting'
-					},
-					{
-						icon: Settings,
-						label: 'Настройки',
-						href: '/dashboard/settings'
-					}
-				]
+		// userType === 'manager'
+		// 	? [
+		// 			{
+		// 				icon: Building,
+		// 				label: 'Properties',
+		// 				href: '/managers/properties'
+		// 			},
+		// 			{
+		// 				icon: FileText,
+		// 				label: 'Applications',
+		// 				href: '/managers/applications'
+		// 			},
+		// 			{
+		// 				icon: Settings,
+		// 				label: 'Settings',
+		// 				href: '/managers/settings'
+		// 			}
+		// 		]
+		// :
+		[
+			{
+				icon: Heart,
+				label: 'Избранное',
+				href: '/dashboard/favorites'
+			},
+			{
+				icon: PartyPopper,
+				label: 'Участие',
+				href: '/dashboard/attending'
+			},
+
+			{
+				icon: NotebookPen,
+				label: 'Организация',
+				href: '/dashboard/hosting'
+			},
+
+			{
+				icon: MapPinned,
+				label: 'Карта',
+				href: '/dashboard/settingsoo'
+			},
+			{
+				icon: Settings,
+				label: 'Настройки',
+				href: '/dashboard/settings'
+			},
+			{
+				icon: House,
+				label: 'Главная',
+				href: '/'
+			}
+		]
 
 	return (
 		<Sidebar

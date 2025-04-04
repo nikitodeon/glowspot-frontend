@@ -98,7 +98,7 @@ const HeroSection = () => {
 						/>
 						<Button
 							// onClick={handleLocationSearch}
-							className='h-12 rounded-l-none rounded-r-xl border-y border-r border-white bg-black text-white'
+							className='h-12 rounded-l-none rounded-r-xl border-y border-r border-white bg-transparent text-white hover:bg-white/10'
 						>
 							Поиск
 						</Button>

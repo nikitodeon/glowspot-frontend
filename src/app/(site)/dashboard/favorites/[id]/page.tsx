@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowLeft, Trash, Trash2, X } from 'lucide-react'
+import { ArrowLeft, Trash, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
@@ -19,8 +19,9 @@ import {
 
 import {
 	useDeleteEventMutation,
-	useGetEventByIdQuery
-	//   useLeaveEventMutation
+	useGetEventByIdQuery,
+	//   useLeaveEventMutation,
+	useRemoveFromFavoritesMutation
 } from '@/graphql/generated/output'
 
 import { useCurrent } from '@/hooks/useCurrent'
@@ -35,7 +36,7 @@ const destructiveButtonClass = cn(
 	'transition-colors duration-200'
 )
 
-const AttendingEventDetailsPage = () => {
+const FavoriteEventDetailsPage = () => {
 	const { id } = useParams()
 	const router = useRouter()
 	const { user } = useCurrent()
@@ -57,7 +58,9 @@ const AttendingEventDetailsPage = () => {
 		]
 	})
 
-	//   const [leaveEvent] = useLeaveEventMutation()
+	const [removeFromFavorites] = useRemoveFromFavoritesMutation({
+		refetchQueries: ['GetFavoriteEventsDocument']
+	})
 
 	const handleDelete = async () => {
 		setIsDeleting(true)
@@ -67,7 +70,7 @@ const AttendingEventDetailsPage = () => {
 					id: id as string
 				}
 			})
-			router.push('/dashboard/attending')
+			router.push('/dashboard/favorites')
 		} catch (err) {
 			console.error('Error deleting event:', err)
 			alert('Не удалось удалить мероприятие')
@@ -76,6 +79,20 @@ const AttendingEventDetailsPage = () => {
 		}
 	}
 
+	const handleRemoveFromFavorites = async () => {
+		try {
+			await removeFromFavorites({
+				variables: {
+					eventId: id as string
+				}
+			})
+			router.push('/dashboard/favorites')
+		} catch (err) {
+			console.error('Error removing from favorites:', err)
+		}
+	}
+	//   const [leaveEvent] = useLeaveEventMutation()
+
 	//   const handleLeaveEvent = async () => {
 	//     try {
 	//       await leaveEvent({
@@ -83,12 +100,11 @@ const AttendingEventDetailsPage = () => {
 	//           eventId: id as string
 	//         }
 	//       })
-	//       router.push('/dashboard/attending')
+	//       router.push('/dashboard/events')
 	//     } catch (err) {
 	//       console.error('Error leaving event:', err)
 	//     }
 	//   }
-
 	if (loading) {
 		return (
 			<div className='flex min-h-screen items-center justify-center bg-black p-8'>
@@ -138,12 +154,12 @@ const AttendingEventDetailsPage = () => {
 	return (
 		<div className='min-h-screen bg-black px-4 pb-8 pt-8 text-gray-200 sm:px-8'>
 			<Link
-				href='/dashboard/attending'
+				href='/dashboard/favorites'
 				className='hover:text-primary-500 group mb-6 flex items-center text-gray-400 transition-colors'
 				scroll={false}
 			>
 				<ArrowLeft className='mr-2 h-5 w-5 transition-transform group-hover:-translate-x-1' />
-				<span className='text-lg'>Назад к участию</span>
+				<span className='text-lg'>Назад к избранному</span>
 			</Link>
 
 			<div className='mb-8 overflow-hidden rounded-xl border border-white/20 bg-black p-6 shadow-lg transition-all hover:shadow-xl'>
@@ -191,7 +207,7 @@ const AttendingEventDetailsPage = () => {
 								</p>
 							</div>
 
-							<div className='relative rounded-lg border border-white/10 bg-black p-4 transition-colors hover:border-white/20'>
+							<div className='rounded-lg border border-white/10 bg-black p-4 transition-colors hover:border-white/20'>
 								<h3 className='mb-1 text-sm font-medium text-gray-400'>
 									Дата окончания
 								</h3>
@@ -279,11 +295,11 @@ const AttendingEventDetailsPage = () => {
 							</div>
 						)}
 
-						<div className='mb-6'>
+						<div className='mb-6 max-w-3xl'>
 							<h3 className='mb-2 text-sm font-medium text-gray-400'>
 								Описание
 							</h3>
-							<p className='whitespace-pre-line text-gray-300'>
+							<p className='whitespace-pre-line break-words text-gray-300'>
 								{event.description}
 							</p>
 						</div>
@@ -368,7 +384,7 @@ const AttendingEventDetailsPage = () => {
 						</li>
 						{event.eventProperties &&
 							event.eventProperties.length > 0 && (
-								<li className='rounded-lg border border-white/10 p-3'>
+								<li className='rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'>
 									<strong className='font-medium text-gray-300'>
 										Свойства:
 									</strong>
@@ -456,10 +472,10 @@ const AttendingEventDetailsPage = () => {
 			) : (
 				<div className='mt-10 flex justify-center'>
 					<button
-						// onClick={handleLeaveEvent}
+						onClick={handleRemoveFromFavorites}
 						className='flex items-center gap-3 rounded-lg border-2 border-white/20 bg-black px-8 py-4 text-xl font-medium text-white transition-colors hover:border-white/40 hover:bg-white/10'
 					>
-						Покинуть мероприятие
+						Удалить из избранного
 					</button>
 				</div>
 			)}
@@ -467,4 +483,4 @@ const AttendingEventDetailsPage = () => {
 	)
 }
 
-export default AttendingEventDetailsPage
+export default FavoriteEventDetailsPage

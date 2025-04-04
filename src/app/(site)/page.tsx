@@ -1,14 +1,21 @@
-import Navbar from '@/components/layout/Navbar'
+import React from 'react'
 
-import Landing from './(nondashboard)/landing/page'
+import CallToActionSection from './CallToActionSection'
+import DiscoverSection from './DiscoverSection'
+import FeaturesSection from './FeaturesSection'
+import FooterSection from './FooterSection'
+import HeroSection from './HeroSection'
 
-export default function Home() {
+const Home = () => {
 	return (
-		<div className='h-full w-full'>
-			{/* <Navbar /> */}
-			<main className={`flex h-full w-full flex-col`}>
-				<Landing />
-			</main>
+		<div>
+			<HeroSection />
+			<FeaturesSection />
+			{/* <DiscoverSection /> */}
+			<CallToActionSection />
+			<FooterSection />
 		</div>
 	)
 }
+
+export default Home

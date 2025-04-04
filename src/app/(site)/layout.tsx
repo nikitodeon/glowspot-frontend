@@ -7,6 +7,8 @@ import { HeaderWithProps } from '@/components/layout/header/HeaderWithProps'
 
 import { useGetEventByIdLazyQuery } from '@/graphql/generated/output'
 
+import StoreProvider from '@/store/redux/redux'
+
 export default function SiteLayout({ children }: PropsWithChildren<unknown>) {
 	const pathname = usePathname()
 	const params = useParams()
@@ -28,12 +30,15 @@ export default function SiteLayout({ children }: PropsWithChildren<unknown>) {
 	const headerTexts: Record<string, string> = {
 		'/dashboard/hosting': 'Организация мероприятий',
 		'/dashboard/attending': 'Участие в мероприятиях',
-		'/favorites': 'Избранное',
+		'/dashboard/favorites': 'Избранное',
 		'/dashboard/settings': 'Настройки',
-		...(eventId ? { [`/dashboard/hosting/${eventId}`]: title } : {})
+
+		...(eventId ? { [`/dashboard/hosting/${eventId}`]: title } : {}),
+		...(eventId ? { [`/dashboard/attending/${eventId}`]: title } : {}),
+		...(eventId ? { [`/dashboard/favorites/${eventId}`]: title } : {})
 	}
 
-	const headerText = headerTexts[pathname] || 'Мои мероприятия'
+	const headerText = headerTexts[pathname]
 
 	return (
 		<div className='flex h-full flex-col'>
@@ -41,7 +46,7 @@ export default function SiteLayout({ children }: PropsWithChildren<unknown>) {
 				<div className='fixed inset-y-0 z-50 h-[65px] w-full'>
 					<HeaderWithProps text={headerText} />
 				</div>
-				{children}
+				<StoreProvider>{children}</StoreProvider>
 			</div>
 		</div>
 	)

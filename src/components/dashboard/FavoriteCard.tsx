@@ -1,5 +1,3 @@
-'use client'
-
 import { useMutation } from '@apollo/client'
 import { Calendar, Clock, Heart, LogOut, Trash } from 'lucide-react'
 import Image from 'next/image'
@@ -19,14 +17,13 @@ import {
 
 import {
 	DeleteEventDocument
-	//   LeaveEventDocument
+	// LeaveEventDocument
 } from '@/graphql/generated/output'
 
 import { getMediaSource } from '@/utils/get-media-source'
 
 import { cn } from '@/lib/utils'
 
-// Кастомный класс для деструктивной кнопки в темной теме
 const destructiveButtonClass = cn(
 	'bg-transparent text-red-500 border border-red-500/30 hover:bg-red-500/10',
 	'hover:text-red-400 focus-visible:ring-red-500 focus-visible:ring-offset-black',
@@ -51,9 +48,8 @@ const AttendCard = ({
 	const [imgSrc, setImgSrc] = useState(
 		getMediaSource(event.photoUrls?.[0]) || '/placeholder.jpg'
 	)
-	const [openLeaveDialog, setOpenLeaveDialog] = useState(false)
-
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+	const [openLeaveDialog, setOpenLeaveDialog] = useState(false)
 	const [isDeleting, setIsDeleting] = useState(false)
 	const [isLeaving, setIsLeaving] = useState(false)
 
@@ -64,7 +60,8 @@ const AttendCard = ({
 			'GetFavoriteEventsDocument'
 		]
 	})
-	// const [leaveEvent] = useMutation(LeaveEventDocument, {
+
+	//   const [leaveEvent] = useMutation(LeaveEventDocument, {
 	//     refetchQueries: [
 	//       'GetEventsWhereIParticipate',
 	//       'GetFavoriteEventsDocument'
@@ -82,6 +79,7 @@ const AttendCard = ({
 	})
 
 	const isOrganizer = userId === event.organizer.id
+	const isParticipant = event.participants.some((p: any) => p.id === userId)
 
 	const handleDelete = async () => {
 		setIsDeleting(true)
@@ -97,7 +95,8 @@ const AttendCard = ({
 			setIsDeleting(false)
 		}
 	}
-	// const handleLeave = async () => {
+
+	//   const handleLeave = async () => {
 	//     setIsLeaving(true)
 	//     try {
 	//       await leaveEvent({
@@ -111,7 +110,6 @@ const AttendCard = ({
 	//       setIsLeaving(false)
 	//     }
 	//   }
-	const isParticipant = event.participants.some((p: any) => p.id === userId)
 
 	return (
 		<div className='mmborder-white mb-5 w-full overflow-hidden rounded-xl border bg-black shadow-lg transition-transform hover:scale-[1.02]'>

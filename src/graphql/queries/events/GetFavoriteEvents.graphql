@@ -1,0 +1,48 @@
+query GetFavoriteEvents {
+	getFavoriteEvents {
+		ageRestriction
+		createdAt
+		currency
+		description
+		endTime
+		eventProperties
+		eventType
+		favoritedBy {
+			id
+		}
+		id
+		isPrivate
+		isVerified
+		location {
+			placeName
+			address
+			city
+			coordinates {
+				longitude
+				latitude
+			}
+		}
+		maxParticipants
+		organizer {
+			id
+			username
+			displayName
+			avatar
+		}
+		participants {
+			id
+			username
+			displayName
+			avatar
+		}
+		paymentType
+		photoUrls
+		postedDate
+		price
+		startTime
+		status
+		tags
+		title
+		updatedAt
+	}
+}

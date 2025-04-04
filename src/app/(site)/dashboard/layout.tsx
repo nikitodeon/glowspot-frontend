@@ -10,7 +10,7 @@ import Sidebar from '@/components/layout/AppSidebar'
 // import Navbar from '@/components/Navbar'
 import { SidebarProvider } from '@/components/ui/commonApp/sidebar'
 
-import { store } from '@/store/redux/store'
+// import { store } from '@/store/redux/store'
 
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 
@@ -45,26 +45,26 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
 	return (
 		<SidebarProvider>
-			<Provider store={store}>
-				<QueryClientProvider client={queryClient}>
-					<div className='bg-primary-100 min-h-screen w-full'>
-						{/* <Navbar /> */}
-						<div style={{ marginTop: `${NAVBAR_HEIGHT}px` }}>
-							<main className='flex'>
-								<Sidebar
-									userType={
-										'tenant'
-										// authUser.userRole.toLowerCase()
-									}
-								/>
-								<div className='flex-grow transition-all duration-300'>
-									{children}
-								</div>
-							</main>
-						</div>
+			{/* <Provider store={store}> */}
+			<QueryClientProvider client={queryClient}>
+				<div className='bg-primary-100 min-h-screen w-full'>
+					{/* <Navbar /> */}
+					<div style={{ marginTop: `${NAVBAR_HEIGHT}px` }}>
+						<main className='flex'>
+							<Sidebar
+								userType={
+									'tenant'
+									// authUser.userRole.toLowerCase()
+								}
+							/>
+							<div className='flex-grow transition-all duration-300'>
+								{children}
+							</div>
+						</main>
 					</div>
-				</QueryClientProvider>
-			</Provider>
+				</div>
+			</QueryClientProvider>
+			{/* </Provider> */}
 		</SidebarProvider>
 	)
 }

@@ -9,7 +9,7 @@ const datetimeLocalSchema = z.string().refine(val => {
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 
 export const eventSchema = z.object({
-	title: z.string().min(1, 'Title is required'),
+	title: z.string().min(1, 'Title is required').max(30),
 	description: z.string().min(1, 'Description is required'),
 	startTime: datetimeLocalSchema,
 	endTime: datetimeLocalSchema.optional(),

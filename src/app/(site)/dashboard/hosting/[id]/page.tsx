@@ -1,21 +1,42 @@
 'use client'
 
-import { ArrowLeft, Trash2 } from 'lucide-react'
+import { ArrowLeft, Trash, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
+
+import { Button } from '@/components/ui/commonApp/button'
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger
+} from '@/components/ui/commonApp/dialog'
 
 import {
-	//  useDeleteEventMutation,
+	useDeleteEventMutation,
 	useGetEventByIdQuery
 } from '@/graphql/generated/output'
 
 import { getMediaSource } from '@/utils/get-media-source'
 
+import { cn } from '@/lib/utils'
+
+const destructiveButtonClass = cn(
+	'bg-transparent text-red-500 border border-red-500/30 hover:bg-red-500/10',
+	'hover:text-red-400 focus-visible:ring-red-500 focus-visible:ring-offset-black',
+	'transition-colors duration-200'
+)
+
 const EventDetailsPage = () => {
 	const { id } = useParams()
 	const router = useRouter()
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+	const [isDeleting, setIsDeleting] = useState(false)
 
 	const { data, loading, error } = useGetEventByIdQuery({
 		variables: {
@@ -23,22 +44,30 @@ const EventDetailsPage = () => {
 		}
 	})
 
-	//   const [deleteEvent] = useDeleteEventMutation()
+	const [deleteEvent] = useDeleteEventMutation({
+		refetchQueries: [
+			'GetMyOrganizedEvents',
+			'GetEventsWhereIParticipate',
+			'GetFavoriteEventsDocument'
+		]
+	})
 
-	//   const handleDelete = async () => {
-	//     if (confirm('Вы уверены, что хотите удалить это мероприятие?')) {
-	//       try {
-	//         await deleteEvent({
-	//           variables: {
-	//             eventId: id as string
-	//           }
-	//         })
-	//         router.push('/dashboard/hosting')
-	//       } catch (err) {
-	//         console.error('Error deleting event:', err)
-	//       }
-	//     }
-	//   }
+	const handleDelete = async () => {
+		setIsDeleting(true)
+		try {
+			await deleteEvent({
+				variables: {
+					id: id as string
+				}
+			})
+			router.push('/dashboard/hosting')
+		} catch (err) {
+			console.error('Error deleting event:', err)
+			alert('Не удалось удалить мероприятие')
+		} finally {
+			setIsDeleting(false)
+		}
+	}
 
 	if (loading) {
 		return (
@@ -49,6 +78,7 @@ const EventDetailsPage = () => {
 	}
 
 	if (error) {
+		console.error('Error fetching event:', error)
 		return (
 			<div className='flex min-h-screen items-center justify-center bg-black p-8 text-center text-red-500'>
 				Ошибка загрузки данных мероприятия
@@ -90,7 +120,7 @@ const EventDetailsPage = () => {
 				scroll={false}
 			>
 				<ArrowLeft className='mr-2 h-5 w-5 transition-transform group-hover:-translate-x-1' />
-				<span className='text-lg'>Назад к моим мероприятиям</span>
+				<span className='text-lg'>Назад к организации</span>
 			</Link>
 
 			<div className='mb-8 overflow-hidden rounded-xl border border-white/20 bg-black p-6 shadow-lg transition-all hover:shadow-xl'>
@@ -123,7 +153,7 @@ const EventDetailsPage = () => {
 						</div>
 
 						<div className='mb-6 grid grid-cols-1 gap-4 md:grid-cols-2'>
-							<div className='rounded-lg border border-white/10 bg-black p-4'>
+							<div className='rounded-lg border border-white/10 bg-black p-4 transition-colors hover:border-white/20'>
 								<h3 className='mb-1 text-sm font-medium text-gray-400'>
 									Дата начала
 								</h3>
@@ -138,7 +168,7 @@ const EventDetailsPage = () => {
 								</p>
 							</div>
 
-							<div className='rounded-lg border border-white/10 bg-black p-4'>
+							<div className='rounded-lg border border-white/10 bg-black p-4 transition-colors hover:border-white/20'>
 								<h3 className='mb-1 text-sm font-medium text-gray-400'>
 									Дата окончания
 								</h3>
@@ -153,7 +183,7 @@ const EventDetailsPage = () => {
 								</p>
 							</div>
 
-							<div className='rounded-lg border border-white/10 bg-black p-4'>
+							<div className='rounded-lg border border-white/10 bg-black p-4 transition-colors hover:border-white/20'>
 								<h3 className='mb-1 text-sm font-medium text-gray-400'>
 									Местоположение
 								</h3>
@@ -164,7 +194,7 @@ const EventDetailsPage = () => {
 								</p>
 							</div>
 
-							<div className='rounded-lg border border-white/10 bg-black p-4'>
+							<div className='rounded-lg border border-white/10 bg-black p-4 transition-colors hover:border-white/20'>
 								<h3 className='mb-1 text-sm font-medium text-gray-400'>
 									Тип мероприятия
 								</h3>
@@ -175,7 +205,7 @@ const EventDetailsPage = () => {
 								</p>
 							</div>
 
-							<div className='rounded-lg border border-white/10 bg-black p-4'>
+							<div className='rounded-lg border border-white/10 bg-black p-4 transition-colors hover:border-white/20'>
 								<h3 className='mb-1 text-sm font-medium text-gray-400'>
 									Цена
 								</h3>
@@ -186,16 +216,18 @@ const EventDetailsPage = () => {
 								</p>
 							</div>
 
-							<div className='rounded-lg border border-white/10 bg-black p-4'>
+							<div className='rounded-lg border border-white/10 bg-black p-4 transition-colors hover:border-white/20'>
 								<h3 className='mb-1 text-sm font-medium text-gray-400'>
 									Возрастное ограничение
 								</h3>
 								<p className='text-white'>
-									{event.ageRestriction}+
+									{event.ageRestriction
+										? `${event.ageRestriction}+`
+										: 'Нет'}
 								</p>
 							</div>
 
-							<div className='rounded-lg border border-white/10 bg-black p-4'>
+							<div className='rounded-lg border border-white/10 bg-black p-4 transition-colors hover:border-white/20'>
 								<h3 className='mb-1 text-sm font-medium text-gray-400'>
 									Участники
 								</h3>
@@ -224,11 +256,11 @@ const EventDetailsPage = () => {
 							</div>
 						)}
 
-						<div className='mb-6'>
+						<div className='mb-6 max-w-3xl'>
 							<h3 className='mb-2 text-sm font-medium text-gray-400'>
 								Описание
 							</h3>
-							<p className='whitespace-pre-line text-gray-300'>
+							<p className='whitespace-pre-line break-words text-gray-300'>
 								{event.description}
 							</p>
 						</div>
@@ -262,7 +294,7 @@ const EventDetailsPage = () => {
 							{event.participants.map(participant => (
 								<div
 									key={participant.id}
-									className='flex items-center gap-3 rounded-lg border border-white/10 p-3 hover:border-white/20'
+									className='flex items-center gap-3 rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'
 								>
 									<div className='relative h-10 w-10 overflow-hidden rounded-full border border-white/20'>
 										<Image
@@ -293,7 +325,7 @@ const EventDetailsPage = () => {
 						Детали
 					</h2>
 					<ul className='space-y-3'>
-						<li className='rounded-lg border border-white/10 p-3'>
+						<li className='rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'>
 							<strong className='font-medium text-gray-300'>
 								Статус:
 							</strong>{' '}
@@ -303,7 +335,7 @@ const EventDetailsPage = () => {
 									: event.status}
 							</span>
 						</li>
-						<li className='rounded-lg border border-white/10 p-3'>
+						<li className='rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'>
 							<strong className='font-medium text-gray-300'>
 								Приватное:
 							</strong>{' '}
@@ -313,7 +345,7 @@ const EventDetailsPage = () => {
 						</li>
 						{event.eventProperties &&
 							event.eventProperties.length > 0 && (
-								<li className='rounded-lg border border-white/10 p-3'>
+								<li className='rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'>
 									<strong className='font-medium text-gray-300'>
 										Свойства:
 									</strong>
@@ -339,13 +371,64 @@ const EventDetailsPage = () => {
 
 			{/* Большая кнопка удаления внизу страницы */}
 			<div className='mt-10 flex justify-center'>
-				<button
-					//   onClick={handleDelete}
-					className='flex items-center gap-3 rounded-lg border-2 border-white/20 bg-black px-8 py-4 text-xl font-medium text-white transition-colors hover:border-white/40 hover:bg-white/10'
+				<Dialog
+					open={openDeleteDialog}
+					onOpenChange={setOpenDeleteDialog}
 				>
-					<Trash2 className='h-6 w-6' />
-					Удалить мероприятие
-				</button>
+					<DialogTrigger asChild>
+						<button className='flex items-center gap-3 rounded-lg border-2 border-white/20 bg-black px-8 py-4 text-xl font-medium text-white transition-colors hover:border-white/40 hover:bg-white/10 hover:text-red-400'>
+							<Trash className='h-6 w-6' />
+							Удалить мероприятие
+						</button>
+					</DialogTrigger>
+					<DialogContent className='border-white/10 bg-black text-white'>
+						<DialogHeader>
+							<DialogTitle className='text-white'>
+								Вы абсолютно уверены?
+							</DialogTitle>
+							<DialogDescription className='text-gray-400'>
+								Это действие будет невозможно отменить. Оно
+								навсегда удалит мероприятие из базы данных.
+							</DialogDescription>
+						</DialogHeader>
+						<DialogFooter className='flex justify-between'>
+							<Button
+								variant='outline'
+								className='border-white/10 text-white hover:bg-white/10 hover:text-white'
+								onClick={() => setOpenDeleteDialog(false)}
+							>
+								Отменить
+							</Button>
+							<Button
+								variant='destructive'
+								className={destructiveButtonClass}
+								onClick={handleDelete}
+								disabled={isDeleting}
+							>
+								{isDeleting ? (
+									<span className='flex items-center gap-2'>
+										<svg
+											className='h-4 w-4 animate-spin'
+											viewBox='0 0 24 24'
+										>
+											<circle
+												cx='12'
+												cy='12'
+												r='10'
+												stroke='currentColor'
+												strokeWidth='4'
+												fill='none'
+											/>
+										</svg>
+										Удаление...
+									</span>
+								) : (
+									'Удалить мероприятие'
+								)}
+							</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
 			</div>
 		</div>
 	)

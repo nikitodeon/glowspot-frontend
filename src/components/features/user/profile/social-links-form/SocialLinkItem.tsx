@@ -124,7 +124,7 @@ export function SocialLinkItem({ socialLink, provided }: SocialLinkItemProps) {
 										<FormItem>
 											<FormControl>
 												<Input
-													placeholder='https://youtube.com/@TeaCoder52'
+													placeholder='https://youtube.com/kokoko'
 													disabled={
 														isLoadingUpdate ||
 														isLoadingRemove
@@ -145,6 +145,7 @@ export function SocialLinkItem({ socialLink, provided }: SocialLinkItemProps) {
 									{t('cancelButton')}
 								</Button>
 								<Button
+									className=''
 									disabled={
 										!isDirty ||
 										!isValid ||

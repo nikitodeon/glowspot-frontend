@@ -134,6 +134,7 @@ export function ChangeInfoForm() {
 					<Separator />
 					<div className='flex justify-end p-5'>
 						<Button
+							className='hover:bg-gray-200'
 							disabled={!isValid || !isDirty || isLoadingUpdate}
 						>
 							{t('submitButton')}

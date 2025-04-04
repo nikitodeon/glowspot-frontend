@@ -42,13 +42,13 @@ const CallToActionSection = () => {
 										behavior: 'smooth'
 									})
 								}
-								className='text-primary-700 hover:bg-primary-500 inline-block rounded-lg bg-white px-6 py-3 font-semibold hover:bg-[]'
+								className='text-primary-700 hover:bg-primary-500 inline-block rounded-lg bg-white px-6 py-3 font-semibold hover:bg-[] hover:bg-gray-200'
 							>
 								Найти!
 							</button>
 							<Link
 								href='/signup'
-								className='bg-secondary-500 hover:bg-secondary-600 inline-block rounded-lg border-2 border-black px-6 py-3 font-semibold text-white hover:bg-[]'
+								className='bg-secondary-500 hover:bg-secondary-600 inline-block rounded-lg border-2 border-black px-6 py-3 font-semibold text-white hover:bg-white/10'
 								scroll={false}
 							>
 								Регистрация

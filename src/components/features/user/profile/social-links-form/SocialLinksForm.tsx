@@ -113,7 +113,10 @@ export function SocialLinksForm() {
 					/>
 					<Separator />
 					<div className='flex justify-end p-5'>
-						<Button disabled={!isValid || isLoadingCreate}>
+						<Button
+							disabled={!isValid || isLoadingCreate}
+							className='hover:bg-gray-200'
+						>
 							{t('submitButton')}
 						</Button>
 					</div>

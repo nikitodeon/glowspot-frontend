@@ -105,6 +105,7 @@ export function ChangeAvatarForm() {
 										/>
 										<Button
 											variant='secondary'
+											className='hover:bg-gray-200'
 											onClick={() =>
 												inputRef.current?.click()
 											}

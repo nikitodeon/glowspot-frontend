@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 
 import AttendCard from '@/components/dashboard/AttendCard'
+import FavoriteCard from '@/components/dashboard/FavoriteCard'
 import HostCard from '@/components/dashboard/HostCard'
 
 import {
@@ -14,17 +15,20 @@ import {
 	GetMyOrganizedEventsDocument,
 	useAddToFavoritesMutation,
 	useGetEventsWhereIParticipateQuery,
+	useGetFavoriteEventsQuery,
 	useRemoveFromFavoritesMutation
 } from '@/graphql/generated/output'
 
 import { useCurrent } from '@/hooks/useCurrent'
 
-const ParticipatingEvents = () => {
+const FavoriteEvents = () => {
 	const { user } = useCurrent()
 	const userId = user?.id
 
-	const { data, loading: isLoading } = useGetEventsWhereIParticipateQuery()
-
+	const { data, loading: isLoading } = useGetFavoriteEventsQuery({
+		fetchPolicy: 'cache-and-network',
+		nextFetchPolicy: 'cache-first'
+	})
 	const updateBothCaches = (
 		cache: ApolloCache<any>,
 		eventId: string,
@@ -61,30 +65,6 @@ const ParticipatingEvents = () => {
 				}
 			}
 		)
-		cache.updateQuery({ query: GetMyOrganizedEventsDocument }, oldData => {
-			if (!oldData?.getMyOrganizedEvents) return oldData
-
-			return {
-				getMyOrganizedEvents: oldData.getMyOrganizedEvents.map(
-					(event: any) => {
-						if (event.id === eventId) {
-							return {
-								...event,
-								favoritedBy: isFavorite
-									? [
-											...(event.favoritedBy || []),
-											{ __typename: 'User', id: userId }
-										]
-									: event.favoritedBy?.filter(
-											(user: any) => user.id !== userId
-										) || []
-							}
-						}
-						return event
-					}
-				)
-			}
-		})
 		cache.updateQuery({ query: GetFavoriteEventsDocument }, oldData => {
 			if (!oldData?.getFavoriteEvents) return oldData
 
@@ -101,6 +81,30 @@ const ParticipatingEvents = () => {
 												__typename: 'User',
 												id: userId
 											}
+										]
+									: event.favoritedBy?.filter(
+											(user: any) => user.id !== userId
+										) || []
+							}
+						}
+						return event
+					}
+				)
+			}
+		})
+		cache.updateQuery({ query: GetMyOrganizedEventsDocument }, oldData => {
+			if (!oldData?.getMyOrganizedEvents) return oldData
+
+			return {
+				getMyOrganizedEvents: oldData.getMyOrganizedEvents.map(
+					(event: any) => {
+						if (event.id === eventId) {
+							return {
+								...event,
+								favoritedBy: isFavorite
+									? [
+											...(event.favoritedBy || []),
+											{ __typename: 'User', id: userId }
 										]
 									: event.favoritedBy?.filter(
 											(user: any) => user.id !== userId
@@ -163,16 +167,16 @@ const ParticipatingEvents = () => {
 		)
 	}
 
-	const participatingEvents = data?.getEventsWhereIParticipate
+	const favoriteEvents = data?.getFavoriteEvents || []
 
 	return (
 		<div className='px-8 pb-5 pt-8'>
 			<div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-				{participatingEvents?.map(event => {
+				{favoriteEvents?.map(event => {
 					const isFavorite =
 						event.favoritedBy?.some(u => u.id === userId) ?? false
 					return (
-						<AttendCard
+						<FavoriteCard
 							key={event.id}
 							userId={userId}
 							event={event}
@@ -180,7 +184,7 @@ const ParticipatingEvents = () => {
 							onFavoriteToggle={() =>
 								handleFavoriteToggle(event.id, isFavorite)
 							}
-							propertyLink={`/dashboard/attending/${event.id}`}
+							propertyLink={`/dashboard/favorites/${event.id}`}
 						/>
 					)
 				})}
@@ -210,4 +214,4 @@ const ParticipatingEvents = () => {
 	)
 }
 
-export default ParticipatingEvents
+export default FavoriteEvents

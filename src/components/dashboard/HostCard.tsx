@@ -1,22 +1,62 @@
-import { Calendar, Clock, Heart, Trash2, Users } from 'lucide-react'
+'use client'
+
+import { useMutation } from '@apollo/client'
+import { Calendar, Clock, Heart, Trash, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import { useState } from 'react'
+
+import { Button } from '@/components/ui/commonApp/button'
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger
+} from '@/components/ui/commonApp/dialog'
+
+import { DeleteEventDocument } from '@/graphql/generated/output'
 
 import { getMediaSource } from '@/utils/get-media-source'
+
+import { cn } from '@/lib/utils'
+
+// Кастомный класс для деструктивной кнопки в темной теме
+const destructiveButtonClass = cn(
+	'bg-transparent text-red-500 border border-red-500/30 hover:bg-red-500/10',
+	'hover:text-red-400 focus-visible:ring-red-500 focus-visible:ring-offset-black',
+	'transition-colors duration-200'
+)
+
+interface EventCardProps {
+	event: any
+	isFavorite: boolean
+	onFavoriteToggle: () => void
+	propertyLink: string
+}
 
 const HostCard = ({
 	event,
 	isFavorite,
 	onFavoriteToggle,
-	showFavoriteButton = true,
 	propertyLink
-}: CardProps) => {
+}: EventCardProps) => {
 	const [imgSrc, setImgSrc] = useState(
 		getMediaSource(event.photoUrls?.[0]) || '/placeholder.jpg'
 	)
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+	const [isDeleting, setIsDeleting] = useState(false)
 
-	// Форматирование даты и времени
+	const [deleteEvent] = useMutation(DeleteEventDocument, {
+		refetchQueries: [
+			'GetMyOrganizedEvents',
+			'GetEventsWhereIParticipate',
+			'GetFavoriteEventsDocument'
+		]
+	})
+
 	const eventDate = new Date(event.startTime).toLocaleDateString('ru-RU', {
 		day: 'numeric',
 		month: 'short'
@@ -27,24 +67,23 @@ const HostCard = ({
 		minute: '2-digit'
 	})
 
-	// Определение типа мероприятия
-	const eventTypeLabelMap: Record<string, string> = {
-		PARTY: 'Вечеринка',
-		CONFERENCE: 'Конференция',
-		WORKSHOP: 'Воркшоп'
-	}
-
-	const eventTypeLabel = eventTypeLabelMap[event.eventType] || event.eventType
-
-	const handleDelete = (e: React.MouseEvent) => {
-		e.preventDefault()
-		e.stopPropagation()
-		// Здесь будет логика удаления
-		console.log('Delete event:', event.id)
+	const handleDelete = async () => {
+		setIsDeleting(true)
+		try {
+			await deleteEvent({
+				variables: { id: event.id }
+			})
+			setOpenDeleteDialog(false)
+		} catch (error) {
+			console.error('Error deleting event:', error)
+			alert('Не удалось удалить мероприятие')
+		} finally {
+			setIsDeleting(false)
+		}
 	}
 
 	return (
-		<div className='mb-5 w-full overflow-hidden rounded-xl border border-white bg-black shadow-lg transition-transform hover:scale-[1.02]'>
+		<div className='mmborder-white mb-5 w-full overflow-hidden rounded-xl border bg-black shadow-lg transition-transform hover:scale-[1.02]'>
 			<div className='relative'>
 				<div className='relative h-48 w-full'>
 					<Image
@@ -57,42 +96,35 @@ const HostCard = ({
 					/>
 				</div>
 
-				{showFavoriteButton && (
-					<button
-						className='absolute bottom-4 right-4 cursor-pointer rounded-full bg-white p-2 hover:bg-white/90'
-						onClick={onFavoriteToggle}
-					>
-						<Heart
-							className={`h-5 w-5 ${
-								isFavorite
-									? 'fill-red-500 text-red-500'
-									: 'text-gray-600'
-							}`}
-						/>
-					</button>
-				)}
+				<button
+					className='hover:bg-white-10 absolute bottom-4 right-4 cursor-pointer rounded-full border border-white/20 bg-black/50 p-2 hover:bg-black/70'
+					onClick={e => {
+						e.stopPropagation()
+						onFavoriteToggle()
+					}}
+				>
+					<Heart
+						className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`}
+					/>
+				</button>
 			</div>
 
 			<div className='relative p-4 pb-12'>
-				{' '}
-				{/* Увеличил нижний padding */}
 				<h2 className='mb-1 line-clamp-1 text-xl font-bold'>
-					{propertyLink ? (
-						<Link
-							href={propertyLink}
-							className='text-white hover:underline'
-							scroll={false}
-						>
-							{event.title}
-						</Link>
-					) : (
-						event.title
-					)}
+					<Link
+						href={propertyLink}
+						className='text-white hover:underline'
+						scroll={false}
+					>
+						{event.title}
+					</Link>
 				</h2>
+
 				<p className='mb-2 line-clamp-1 text-gray-400'>
 					{event?.location?.placeName || event?.location?.address},{' '}
 					{event?.location?.city}
 				</p>
+
 				<div className='mb-3 flex items-center gap-4 text-sm'>
 					<span className='flex items-center text-gray-400'>
 						<Calendar className='mr-1 h-4 w-4' />
@@ -103,48 +135,74 @@ const HostCard = ({
 						{eventTime}
 					</span>
 				</div>
-				<div className='flex items-center justify-between'>
-					<span className='inline-flex items-center rounded-full border-2 border-white/10 bg-black px-3 py-1 text-xs font-medium text-gray-300'>
-						{eventTypeLabel}
-					</span>
-
-					<div className='flex items-center gap-2'>
-						<Users className='h-4 w-4 text-gray-400' />
-						<span className='text-sm text-gray-400'>
-							{event.participants?.length || 0}
-							{event.maxParticipants === 0 ||
-							event.maxParticipants === null ? (
-								<span className='ml-1'>/∞</span>
-							) : (
-								<span>/{event.maxParticipants}</span>
-							)}
-						</span>
-					</div>
+				<div className='absolute bottom-4 left-4'>
+					<Link href={propertyLink}>
+						<button className='flex items-center gap-1 rounded-full border border-white/10 bg-black px-3 py-1 text-xs font-medium text-white hover:bg-white/10'>
+							Подробнее
+						</button>
+					</Link>
 				</div>
-				{/* Контейнер для тегов с фиксированной высотой */}
-				<div className='mt-3 min-h-[40px]'>
-					{event.tags?.length > 0 && (
-						<div className='flex flex-wrap gap-2'>
-							{event.tags.slice(0, 2).map((tag: string) => (
-								<span
-									key={tag}
-									className='rounded-full border-2 border-white/10 bg-black px-2 py-1 text-xs text-gray-300'
-								>
-									{tag}
-								</span>
-							))}
-						</div>
-					)}
-				</div>
-				{/* Кнопка "Удалить" с фиксированным позиционированием */}
 				<div className='absolute bottom-4 right-4'>
-					<button
-						onClick={handleDelete}
-						className='flex items-center gap-1 rounded-full border border-white/20 bg-black px-3 py-1 text-xs font-medium text-white hover:bg-white/10'
+					<Dialog
+						open={openDeleteDialog}
+						onOpenChange={setOpenDeleteDialog}
 					>
-						<Trash2 className='h-3 w-3' />
-						Удалить
-					</button>
+						<DialogTrigger asChild>
+							<button
+								className='flex items-center gap-1 rounded-full border border-white/10 bg-black px-3 py-1 text-xs font-medium text-white hover:bg-white/10 hover:text-red-400'
+								onClick={e => e.stopPropagation()}
+							>
+								<Trash className='h-4 w-4' />
+							</button>
+						</DialogTrigger>
+						<DialogContent className='border-white/10 bg-black text-white'>
+							<DialogHeader>
+								<DialogTitle className='text-white'>
+									Вы абсолютно уверены?
+								</DialogTitle>
+								<DialogDescription className='text-gray-400'>
+									Это действие будет невозможно отменить. Оно
+									навсегда удалит мероприятие из базы данных.
+								</DialogDescription>
+							</DialogHeader>
+							<DialogFooter className='flex justify-between'>
+								<Button
+									variant='outline'
+									className='border-white/10 text-white hover:bg-white/10 hover:text-white'
+									onClick={() => setOpenDeleteDialog(false)}
+								>
+									Отменить
+								</Button>
+								<Button
+									variant='destructive'
+									className={destructiveButtonClass}
+									onClick={handleDelete}
+									disabled={isDeleting}
+								>
+									{isDeleting ? (
+										<span className='flex items-center gap-2'>
+											<svg
+												className='h-4 w-4 animate-spin'
+												viewBox='0 0 24 24'
+											>
+												<circle
+													cx='12'
+													cy='12'
+													r='10'
+													stroke='currentColor'
+													strokeWidth='4'
+													fill='none'
+												/>
+											</svg>
+											Удаление...
+										</span>
+									) : (
+										'Удалить мероприятие'
+									)}
+								</Button>
+							</DialogFooter>
+						</DialogContent>
+					</Dialog>
 				</div>
 			</div>
 		</div>
