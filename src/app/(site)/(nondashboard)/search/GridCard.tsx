@@ -1,12 +1,11 @@
-// components/GridCard.tsx
 'use client'
 
-import { Calendar, Clock, Heart, MapPin, Tag, Users } from 'lucide-react'
+import { Calendar, Clock, Heart, MapPin, Users } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
 
-// components/GridCard.tsx
+import { getMediaSource } from '@/utils/get-media-source'
 
 interface GridCardProps {
 	event: any
@@ -22,7 +21,7 @@ const GridCard = ({
 	propertyLink
 }: GridCardProps) => {
 	const [imgSrc, setImgSrc] = useState(
-		event.photoUrls?.[0] || '/event-placeholder.jpg'
+		getMediaSource(event.photoUrls?.[0]) || '/event-placeholder.jpg'
 	)
 
 	const formatDate = (dateString: string) => {
@@ -42,7 +41,7 @@ const GridCard = ({
 	}
 
 	return (
-		<div className='mb-6 overflow-hidden rounded-lg bg-white shadow-md transition-all hover:shadow-lg'>
+		<div className='mb-6 overflow-hidden rounded-2xl border border-white/20 bg-black shadow-sm transition-all hover:border-white/40'>
 			<div className='relative'>
 				<div className='relative h-48 w-full'>
 					<Image
@@ -56,27 +55,27 @@ const GridCard = ({
 				</div>
 
 				<button
-					className='absolute right-3 top-3 cursor-pointer rounded-full bg-white/80 p-2 shadow-sm hover:bg-white'
+					className='absolute right-3 top-3 cursor-pointer rounded-full bg-white/20 p-2 hover:bg-white/30'
 					onClick={onFavoriteToggle}
 				>
 					<Heart
 						className={`h-4 w-4 ${
 							isFavorite
 								? 'fill-red-500 text-red-500'
-								: 'text-gray-600'
+								: 'text-white'
 						}`}
 					/>
 				</button>
 			</div>
 
-			<div className='p-4'>
+			<div className='p-4 text-white'>
 				<Link href={propertyLink} className='hover:underline'>
 					<h3 className='mb-1 line-clamp-1 text-lg font-semibold'>
 						{event.title}
 					</h3>
 				</Link>
 
-				<div className='mb-2 flex items-center text-sm text-gray-600'>
+				<div className='mb-2 flex items-center text-sm text-gray-400'>
 					<MapPin className='mr-1 h-3 w-3' />
 					<span className='line-clamp-1'>
 						{event.location.placeName || event.location.address},{' '}
@@ -84,8 +83,8 @@ const GridCard = ({
 					</span>
 				</div>
 
-				<div className='mb-3 flex items-center justify-between text-sm'>
-					<div className='flex items-center text-gray-700'>
+				<div className='mb-3 flex items-center justify-between text-sm text-gray-300'>
+					<div className='flex items-center'>
 						<Calendar className='mr-1 h-3 w-3' />
 						<span>{formatDate(event.startTime)}</span>
 						<Clock className='ml-2 mr-1 h-3 w-3' />
@@ -99,7 +98,7 @@ const GridCard = ({
 					</span>
 				</div>
 
-				<div className='flex items-center justify-between text-xs text-gray-500'>
+				<div className='flex items-center justify-between text-xs text-gray-400'>
 					<div className='flex items-center'>
 						<Users className='mr-1 h-3 w-3' />
 						<span>
@@ -111,7 +110,7 @@ const GridCard = ({
 					</div>
 
 					{event.ageRestriction && (
-						<span className='rounded border border-gray-300 px-1'>
+						<span className='rounded border border-gray-500 px-1'>
 							{event.ageRestriction}+
 						</span>
 					)}

@@ -63,7 +63,7 @@ export function ProfileMenu() {
 							{t('channel')}
 						</DropdownMenuItem>
 					</Link> */}
-					<Link href='/dashboard/settings'>
+					<Link href='/dashboard/hosting'>
 						<DropdownMenuItem>
 							<LayoutDashboard className='mr-2 size-2' />
 							{t('dashboard')}

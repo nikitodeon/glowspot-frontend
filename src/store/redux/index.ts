@@ -3,12 +3,29 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 export interface FiltersState {
 	location: string
 	// beds: string
-	status: string
-	paymentType: string
+	status:
+		| 'UPCOMING'
+		| 'ONGOING'
+		| 'COMPLETED'
+		| 'CANCELLED'
+		| 'ARCHIVED'
+		| 'any'
+	paymentType: 'FREE' | 'PAYMENT_REQUIRED' | 'DONATION' | 'any'
 	// baths: string
 	// propertyType: string
 	// amenities: string[]
-	eventType: string
+	eventType:
+		| 'EXHIBITION'
+		| 'MEETUP'
+		| 'WALK'
+		| 'PARTY'
+		| 'CONCERT'
+		| 'SPORT'
+		| 'FESTIVAL'
+		| 'LECTURE'
+		| 'WORKSHOP'
+		| 'OTHER'
+		| 'any'
 	eventProperties: string[]
 	// availableFrom: string
 	priceRange: [number, number] | [null, null]

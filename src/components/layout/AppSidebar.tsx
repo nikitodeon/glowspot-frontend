@@ -73,7 +73,7 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
 			{
 				icon: MapPinned,
 				label: 'Карта',
-				href: '/dashboard/settingsoo'
+				href: '/search'
 			},
 			{
 				icon: Settings,

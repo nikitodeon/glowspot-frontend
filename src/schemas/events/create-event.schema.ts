@@ -1,6 +1,10 @@
 import { z } from 'zod'
 
-import { EventType, PaymentType } from '@/graphql/generated/output'
+import {
+	EventProperty,
+	EventType,
+	PaymentType
+} from '@/graphql/generated/output'
 
 const datetimeLocalSchema = z.string().refine(val => {
 	return !isNaN(Date.parse(val))
@@ -22,7 +26,8 @@ export const eventSchema = z.object({
 		.min(1, 'At least one photo is required'),
 
 	eventType: z.nativeEnum(EventType),
-	eventProperties: z.array(z.string()).optional(),
+	// eventProperties: z.array(z.string()).optional(),
+	eventProperties: z.nativeEnum(EventProperty).array().optional(),
 	paymentType: z.nativeEnum(PaymentType),
 	price: z.coerce.number().min(0).optional(),
 	currency: z.string().default('BYN'),

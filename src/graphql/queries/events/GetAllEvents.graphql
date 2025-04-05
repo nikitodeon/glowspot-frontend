@@ -1,5 +1,5 @@
-query GetAllEvents {
-	getAllEvents {
+query GetFilteredEvents($filter: EventFilterInput) {
+	getAllEvents(filter: $filter) {
 		ageRestriction
 		createdAt
 		currency

@@ -1,4 +1,3 @@
-// components/CardCompact.tsx
 'use client'
 
 import { Calendar, Heart } from 'lucide-react'
@@ -6,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
 
-// components/CardCompact.tsx
+import { getMediaSource } from '@/utils/get-media-source'
 
 interface CardCompactProps {
 	event: any
@@ -22,7 +21,7 @@ const CardCompact = ({
 	propertyLink
 }: CardCompactProps) => {
 	const [imgSrc, setImgSrc] = useState(
-		event.photoUrls?.[0] || '/event-placeholder.jpg'
+		getMediaSource(event.photoUrls?.[0]) || '/event-placeholder.jpg'
 	)
 
 	const formatDate = (dateString: string) => {
@@ -34,8 +33,8 @@ const CardCompact = ({
 	}
 
 	return (
-		<div className='flex gap-4 border-b border-gray-100 p-4 transition-colors hover:bg-gray-50'>
-			<div className='relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg'>
+		<div className='flex gap-4 rounded-xl border border-white/20 bg-black p-4 transition-colors hover:border-white/40'>
+			<div className='relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-white/20'>
 				<Image
 					src={imgSrc}
 					alt={event.title}
@@ -46,14 +45,14 @@ const CardCompact = ({
 				/>
 			</div>
 
-			<div className='min-w-0 flex-grow'>
+			<div className='min-w-0 flex-grow text-white'>
 				<Link href={propertyLink} className='hover:underline'>
 					<h3 className='line-clamp-1 text-base font-medium'>
 						{event.title}
 					</h3>
 				</Link>
 
-				<div className='mt-1 flex items-center text-sm text-gray-600'>
+				<div className='mt-1 flex items-center text-sm text-gray-400'>
 					<Calendar className='mr-1 h-3 w-3 flex-shrink-0' />
 					<span className='line-clamp-1'>
 						{formatDate(event.startTime)} · {event.location.city}
@@ -61,7 +60,7 @@ const CardCompact = ({
 				</div>
 
 				<div className='mt-2 flex items-center justify-between'>
-					<span className='text-sm font-medium'>
+					<span className='text-sm font-medium text-gray-300'>
 						{event.paymentType === 'FREE'
 							? 'Бесплатно'
 							: `${event.price} ${event.currency}`}

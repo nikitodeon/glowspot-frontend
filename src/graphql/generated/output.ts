@@ -101,6 +101,20 @@ export type EnableTotpInput = {
   secret: Scalars['String']['input'];
 };
 
+export type EventFilterInput = {
+  ageRestriction?: InputMaybe<Scalars['Float']['input']>;
+  dateRange?: InputMaybe<Array<Scalars['String']['input']>>;
+  eventProperties?: InputMaybe<Array<EventProperty>>;
+  eventType?: InputMaybe<EventType>;
+  isVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  organizerId?: InputMaybe<Scalars['String']['input']>;
+  paymentType?: InputMaybe<PaymentType>;
+  priceRange?: InputMaybe<Array<Scalars['Float']['input']>>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<EventStatus>;
+};
+
 export type EventModel = {
   __typename?: 'EventModel';
   ageRestriction?: Maybe<Scalars['Float']['output']>;
@@ -384,6 +398,11 @@ export type Query = {
 };
 
 
+export type QueryGetAllEventsArgs = {
+  filter?: InputMaybe<EventFilterInput>;
+};
+
+
 export type QueryGetEventByIdArgs = {
   id: Scalars['String']['input'];
 };
@@ -639,10 +658,12 @@ export type UpdateSocialLinkMutationVariables = Exact<{
 
 export type UpdateSocialLinkMutation = { __typename?: 'Mutation', updateSocialLink: boolean };
 
-export type GetAllEventsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetFilteredEventsQueryVariables = Exact<{
+  filter?: InputMaybe<EventFilterInput>;
+}>;
 
 
-export type GetAllEventsQuery = { __typename?: 'Query', getAllEvents: Array<{ __typename?: 'EventModel', ageRestriction?: number | null, createdAt: any, currency?: string | null, description: string, endTime?: any | null, eventProperties: Array<EventProperty>, eventType: EventType, id: string, isPrivate: boolean, isVerified: boolean, maxParticipants?: number | null, paymentType: PaymentType, photoUrls: Array<string>, postedDate: any, price?: number | null, startTime: any, status: EventStatus, tags: Array<string>, title: string, updatedAt: any, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null, location: { __typename?: 'LocationModel', placeName?: string | null, address?: string | null, city: string, coordinates: { __typename?: 'Coordinates', latitude: number, longitude: number } }, organizer: { __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }, participants?: Array<{ __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }> | null }> };
+export type GetFilteredEventsQuery = { __typename?: 'Query', getAllEvents: Array<{ __typename?: 'EventModel', ageRestriction?: number | null, createdAt: any, currency?: string | null, description: string, endTime?: any | null, eventProperties: Array<EventProperty>, eventType: EventType, id: string, isPrivate: boolean, isVerified: boolean, maxParticipants?: number | null, paymentType: PaymentType, photoUrls: Array<string>, postedDate: any, price?: number | null, startTime: any, status: EventStatus, tags: Array<string>, title: string, updatedAt: any, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null, location: { __typename?: 'LocationModel', placeName?: string | null, address?: string | null, city: string, coordinates: { __typename?: 'Coordinates', latitude: number, longitude: number } }, organizer: { __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }, participants?: Array<{ __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }> | null }> };
 
 export type GetEventByIdQueryVariables = Exact<{
   getEventByIdId: Scalars['String']['input'];
@@ -1522,9 +1543,9 @@ export function useUpdateSocialLinkMutation(baseOptions?: Apollo.MutationHookOpt
 export type UpdateSocialLinkMutationHookResult = ReturnType<typeof useUpdateSocialLinkMutation>;
 export type UpdateSocialLinkMutationResult = Apollo.MutationResult<UpdateSocialLinkMutation>;
 export type UpdateSocialLinkMutationOptions = Apollo.BaseMutationOptions<UpdateSocialLinkMutation, UpdateSocialLinkMutationVariables>;
-export const GetAllEventsDocument = gql`
-    query GetAllEvents {
-  getAllEvents {
+export const GetFilteredEventsDocument = gql`
+    query GetFilteredEvents($filter: EventFilterInput) {
+  getAllEvents(filter: $filter) {
     ageRestriction
     createdAt
     currency
@@ -1574,36 +1595,37 @@ export const GetAllEventsDocument = gql`
     `;
 
 /**
- * __useGetAllEventsQuery__
+ * __useGetFilteredEventsQuery__
  *
- * To run a query within a React component, call `useGetAllEventsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetFilteredEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFilteredEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAllEventsQuery({
+ * const { data, loading, error } = useGetFilteredEventsQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *   },
  * });
  */
-export function useGetAllEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllEventsQuery, GetAllEventsQueryVariables>) {
+export function useGetFilteredEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetFilteredEventsQuery, GetFilteredEventsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAllEventsQuery, GetAllEventsQueryVariables>(GetAllEventsDocument, options);
+        return Apollo.useQuery<GetFilteredEventsQuery, GetFilteredEventsQueryVariables>(GetFilteredEventsDocument, options);
       }
-export function useGetAllEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllEventsQuery, GetAllEventsQueryVariables>) {
+export function useGetFilteredEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFilteredEventsQuery, GetFilteredEventsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAllEventsQuery, GetAllEventsQueryVariables>(GetAllEventsDocument, options);
+          return Apollo.useLazyQuery<GetFilteredEventsQuery, GetFilteredEventsQueryVariables>(GetFilteredEventsDocument, options);
         }
-export function useGetAllEventsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllEventsQuery, GetAllEventsQueryVariables>) {
+export function useGetFilteredEventsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetFilteredEventsQuery, GetFilteredEventsQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetAllEventsQuery, GetAllEventsQueryVariables>(GetAllEventsDocument, options);
+          return Apollo.useSuspenseQuery<GetFilteredEventsQuery, GetFilteredEventsQueryVariables>(GetFilteredEventsDocument, options);
         }
-export type GetAllEventsQueryHookResult = ReturnType<typeof useGetAllEventsQuery>;
-export type GetAllEventsLazyQueryHookResult = ReturnType<typeof useGetAllEventsLazyQuery>;
-export type GetAllEventsSuspenseQueryHookResult = ReturnType<typeof useGetAllEventsSuspenseQuery>;
-export type GetAllEventsQueryResult = Apollo.QueryResult<GetAllEventsQuery, GetAllEventsQueryVariables>;
+export type GetFilteredEventsQueryHookResult = ReturnType<typeof useGetFilteredEventsQuery>;
+export type GetFilteredEventsLazyQueryHookResult = ReturnType<typeof useGetFilteredEventsLazyQuery>;
+export type GetFilteredEventsSuspenseQueryHookResult = ReturnType<typeof useGetFilteredEventsSuspenseQuery>;
+export type GetFilteredEventsQueryResult = Apollo.QueryResult<GetFilteredEventsQuery, GetFilteredEventsQueryVariables>;
 export const GetEventByIdDocument = gql`
     query GetEventById($getEventByIdId: String!) {
   getEventById(id: $getEventByIdId) {

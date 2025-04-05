@@ -9,10 +9,15 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import { CustomFormField } from '@/components/dashboard/FormField'
+import MultiSelect from '@/components/ui/commonApp/MultiSelectWrapper'
 import { Button } from '@/components/ui/commonApp/button'
 import { Form, FormField, FormMessage } from '@/components/ui/commonApp/form'
 
-import { EventType, PaymentType } from '@/graphql/generated/output'
+import {
+	EventProperty,
+	EventType,
+	PaymentType
+} from '@/graphql/generated/output'
 import {
 	CreateEventDocument,
 	GetEventsWhereIParticipateDocument,
@@ -100,6 +105,7 @@ const NewEvent = () => {
 			startTime: new Date().toISOString().slice(0, 16),
 			photos: [],
 			eventType: EventType.Party,
+			eventProperties: [],
 			paymentType: PaymentType.Free,
 			price: 0,
 			currency: 'BYN',
@@ -234,6 +240,17 @@ const NewEvent = () => {
 									label: type
 								}))}
 								className=''
+							/>
+							<MultiSelect
+								name='eventProperties'
+								control={form.control}
+								options={Object.values(EventProperty).map(
+									type => ({
+										value: type,
+										label: type
+									})
+								)}
+								label='Event Properties'
 							/>
 							<CustomFormField
 								name='tags'
