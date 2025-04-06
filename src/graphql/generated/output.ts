@@ -103,6 +103,7 @@ export type EnableTotpInput = {
 
 export type EventFilterInput = {
   ageRestriction?: InputMaybe<Scalars['Float']['input']>;
+  currency?: InputMaybe<Scalars['String']['input']>;
   dateRange?: InputMaybe<Array<Scalars['String']['input']>>;
   eventProperties?: InputMaybe<Array<EventProperty>>;
   eventType?: InputMaybe<EventType>;
@@ -165,16 +166,23 @@ export enum EventStatus {
 }
 
 export enum EventType {
+  BookClub = 'BOOK_CLUB',
   Concert = 'CONCERT',
+  Cybersport = 'CYBERSPORT',
+  Dance = 'DANCE',
   Exhibition = 'EXHIBITION',
   Festival = 'FESTIVAL',
+  Karaoke = 'KARAOKE',
+  KidsEvent = 'KIDS_EVENT',
   Lecture = 'LECTURE',
   Meetup = 'MEETUP',
+  Movie = 'MOVIE',
   Other = 'OTHER',
   Party = 'PARTY',
   Sport = 'SPORT',
-  Walk = 'WALK',
-  Workshop = 'WORKSHOP'
+  Standup = 'STANDUP',
+  Theatre = 'THEATRE',
+  Walk = 'WALK'
 }
 
 export type LocationModel = {

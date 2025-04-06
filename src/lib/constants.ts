@@ -122,28 +122,85 @@ export enum EventTypeEnum {
 	SPORT = 'SPORT',
 	FESTIVAL = 'FESTIVAL',
 	LECTURE = 'LECTURE',
-	WORKSHOP = 'WORKSHOP',
-	OTHER = 'OTHER'
+
+	OTHER = 'OTHER',
+
+	MOVIE = 'MOVIE',
+	THEATRE = 'THEATRE',
+
+	STANDUP = 'STANDUP',
+	DANCE = 'DANCE',
+	BOOK_CLUB = 'BOOK_CLUB',
+	KARAOKE = 'KARAOKE',
+	CYBERSPORT = 'CYBERSPORT',
+	KIDS_EVENT = 'KIDS_EVENT'
 }
 
 export const EventTypeIcons: Record<EventTypeEnum, LucideIcon> = {
-	// Rooms: Home,
-	// Tinyhouse: Warehouse,
-	// Apartment: Building,
-	// Villa: Castle,
-	// Townhouse: Home,
-	// Cottage: Trees
+	[EventTypeEnum.EXHIBITION]: Home,
+	[EventTypeEnum.MEETUP]: Home,
+	[EventTypeEnum.WALK]: Home,
+	[EventTypeEnum.PARTY]: Home,
+	[EventTypeEnum.CONCERT]: Home,
+	[EventTypeEnum.SPORT]: Home,
+	[EventTypeEnum.FESTIVAL]: Home,
+	[EventTypeEnum.LECTURE]: Home,
 
-	EXHIBITION: Home,
-	MEETUP: Home,
-	WALK: Home,
-	PARTY: Home,
-	CONCERT: Home,
-	SPORT: Home,
-	FESTIVAL: Home,
-	LECTURE: Home,
-	WORKSHOP: Home,
-	OTHER: Home
+	[EventTypeEnum.OTHER]: Home,
+	[EventTypeEnum.MOVIE]: Home,
+	[EventTypeEnum.THEATRE]: Home,
+
+	[EventTypeEnum.STANDUP]: Home,
+	[EventTypeEnum.DANCE]: Home,
+	[EventTypeEnum.BOOK_CLUB]: Home,
+	[EventTypeEnum.KARAOKE]: Home,
+	[EventTypeEnum.CYBERSPORT]: Home,
+	[EventTypeEnum.KIDS_EVENT]: Home
+}
+// export const EventTypeLabelsRu: Record<EventTypeEnum, string> = {
+// 	EXHIBITION: 'Выставка',
+// 	MEETUP: 'Встреча',
+// 	WALK: 'Прогулка',
+// 	PARTY: 'Вечеринка',
+// 	CONCERT: 'Концерт',
+// 	SPORT: 'Спорт',
+// 	FESTIVAL: 'Фестиваль',
+// 	LECTURE: 'Лекция',
+// 	// WORKSHOP: 'Мастер-класс',
+// 	OTHER: 'Другое',
+
+// 	THEATRE: 'Театр',
+// 	MOVIE: 'Кино',
+// 	// TOUR = 'Экскурсия',
+// 	STANDUP: 'Стендап',
+// 	DANCE: 'Танцы',
+// 	BOOK_CLUB: 'Книги',
+// 	KARAOKE: 'Караоке',
+// 	CYBERSPORT: 'Киберспорт',
+// 	KIDS_EVENT: 'Для детей'
+// }
+
+export const EventTypeLabelsRu: Record<EventTypeEnum, string> = {
+	[EventTypeEnum.EXHIBITION]: 'Выставка',
+	[EventTypeEnum.MEETUP]: 'Встреча',
+	[EventTypeEnum.WALK]: 'Прогулка',
+	[EventTypeEnum.PARTY]: 'Вечеринка',
+	[EventTypeEnum.CONCERT]: 'Концерт',
+	[EventTypeEnum.SPORT]: 'Спорт',
+	[EventTypeEnum.FESTIVAL]: 'Фестиваль',
+	[EventTypeEnum.LECTURE]: 'Лекция',
+
+	[EventTypeEnum.OTHER]: 'Другое',
+
+	[EventTypeEnum.THEATRE]: 'Театр',
+	[EventTypeEnum.MOVIE]: 'Кино',
+
+	[EventTypeEnum.STANDUP]: 'Стендап',
+	[EventTypeEnum.DANCE]: 'Танцы',
+	[EventTypeEnum.BOOK_CLUB]: 'Книги',
+	[EventTypeEnum.KARAOKE]: 'Караоке',
+	[EventTypeEnum.CYBERSPORT]: 'Киберспорт',
+	[EventTypeEnum.KIDS_EVENT]: 'Для детей'
 }
 
 // Add this constant at the end of the file

@@ -24,7 +24,7 @@ import {
 } from '@/store/redux'
 import { useAppSelector } from '@/store/redux/redux'
 
-import { EventTypeIcons } from '@/lib/constants'
+import { EventTypeIcons, EventTypeLabelsRu } from '@/lib/constants'
 import { cleanParams, cn, formatPriceValue } from '@/lib/utils'
 
 const bynPrices = [0, 15, 30, 50, 70, 100, 150]
@@ -102,7 +102,7 @@ const FiltersBar = () => {
 					onClick={() => dispatch(toggleFiltersFullOpen())}
 				>
 					<Filter className='h-4 w-4 text-white' />
-					<span>Все фильтры</span>
+					<span>Больше фильтров</span>
 				</Button>
 
 				<div className='flex items-center'>
@@ -122,7 +122,7 @@ const FiltersBar = () => {
 					</Button>
 				</div>
 
-				{/* Ценовой фильтр */}
+				{/* Ценовой фильтр
 				<div className='flex gap-1'>
 					<Select
 						value={filters.priceRange[0]?.toString() || 'any'}
@@ -175,7 +175,7 @@ const FiltersBar = () => {
 							))}
 						</SelectContent>
 					</Select>
-				</div>
+				</div> */}
 
 				{/* Статус и оплата */}
 				<div className='flex gap-1'>
@@ -185,7 +185,7 @@ const FiltersBar = () => {
 							handleFilterChange('status', value, null)
 						}
 					>
-						<SelectTrigger className='border-primary-400 w-28 rounded-xl text-white'>
+						<SelectTrigger className='border-primary-400 w-36 rounded-xl text-white'>
 							<SelectValue placeholder='Статус' />
 						</SelectTrigger>
 						<SelectContent className='bg-black text-white'>
@@ -204,7 +204,7 @@ const FiltersBar = () => {
 							handleFilterChange('paymentType', value, null)
 						}
 					>
-						<SelectTrigger className='border-primary-400 w-28 rounded-xl text-white'>
+						<SelectTrigger className='border-primary-400 w-36 rounded-xl text-white'>
 							<SelectValue placeholder='Оплата' />
 						</SelectTrigger>
 						<SelectContent className='bg-black text-white'>
@@ -226,7 +226,11 @@ const FiltersBar = () => {
 					}
 				>
 					<SelectTrigger className='border-primary-400 w-32 rounded-xl text-white'>
-						<SelectValue placeholder='Тип мероприятия' />
+						<SelectValue placeholder='Тип мероприятия'>
+							{filters.eventType && filters.eventType !== 'any'
+								? (EventTypeLabelsRu as any)[filters.eventType] // Костыль для обхода ошибки типов
+								: 'Тип мероприятия'}
+						</SelectValue>
 					</SelectTrigger>
 					<SelectContent className='bg-black text-white'>
 						<SelectItem value='any'>Любой тип</SelectItem>
@@ -234,7 +238,13 @@ const FiltersBar = () => {
 							<SelectItem key={type} value={type}>
 								<div className='flex items-center'>
 									<Icon className='mr-2 h-4 w-4' />
-									<span>{type}</span>
+									<span>
+										{
+											EventTypeLabelsRu[
+												type as keyof typeof EventTypeLabelsRu
+											]
+										}
+									</span>
 								</div>
 							</SelectItem>
 						))}

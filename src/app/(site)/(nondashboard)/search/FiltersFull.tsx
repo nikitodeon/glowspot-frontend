@@ -1,5 +1,5 @@
 import { debounce, set } from 'lodash'
-import { Search } from 'lucide-react'
+import { Home, Search } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -27,6 +27,12 @@ const FiltersFull = () => {
 	const pathname = usePathname()
 	const filters = useAppSelector(state => state.global.filters)
 	const [localFilters, setLocalFilters] = useState(initialState.filters)
+	// const [sliderStates, setSliderStates] = useState({
+	// 	smallRangeActive: false,
+	// 	largeRangeActive: false
+	// })
+	const [isPriceFilterActive, setIsPriceFilterActive] = useState(false)
+
 	const isFiltersFullOpen = useAppSelector(
 		state => state.global.isFiltersFullOpen
 	)
@@ -54,27 +60,36 @@ const FiltersFull = () => {
 		dispatch(setFilters(initialState.filters))
 		updateURL(initialState.filters)
 		setLocalFilters(initialState.filters)
+		// setSliderStates({
+		// 	smallRangeActive: false,
+		// 	largeRangeActive: false
+		// })
+		setIsPriceFilterActive(false)
 	}
 
-	const handleEventTypeChange = (
-		eventType:
-			| 'EXHIBITION'
-			| 'MEETUP'
-			| 'WALK'
-			| 'PARTY'
-			| 'CONCERT'
-			| 'SPORT'
-			| 'FESTIVAL'
-			| 'LECTURE'
-			| 'WORKSHOP'
-			| 'OTHER'
-			| 'any'
+	const handleEventTypeChange = (eventType: EventTypeEnum | 'any') => {
+		setLocalFilters(prev => ({
+			...prev,
+			eventType: eventType === 'any' ? null : eventType
+		}))
+	}
+	const handleSliderChange = (
+		value: [number, number],
+		rangeType: 'small' | 'large'
 	) => {
 		setLocalFilters(prev => ({
 			...prev,
-			eventType: eventType // Здесь мы указываем, что eventType должен быть одним из этих значений
+			priceRange: value
 		}))
+
+		// setSliderStates(prev => ({
+		// 	...prev,
+		// 	smallRangeActive: rangeType === 'small' || prev.smallRangeActive,
+		// 	largeRangeActive: rangeType === 'large' || prev.largeRangeActive
+		// }))
+		setIsPriceFilterActive(true)
 	}
+
 	// const handleFilterChange = (key: keyof FiltersState, value: any) => {
 	// 	const newFilters: FiltersState = {
 	// 		...localFilters,
@@ -125,6 +140,25 @@ const FiltersFull = () => {
 
 	// setLocalFilters(newFilters as FiltersState)
 	// }
+
+	const getCurrencyName = (currencyCode: string | null) => {
+		switch (currencyCode) {
+			case 'BYN':
+				return 'BYN'
+			case 'USD':
+				return 'USD'
+			case 'EUR':
+				return 'EUR'
+			case 'RUB':
+				return 'RUB'
+			case 'any':
+				return null
+			default:
+				return null
+		}
+	}
+	const currencyName = getCurrencyName(localFilters.currency)
+
 	if (!isFiltersFullOpen) return null
 
 	return (
@@ -156,46 +190,112 @@ const FiltersFull = () => {
 
 				{/* Event Type */}
 				<div>
-					<h4 className='mb-2 font-bold text-white'>Event Type</h4>
-					<div className='grid grid-cols-2 gap-4'>
+					<h4 className='mb-2 font-bold text-white'>
+						Тип мероприятия
+					</h4>
+					<div className='grid grid-cols-3 gap-2'>
+						{' '}
+						{/* Увеличиваем количество колонок и уменьшаем отступы */}
+						<Button
+							key='any'
+							variant='ghost'
+							className={cn(
+								'flex h-auto min-h-0 flex-col items-center justify-center rounded-lg p-2 text-white hover:bg-black',
+								!localFilters.eventType
+									? 'border-[3px] border-white bg-black'
+									: 'border-2 border-white/70'
+							)}
+							onClick={() => handleEventTypeChange('any')}
+						>
+							<Home className='mb-1 h-5 w-5 text-white' />
+							<span className='text-xs'>Любой</span>
+						</Button>
 						{Object.entries(EventTypeIcons).map(([type, Icon]) => (
-							<div
+							<Button
 								key={type}
+								variant='ghost'
 								className={cn(
-									'flex cursor-pointer flex-col items-center justify-center rounded-xl border p-4 text-white',
-									localFilters.eventType === type
-										? 'border-primary-700'
-										: 'border-gray-200'
+									'flex h-auto min-h-0 flex-col items-center justify-center rounded-lg p-2 text-white hover:bg-black',
+									localFilters.eventType === type ||
+										(!localFilters.eventType &&
+											type === 'any')
+										? 'border-[3px] border-white bg-black'
+										: 'bgkk-gray-800/50 borderkk-gray-600 border-2 border-white/70'
 								)}
 								onClick={() =>
-									handleEventTypeChange(
-										type as
-											| 'EXHIBITION'
-											| 'MEETUP'
-											| 'WALK'
-											| 'PARTY'
-											| 'CONCERT'
-											| 'SPORT'
-											| 'FESTIVAL'
-											| 'LECTURE'
-											| 'WORKSHOP'
-											| 'OTHER'
-											| 'any'
-									)
+									handleEventTypeChange(type as EventTypeEnum)
 								}
 							>
-								<Icon className='mb-2 h-6 w-6 text-white' />
-								<span>{type}</span>
-							</div>
+								<Icon className='mb-1 h-5 w-5 text-white' />
+								<span className='text-xs'>
+									{type === 'EXHIBITION' && 'Выставка'}
+									{type === 'MEETUP' && 'Встреча'}
+									{type === 'WALK' && 'Прогулка'}
+									{type === 'PARTY' && 'Вечеринка'}
+									{type === 'CONCERT' && 'Концерт'}
+									{type === 'SPORT' && 'Спорт'}
+									{type === 'FESTIVAL' && 'Фестиваль'}
+									{type === 'LECTURE' && 'Лекция'}
+
+									{type === 'OTHER' && 'Другое'}
+									{type === 'MOVIE' && 'Кино'}
+									{type === 'THEATRE' && 'Театр'}
+									{type === 'STANDUP' && 'Стендап'}
+									{type === 'DANCE' && 'Танцы'}
+									{type === 'BOOK_CLUB' && 'Книги'}
+									{type === 'KARAOKE' && 'Караоке'}
+									{type === 'CYBERSPORT' && 'Киберспорт'}
+									{type === 'KIDS_EVENT' && 'Для детей'}
+								</span>
+							</Button>
 						))}
 					</div>
 				</div>
+				<div>
+					<h4 className='mb-2 font-bold text-white'>Валюта</h4>
+					<Select
+						value={localFilters.currency || 'any'}
+						onValueChange={value =>
+							setLocalFilters(prev => ({
+								...prev,
+								currency: value as
+									| 'BYN'
+									| 'USD'
+									| 'EUR'
+									| 'RUB'
+									| 'any'
+							}))
+						}
+					>
+						<SelectTrigger className='w-full rounded-xl border-white text-white'>
+							<SelectValue placeholder='Select currency' />
+						</SelectTrigger>
+						<SelectContent className='bg-black'>
+							<SelectItem value='any'>Любая</SelectItem>
+							<SelectItem value='BYN'>BYN</SelectItem>
+							<SelectItem value='USD'>USD</SelectItem>
+							<SelectItem value='EUR'>EUR</SelectItem>
+							<SelectItem value='RUB'>RUB</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
 
 				{/* Price Range (using Slider instead of Select) */}
+
 				<div>
-					<h4 className='mb-2 font-bold text-white'>
-						Price Range (Monthly)
-					</h4>
+					<div className='mb-2 flex items-center justify-between'>
+						<h4 className='font-bold text-white'>
+							Малый диапазон цены
+						</h4>
+						<span className='text-xs text-gray-400'>
+							{/* {sliderStates.smallRangeActive
+								? 'Активирован'
+								: 'Деактивирован'} */}
+							<span className='text-xs text-gray-400'>
+								{isPriceFilterActive ? 'Активен' : 'Не активен'}
+							</span>
+						</span>
+					</div>
 					<Slider
 						min={0}
 						max={500}
@@ -204,23 +304,59 @@ const FiltersFull = () => {
 							localFilters.priceRange[0] ?? 0,
 							localFilters.priceRange[1] ?? 500
 						]}
-						onValueChange={(value: [number, number]) => {
-							setLocalFilters(prev => ({
-								...prev,
-								priceRange: value // без всякой логики, как есть
-							}))
-						}}
+						onValueChange={(value: [number, number]) =>
+							handleSliderChange(value, 'small')
+						}
 					/>
 					<div className='mt-2 flex justify-between text-white'>
-						<span>{localFilters.priceRange[0] ?? 0} BYN</span>
-						<span>{localFilters.priceRange[1] ?? 500} BYN</span>
+						<span>
+							{localFilters.priceRange[0] ?? 0}{' '}
+							{currencyName && <>{currencyName}</>}
+						</span>
+						<span>
+							{localFilters.priceRange[1] ?? 500}{' '}
+							{currencyName && <>{currencyName}</>}
+						</span>
 					</div>
 				</div>
 
+				{/* Большой диапазон цены */}
+				<div>
+					<div className='mb-2 flex items-center justify-between'>
+						<h4 className='font-bold text-white'>
+							Большой диапазон цены
+						</h4>
+						<span className='text-xs text-gray-400'>
+							{isPriceFilterActive ? 'Активен' : 'Не активен'}
+						</span>
+					</div>
+					<Slider
+						min={0}
+						max={20000}
+						step={100}
+						value={[
+							localFilters.priceRange[0] ?? 0,
+							localFilters.priceRange[1] ?? 20000
+						]}
+						onValueChange={(value: [number, number]) =>
+							handleSliderChange(value, 'large')
+						}
+					/>
+					<div className='mt-2 flex justify-between text-white'>
+						<span>
+							{localFilters.priceRange[0] ?? 0}{' '}
+							{currencyName && <>{currencyName}</>}
+						</span>
+						<span>
+							{localFilters.priceRange[1] ?? 20000}{' '}
+							{currencyName && <>{currencyName}</>}
+						</span>
+					</div>
+				</div>
 				{/* Status and Payment Type */}
 				<div className='flex gap-4'>
 					<div className='flex-1'>
-						<h4 className='mb-2 font-bold text-white'>Status</h4>
+						<h4 className='mb-2 font-bold text-white'>Статус</h4>
 						<Select
 							value={localFilters.status || 'any'}
 							onValueChange={value =>
@@ -240,19 +376,21 @@ const FiltersFull = () => {
 								<SelectValue placeholder='Status' />
 							</SelectTrigger>
 							<SelectContent className='bg-black'>
-								<SelectItem value='any'>Any</SelectItem>
+								<SelectItem value='any'>Любой</SelectItem>
 								<SelectItem value='UPCOMING'>
-									Upcoming
+									Предстоящее
 								</SelectItem>
-								<SelectItem value='ONGOING'>Ongoing</SelectItem>
+								<SelectItem value='ONGOING'>
+									Активное
+								</SelectItem>
 								<SelectItem value='COMPLETED'>
-									Completed
+									Завершённое
 								</SelectItem>
 								<SelectItem value='CANCELLED'>
-									Cancelled
+									Отменённое
 								</SelectItem>
 								<SelectItem value='ARCHIVED'>
-									Archived
+									В архиве
 								</SelectItem>
 							</SelectContent>
 						</Select>
@@ -299,14 +437,14 @@ const FiltersFull = () => {
 						onClick={handleSubmit}
 						className='bg-primary-700 flex-1 rounded-xl border border-white bg-black text-white'
 					>
-						Apply
+						Применить
 					</Button>
 					<Button
 						onClick={handleReset}
 						variant='outline'
 						className='flex-1 rounded-xl border-white text-white'
 					>
-						Reset Filters
+						Сбросить фильтры
 					</Button>
 				</div>
 			</div>

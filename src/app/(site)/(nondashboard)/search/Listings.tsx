@@ -40,12 +40,13 @@ const Listings = () => {
 					? (filters.paymentType as PaymentType)
 					: undefined,
 			eventType:
-				filters.eventType !== 'any'
-					? (filters.eventType as EventType)
+				filters.eventType && filters.eventType !== 'any'
+					? (filters.eventType as unknown as EventType)
 					: undefined,
 			priceRange: filters.priceRange.every(v => v === null)
 				? undefined
-				: filters.priceRange.filter((v): v is number => v !== null)
+				: filters.priceRange.filter((v): v is number => v !== null),
+			currency: filters.currency !== 'any' ? filters.currency : undefined // Добавляем новое поле
 		}
 	}
 

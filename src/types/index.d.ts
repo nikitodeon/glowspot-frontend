@@ -52,17 +52,26 @@ declare global {
 	// 	Townhouse = 'Townhouse',
 	// 	Cottage = 'Cottage'
 	// }
-	enum EventTypeEnum {
-		EXHIBITION = 'EXHIBITION',
-		MEETUP = 'MEETUP',
-		WALK = 'WALK',
-		PARTY = 'PARTY',
-		CONCERT = 'CONCERT',
-		SPORT = 'SPORT',
-		FESTIVAL = 'FESTIVAL',
-		LECTURE = 'LECTURE',
-		WORKSHOP = 'WORKSHOP',
-		OTHER = 'OTHER'
+	export enum EventTypeEnum {
+		EXHIBITION = 'Выставка',
+		MEETUP = 'Встреча',
+		WALK = 'Прогулка',
+		PARTY = 'Вечеринка',
+		CONCERT = 'Концерт',
+		SPORT = 'Спорт',
+		FESTIVAL = 'Фестиваль',
+		LECTURE = 'Лекция',
+
+		OTHER = 'Другое',
+		MOVIE = 'Кино',
+		THEATRE = 'Театр',
+
+		STANDUP = 'Стендап',
+		DANCE = 'Танцы',
+		BOOK_CLUB = 'Книги',
+		KARAOKE = 'Караоке',
+		CYBERSPORT = 'Киберспорт',
+		KIDS_EVENT = 'Для детей'
 	}
 }
 export {}

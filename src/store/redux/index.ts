@@ -14,23 +14,13 @@ export interface FiltersState {
 	// baths: string
 	// propertyType: string
 	// amenities: string[]
-	eventType:
-		| 'EXHIBITION'
-		| 'MEETUP'
-		| 'WALK'
-		| 'PARTY'
-		| 'CONCERT'
-		| 'SPORT'
-		| 'FESTIVAL'
-		| 'LECTURE'
-		| 'WORKSHOP'
-		| 'OTHER'
-		| 'any'
+	eventType: 'any' | EventTypeEnum | null
 	eventProperties: string[]
 	// availableFrom: string
 	priceRange: [number, number] | [null, null]
 	// squareFeet: [number, number] | [null, null]
 	coordinates: [number, number]
+	currency: string
 }
 
 interface InitialStateTypes {
@@ -50,10 +40,11 @@ export const initialState: InitialStateTypes = {
 		eventProperties: [],
 		// availableFrom: 'any',
 		priceRange: [null, null],
+		currency: 'any',
 		// squareFeet: [null, null],
 		coordinates: [53.9, 27.57]
 	},
-	isFiltersFullOpen: false,
+	isFiltersFullOpen: true,
 	viewMode: 'grid'
 }
 

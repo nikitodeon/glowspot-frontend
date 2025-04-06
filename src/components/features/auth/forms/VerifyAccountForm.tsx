@@ -26,7 +26,7 @@ export function VerifyAccountForm() {
 		onCompleted() {
 			auth()
 			toast.success(t('successMessage'))
-			router.push('/dashboard/settings')
+			router.push('/dashboard/hosting')
 		},
 		onError() {
 			toast.error(t('errorMessage'))
