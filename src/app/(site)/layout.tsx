@@ -32,6 +32,7 @@ export default function SiteLayout({ children }: PropsWithChildren<unknown>) {
 		'/dashboard/attending': 'Участие в мероприятиях',
 		'/dashboard/favorites': 'Избранное',
 		'/dashboard/settings': 'Настройки',
+		'/search': 'Мероприятия на карте',
 
 		...(eventId ? { [`/dashboard/hosting/${eventId}`]: title } : {}),
 		...(eventId ? { [`/dashboard/attending/${eventId}`]: title } : {}),

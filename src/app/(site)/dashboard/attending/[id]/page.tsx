@@ -260,6 +260,7 @@ const AttendingEventDetailsPage = () => {
 									event.maxParticipants > 0 ? (
 										`/${event.maxParticipants}`
 									) : (
+										//  null
 										<span className='ml-1'>/∞</span>
 									)}
 								</p>

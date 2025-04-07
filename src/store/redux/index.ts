@@ -18,6 +18,7 @@ export interface FiltersState {
 	eventProperties: string[]
 	// availableFrom: string
 	priceRange: [number, number] | [null, null]
+	dateRange: [string | null, string | null]
 	// squareFeet: [number, number] | [null, null]
 	coordinates: [number, number]
 	currency: string
@@ -40,6 +41,7 @@ export const initialState: InitialStateTypes = {
 		eventProperties: [],
 		// availableFrom: 'any',
 		priceRange: [null, null],
+		dateRange: [null, null],
 		currency: 'any',
 		// squareFeet: [null, null],
 		coordinates: [53.9, 27.57]

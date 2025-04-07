@@ -1,8 +1,11 @@
+import { Label } from '@radix-ui/react-label'
 import { debounce, set } from 'lodash'
 import { Home, Search } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useState } from 'react'
+import DatePicker from 'react-datepicker'
 import { useDispatch } from 'react-redux'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/commonApp/button'
 import { Input } from '@/components/ui/commonApp/input'
@@ -161,6 +164,14 @@ const FiltersFull = () => {
 
 	if (!isFiltersFullOpen) return null
 
+	const handleDateChange = (dates: [Date | null, Date | null]) => {
+		const [start, end] = dates
+		if (start && end && start > end) {
+			toast.error('Дата начала не может быть позже даты окончания')
+			return
+		}
+	}
+
 	return (
 		<div className='mmbg-black h-full overflow-auto rounded-lg bg-black px-4 pb-10'>
 			<div className='flex flex-col space-y-6'>
@@ -282,7 +293,176 @@ const FiltersFull = () => {
 
 				{/* Price Range (using Slider instead of Select) */}
 
-				<div>
+				<div className='mb-6'>
+					<h4 className='mb-2 font-bold text-white'>
+						Временной дипазон активных мероприятий
+					</h4>
+					<div className='flex gap-4'>
+						{/* Дата начала */}
+						<div className='flex-1'>
+							<Label
+								htmlFor='start-date'
+								className='mb-1 block text-white'
+							>
+								С какого числа
+							</Label>
+							<DatePicker
+								// dateFormat='MM/dd/yyyy, h:mm aa'
+								selected={
+									localFilters.dateRange[0]
+										? new Date(localFilters.dateRange[0])
+										: null
+								}
+								onChange={(date: Date | null) => {
+									setLocalFilters(prev => ({
+										...prev,
+										dateRange: [
+											date ? date.toISOString() : null,
+											prev.dateRange[1]
+										]
+									}))
+								}}
+								selectsStart
+								startDate={
+									localFilters.dateRange[0]
+										? new Date(localFilters.dateRange[0])
+										: null
+								}
+								endDate={
+									localFilters.dateRange[1]
+										? new Date(localFilters.dateRange[1])
+										: null
+								}
+								showTimeSelect
+								timeFormat='HH:mm'
+								timeIntervals={15}
+								dateFormat='Pp'
+								className='w- rounded-md border border-white bg-black p-2 text-white'
+								placeholderText='Выберите дату (необязательно)'
+								calendarClassName='react-datepicker-dark hide-weekdays only-current-month-days forcells no-outside-days'
+								dayClassName={() =>
+									'react-datepicker__day-dark'
+								}
+								weekDayClassName={() =>
+									'react-datepicker__day-name-dark'
+								}
+								timeClassName={() =>
+									'react-datepicker__time-dark'
+								}
+								popperClassName='react-datepicker-dark-popper'
+								renderCustomHeader={({
+									monthDate,
+									decreaseMonth,
+									increaseMonth
+								}) => (
+									<div className='flex items-center justify-between bg-black px-2 py-1'>
+										<button
+											onClick={decreaseMonth}
+											className='rounded p-1 text-white hover:bg-gray-800'
+										>
+											{'<'}
+										</button>
+										<span className='text-white'>
+											{monthDate.toLocaleString('ru-RU', {
+												month: 'long',
+												year: 'numeric'
+											})}
+										</span>
+										<button
+											onClick={increaseMonth}
+											className='rounded p-1 text-white hover:bg-gray-800'
+										>
+											{'>'}
+										</button>
+									</div>
+								)}
+							/>
+						</div>
+					</div>
+					{/* Дата окончания */}
+					<div className='flex-1'>
+						<Label
+							htmlFor='end-date'
+							className='mb-1 block text-white'
+						>
+							До какого числа
+						</Label>
+						<DatePicker
+							selected={
+								localFilters.dateRange[1]
+									? new Date(localFilters.dateRange[1])
+									: null
+							}
+							onChange={(date: Date | null) => {
+								setLocalFilters(prev => ({
+									...prev,
+									dateRange: [
+										prev.dateRange[0],
+										date ? date.toISOString() : null
+									]
+								}))
+							}}
+							selectsEnd
+							startDate={
+								localFilters.dateRange[0]
+									? new Date(localFilters.dateRange[0])
+									: null
+							}
+							endDate={
+								localFilters.dateRange[1]
+									? new Date(localFilters.dateRange[1])
+									: null
+							}
+							minDate={
+								localFilters.dateRange[0]
+									? new Date(localFilters.dateRange[0])
+									: undefined
+							}
+							showTimeSelect
+							timeFormat='HH:mm'
+							timeIntervals={15}
+							dateFormat='Pp'
+							className='w- rounded-md border border-white bg-black p-2 text-white'
+							placeholderText='Укажите финальную точку'
+							calendarClassName='react-datepicker-dark hide-weekdays only-current-month-days forcells no-outside-days'
+							dayClassName={() => 'react-datepicker__day-dark'}
+							weekDayClassName={() =>
+								'react-datepicker__day-name-dark'
+							}
+							timeClassName={() => 'react-datepicker__time-dark'}
+							popperClassName='react-datepicker-dark-popper'
+							renderCustomHeader={({
+								monthDate,
+								decreaseMonth,
+								increaseMonth
+							}) => (
+								<div className='flex items-center justify-between bg-black px-2 py-1'>
+									<button
+										onClick={decreaseMonth}
+										className='rounded p-1 text-white hover:bg-gray-800'
+									>
+										{'<'}
+									</button>
+									<span className='text-white'>
+										{monthDate.toLocaleString('ru-RU', {
+											month: 'long',
+											year: 'numeric'
+										})}
+									</span>
+									<button
+										onClick={increaseMonth}
+										className='rounded p-1 text-white hover:bg-gray-800'
+									>
+										{'>'}
+									</button>
+								</div>
+							)}
+							// Добавляем этот пропс чтобы скрыть стандартный заголовок
+							//   showMonthYearDropdown={false}
+							showYearDropdown={false}
+						/>
+					</div>
+					{/* </div> */}
 					<div className='mb-2 flex items-center justify-between'>
 						<h4 className='font-bold text-white'>
 							Малый диапазон цены

@@ -28,6 +28,21 @@ const Listings = () => {
 	const filters = useAppSelector(state => state.global.filters)
 	const viewMode = useAppSelector(state => state.global.viewMode)
 
+	const startRaw = filters.dateRange?.[0]
+	const endRaw = filters.dateRange?.[1]
+
+	let end: string | null = null
+	if (endRaw) {
+		const endDate = new Date(endRaw)
+		endDate.setHours(23, 59, 59, 999)
+		end = endDate.toISOString()
+	}
+
+	const dateRange: [string | null, string | null] | undefined =
+		startRaw || end ? [startRaw || null, end] : undefined
+
+	console.log('✅ Отправляемый dateRange:', dateRange)
+
 	const queryVariables = {
 		filter: {
 			location: filters.location !== 'any' ? filters.location : undefined,
@@ -46,7 +61,8 @@ const Listings = () => {
 			priceRange: filters.priceRange.every(v => v === null)
 				? undefined
 				: filters.priceRange.filter((v): v is number => v !== null),
-			currency: filters.currency !== 'any' ? filters.currency : undefined // Добавляем новое поле
+			currency: filters.currency !== 'any' ? filters.currency : undefined, // Добавляем новое поле
+			dateRange: dateRange
 		}
 	}
 
