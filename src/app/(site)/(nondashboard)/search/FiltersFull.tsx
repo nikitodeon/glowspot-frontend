@@ -2,7 +2,7 @@ import { Label } from '@radix-ui/react-label'
 import { debounce, set } from 'lodash'
 import { Home, Search } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { useDispatch } from 'react-redux'
 import { toast } from 'sonner'
@@ -45,15 +45,21 @@ const FiltersFull = () => {
 		const updatedSearchParams = new URLSearchParams()
 
 		Object.entries(cleanFilters).forEach(([key, value]) => {
-			updatedSearchParams.set(
-				key,
-				Array.isArray(value) ? value.join(',') : value.toString()
-			)
+			if (key === 'dateRange') {
+				// Сохраняем как строку с разделителем
+				updatedSearchParams.set(
+					key,
+					value.map((v: any) => v || '').join(',')
+				)
+			} else if (Array.isArray(value)) {
+				updatedSearchParams.set(key, value.join(','))
+			} else {
+				updatedSearchParams.set(key, value?.toString() ?? '')
+			}
 		})
 
 		router.push(`${pathname}?${updatedSearchParams.toString()}`)
 	}, 300)
-
 	const handleSubmit = () => {
 		dispatch(setFilters(localFilters))
 		updateURL(localFilters)
@@ -92,7 +98,39 @@ const FiltersFull = () => {
 		// }))
 		setIsPriceFilterActive(true)
 	}
+	useEffect(() => {
+		const query = new URLSearchParams(window.location.search)
+		const rawDateRange = query.get('dateRange')
 
+		console.log('[Init] rawDateRange from URL:', rawDateRange)
+
+		if (rawDateRange) {
+			let dateArray: [string | null, string | null] = [null, null]
+
+			try {
+				// Пробуем разобрать как строку с разделителем
+				const parts = rawDateRange.split(',')
+
+				dateArray = [
+					parts[0] && !isNaN(new Date(parts[0]).getTime())
+						? new Date(parts[0]).toISOString()
+						: null,
+					parts[1] && !isNaN(new Date(parts[1]).getTime())
+						? new Date(parts[1]).toISOString()
+						: null
+				]
+
+				console.log('[Init] Parsed Dates from URL:', dateArray)
+			} catch (e) {
+				console.error('Error parsing dateRange:', e)
+			}
+
+			setLocalFilters(prev => ({
+				...prev,
+				dateRange: dateArray
+			}))
+		}
+	}, [])
 	// const handleFilterChange = (key: keyof FiltersState, value: any) => {
 	// 	const newFilters: FiltersState = {
 	// 		...localFilters,
@@ -164,13 +202,13 @@ const FiltersFull = () => {
 
 	if (!isFiltersFullOpen) return null
 
-	const handleDateChange = (dates: [Date | null, Date | null]) => {
-		const [start, end] = dates
-		if (start && end && start > end) {
-			toast.error('Дата начала не может быть позже даты окончания')
-			return
-		}
-	}
+	// const handleDateChange = (dates: [Date | null, Date | null]) => {
+	// 	const [start, end] = dates
+	// 	if (start && end && start > end) {
+	// 		toast.error('Дата начала не может быть позже даты окончания')
+	// 		return
+	// 	}
+	// }
 
 	return (
 		<div className='mmbg-black h-full overflow-auto rounded-lg bg-black px-4 pb-10'>

@@ -28,21 +28,24 @@ const Listings = () => {
 	const filters = useAppSelector(state => state.global.filters)
 	const viewMode = useAppSelector(state => state.global.viewMode)
 
-	const startRaw = filters.dateRange?.[0]
-	const endRaw = filters.dateRange?.[1]
+	// const startRaw = filters.dateRange?.[0]
+	// const endRaw = filters.dateRange?.[1]
 
-	let end: string | null = null
-	if (endRaw) {
-		const endDate = new Date(endRaw)
-		endDate.setHours(23, 59, 59, 999)
-		end = endDate.toISOString()
+	// let end: string | null = null
+	// if (endRaw) {
+	// 	const endDate = new Date(endRaw)
+	// 	endDate.setHours(23, 59, 59, 999)
+	// 	end = endDate.toISOString()
+	// }
+
+	// const dateRange: [string | null, string | null] | undefined =
+	// 	startRaw || end ? [startRaw || null, end] : undefined
+
+	// console.log('✅ Отправляемый dateRange:', dateRange)
+	console.log('GraphQL dateRange filter being sent:', filters.dateRange)
+	function isValidDate(date: Date): boolean {
+		return !isNaN(date.getTime())
 	}
-
-	const dateRange: [string | null, string | null] | undefined =
-		startRaw || end ? [startRaw || null, end] : undefined
-
-	console.log('✅ Отправляемый dateRange:', dateRange)
-
 	const queryVariables = {
 		filter: {
 			location: filters.location !== 'any' ? filters.location : undefined,
@@ -62,9 +65,27 @@ const Listings = () => {
 				? undefined
 				: filters.priceRange.filter((v): v is number => v !== null),
 			currency: filters.currency !== 'any' ? filters.currency : undefined, // Добавляем новое поле
-			dateRange: dateRange
+
+			dateRange:
+				filters.dateRange &&
+				(filters.dateRange[0] || filters.dateRange[1])
+					? [
+							filters.dateRange[0] &&
+							isValidDate(new Date(filters.dateRange[0]))
+								? new Date(filters.dateRange[0]).toISOString()
+								: null,
+							filters.dateRange[1] &&
+							isValidDate(new Date(filters.dateRange[1]))
+								? new Date(filters.dateRange[1]).toISOString()
+								: null
+						]
+					: undefined
 		}
 	}
+	console.log(
+		'[GraphQL] Sending filter.dateRange:',
+		queryVariables.filter.dateRange
+	)
 
 	const {
 		data,

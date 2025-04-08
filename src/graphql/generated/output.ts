@@ -104,6 +104,7 @@ export type EnableTotpInput = {
 export type EventFilterInput = {
   ageRestriction?: InputMaybe<Scalars['Float']['input']>;
   currency?: InputMaybe<Scalars['String']['input']>;
+  dateRange?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   eventProperties?: InputMaybe<Array<EventProperty>>;
   eventType?: InputMaybe<EventType>;
   isVerified?: InputMaybe<Scalars['Boolean']['input']>;
