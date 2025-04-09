@@ -1,23 +1,41 @@
 import {
+	Amphora,
 	Bath,
+	Bike,
+	BookOpenText,
 	Building,
 	Bus,
 	Cable,
+	Cake,
 	Car,
 	Castle,
 	Cigarette,
+	Clapperboard,
+	Drama,
 	Dumbbell,
+	Ellipsis,
+	Footprints,
+	Gamepad2,
+	GraduationCap,
 	Hammer,
+	Handshake,
 	Home,
 	LucideIcon,
 	Maximize,
+	MicVocal,
 	Mountain,
+	PartyPopper,
 	PawPrint,
+	PersonStanding,
 	Phone,
+	Piano,
+	Speech,
 	Sprout,
+	Theater,
 	Thermometer,
 	Trees,
 	Tv,
+	VenetianMask,
 	VolumeX,
 	Warehouse,
 	Waves,
@@ -137,25 +155,25 @@ export enum EventTypeEnum {
 }
 
 export const EventTypeIcons: Record<EventTypeEnum, LucideIcon> = {
-	[EventTypeEnum.EXHIBITION]: Home,
-	[EventTypeEnum.MEETUP]: Home,
-	[EventTypeEnum.WALK]: Home,
-	[EventTypeEnum.PARTY]: Home,
-	[EventTypeEnum.CONCERT]: Home,
-	[EventTypeEnum.SPORT]: Home,
-	[EventTypeEnum.FESTIVAL]: Home,
-	[EventTypeEnum.LECTURE]: Home,
+	[EventTypeEnum.EXHIBITION]: Amphora,
+	[EventTypeEnum.MEETUP]: Handshake,
+	[EventTypeEnum.WALK]: Footprints,
+	[EventTypeEnum.PARTY]: PartyPopper,
+	[EventTypeEnum.CONCERT]: Piano,
+	[EventTypeEnum.SPORT]: Bike,
+	[EventTypeEnum.FESTIVAL]: VenetianMask,
+	[EventTypeEnum.LECTURE]: GraduationCap,
 
-	[EventTypeEnum.OTHER]: Home,
-	[EventTypeEnum.MOVIE]: Home,
-	[EventTypeEnum.THEATRE]: Home,
+	[EventTypeEnum.MOVIE]: Clapperboard,
+	[EventTypeEnum.THEATRE]: Drama,
 
-	[EventTypeEnum.STANDUP]: Home,
-	[EventTypeEnum.DANCE]: Home,
-	[EventTypeEnum.BOOK_CLUB]: Home,
-	[EventTypeEnum.KARAOKE]: Home,
-	[EventTypeEnum.CYBERSPORT]: Home,
-	[EventTypeEnum.KIDS_EVENT]: Home
+	[EventTypeEnum.STANDUP]: Speech,
+	[EventTypeEnum.DANCE]: PersonStanding,
+	[EventTypeEnum.BOOK_CLUB]: BookOpenText,
+	[EventTypeEnum.KARAOKE]: MicVocal,
+	[EventTypeEnum.CYBERSPORT]: Gamepad2,
+	[EventTypeEnum.KIDS_EVENT]: Cake,
+	[EventTypeEnum.OTHER]: Ellipsis
 }
 // export const EventTypeLabelsRu: Record<EventTypeEnum, string> = {
 // 	EXHIBITION: 'Выставка',
@@ -204,7 +222,7 @@ export const EventTypeLabelsRu: Record<EventTypeEnum, string> = {
 }
 
 // Add this constant at the end of the file
-export const NAVBAR_HEIGHT = 52 // in pixels
+export const NAVBAR_HEIGHT = 102 // in pixels
 
 // Test users for development
 export const testUsers = {

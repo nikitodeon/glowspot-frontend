@@ -1,0 +1,209 @@
+'use client'
+
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
+import { useRouter } from 'next/navigation'
+import React, { useEffect, useRef, useState } from 'react'
+
+import {
+	EventStatus,
+	EventType,
+	PaymentType,
+	useGetFilteredEventsQuery
+} from '@/graphql/generated/output'
+
+import { useAppSelector } from '@/store/redux/redux'
+
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string
+
+const Map = () => {
+	const router = useRouter()
+	const mapContainerRef = useRef<HTMLDivElement | null>(null)
+	const mapRef = useRef<mapboxgl.Map | null>(null)
+	const resizeObserverRef = useRef<ResizeObserver | null>(null)
+
+	const filters = useAppSelector(state => state.global.filters)
+	const isFiltersFullOpen = useAppSelector(
+		state => state.global.isFiltersFullOpen
+	)
+
+	const [shouldInitMap, setShouldInitMap] = useState(false)
+
+	function isValidDate(date: Date): boolean {
+		return !isNaN(date.getTime())
+	}
+
+	const queryVariables = {
+		filter: {
+			location: filters.location !== 'any' ? filters.location : undefined,
+			status:
+				filters.status !== 'any'
+					? (filters.status as EventStatus)
+					: undefined,
+			paymentType:
+				filters.paymentType !== 'any'
+					? (filters.paymentType as PaymentType)
+					: undefined,
+			eventType:
+				filters.eventType && filters.eventType !== 'any'
+					? (filters.eventType as unknown as EventType)
+					: undefined,
+			priceRange: filters.priceRange.every(v => v === null)
+				? undefined
+				: filters.priceRange.filter((v): v is number => v !== null),
+			currency: filters.currency !== 'any' ? filters.currency : undefined,
+			dateRange:
+				filters.dateRange &&
+				(filters.dateRange[0] || filters.dateRange[1])
+					? [
+							filters.dateRange[0] &&
+							isValidDate(new Date(filters.dateRange[0]))
+								? new Date(filters.dateRange[0]).toISOString()
+								: null,
+							filters.dateRange[1] &&
+							isValidDate(new Date(filters.dateRange[1]))
+								? new Date(filters.dateRange[1]).toISOString()
+								: null
+						]
+					: undefined
+		}
+	}
+
+	const {
+		data,
+		loading: isLoading,
+		error: isError
+	} = useGetFilteredEventsQuery({
+		variables: queryVariables
+	})
+
+	const events = data?.getAllEvents || []
+
+	useEffect(() => {
+		const timeout = setTimeout(() => setShouldInitMap(true), 100)
+		return () => clearTimeout(timeout)
+	}, [])
+
+	useEffect(() => {
+		if (!shouldInitMap || isLoading || isError || !events) return
+
+		const map = new mapboxgl.Map({
+			container: mapContainerRef.current!,
+			style: 'mapbox://styles/nikitodeon/cm98gli8900i601qz6nno327g',
+			center: filters.coordinates || [27.57, 53.9],
+			zoom: 9
+		})
+
+		mapRef.current = map
+
+		const handleEventClick = (eventId: string) => {
+			// Ключевое изменение - используем replace вместо push
+			router.replace(`/search?eventId=${eventId}`, {
+				scroll: false
+			})
+		}
+
+		events.forEach(event => {
+			const marker = createEventMarker(event, map, handleEventClick)
+			const markerElement = marker.getElement()
+			const path = markerElement.querySelector("path[fill='#3FB1CE']")
+			if (path) path.setAttribute('fill', '#000000')
+		})
+
+		resizeObserverRef.current = new ResizeObserver(() => {
+			map.resize()
+		})
+
+		if (mapContainerRef.current) {
+			resizeObserverRef.current.observe(mapContainerRef.current)
+		}
+
+		return () => {
+			map.remove()
+			resizeObserverRef.current?.disconnect()
+		}
+	}, [shouldInitMap, isLoading, isError, events, filters.coordinates, router])
+
+	if (isLoading)
+		return (
+			<div className='flex h-full items-center justify-center'>
+				Загрузка карты...
+			</div>
+		)
+
+	if (isError || !events)
+		return (
+			<div className='flex h-full items-center justify-center text-red-500'>
+				Ошибка загрузки мероприятий
+			</div>
+		)
+
+	return (
+		<div className='relative grow basis-5/12 rounded-xl'>
+			<div
+				className='map-container rounded-xl transition-all duration-500 ease-in-out'
+				ref={mapContainerRef}
+				style={{
+					height: '100%',
+					width: '100%',
+					minHeight: '500px'
+				}}
+			/>
+		</div>
+	)
+}
+
+const createEventMarker = (
+	event: any,
+	map: mapboxgl.Map,
+	onClick: (eventId: string) => void
+) => {
+	const el = document.createElement('div')
+	el.className = 'custom-marker'
+	el.style.backgroundImage = 'url("/logos/glowpinsmile.png")'
+	el.style.width = '32px'
+	el.style.height = '40px'
+	el.style.backgroundSize = 'cover'
+	el.style.cursor = 'pointer'
+
+	const popupContent = document.createElement('div')
+	popupContent.className = 'p-2'
+	popupContent.innerHTML = `
+    <div class="flex items-start gap-2">
+      <div class="w-12 h-12 bg-gray-200 rounded"></div>
+      <div>
+        <button 
+          class="text-left font-medium text-blue-600 hover:text-blue-800 transition-colors"
+          data-event-id="${event.id}"
+          id="event-button-${event.id}"
+        >
+          ${event.title}
+        </button>
+        <p class="text-sm mt-1">
+          ${event.paymentType === 'FREE' ? 'Бесплатно' : `${event.price} ${event.currency}`}
+        </p>
+      </div>
+    </div>
+  `
+
+	const button = popupContent.querySelector('button')
+	button?.addEventListener('click', e => {
+		e.preventDefault()
+		e.stopPropagation()
+		onClick(event.id)
+	})
+
+	const marker = new mapboxgl.Marker(el)
+		.setLngLat([
+			event.location.coordinates.longitude,
+			event.location.coordinates.latitude
+		])
+		.setPopup(
+			new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupContent)
+		)
+		.addTo(map)
+
+	return marker
+}
+
+export default Map

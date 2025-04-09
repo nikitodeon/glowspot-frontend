@@ -35,7 +35,7 @@ const FiltersFull = () => {
 	// 	largeRangeActive: false
 	// })
 	const [isPriceFilterActive, setIsPriceFilterActive] = useState(false)
-
+	const [searchInput, setSearchInput] = useState(filters.location)
 	const isFiltersFullOpen = useAppSelector(
 		state => state.global.isFiltersFullOpen
 	)
@@ -200,8 +200,6 @@ const FiltersFull = () => {
 	}
 	const currencyName = getCurrencyName(localFilters.currency)
 
-	if (!isFiltersFullOpen) return null
-
 	// const handleDateChange = (dates: [Date | null, Date | null]) => {
 	// 	const [start, end] = dates
 	// 	if (start && end && start > end) {
@@ -209,7 +207,39 @@ const FiltersFull = () => {
 	// 		return
 	// 	}
 	// }
+	const handleLocationSearch = async () => {
+		try {
+			const response = await fetch(
+				`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+					searchInput
+				)}.json?access_token=${
+					process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+				}&fuzzyMatch=true`
+			)
+			const data = await response.json()
+			if (data.features && data.features.length > 0) {
+				const [lng, lat] = data.features[0].center
+				dispatch(
+					setFilters({
+						location: searchInput,
+						coordinates: [lng, lat]
+					})
+				)
+				updateURL({
+					...filters,
+					location: searchInput,
+					coordinates: [lng, lat]
+				})
+			}
+		} catch (err) {
+			console.error('Error search location:', err)
+		}
+	}
 
+	useEffect(() => {
+		setSearchInput(filters.location)
+	}, [filters.location])
+	if (!isFiltersFullOpen) return null
 	return (
 		<div className='mmbg-black h-full overflow-auto rounded-lg bg-black px-4 pb-10'>
 			<div className='flex flex-col space-y-6'>
@@ -218,18 +248,13 @@ const FiltersFull = () => {
 					<h4 className='mb-2 font-bold text-white'>Location</h4>
 					<div className='flex items-center'>
 						<Input
-							placeholder='Enter location'
-							value={filters.location}
-							onChange={e =>
-								setLocalFilters(prev => ({
-									...prev,
-									location: e.target.value
-								}))
-							}
-							className='rounded-l-xl rounded-r-none border-r-0 border-white text-white'
+							placeholder='Город / локация'
+							value={searchInput}
+							onChange={e => setSearchInput(e.target.value)}
+							className='border-primary-400 w-40 rounded-l-xl rounded-r-none border-r-0 text-white'
 						/>
 						<Button
-							onClick={() => updateURL(localFilters)}
+							onClick={handleLocationSearch}
 							className='border-l-none hover:bg-primary-700 hover:text-primary-50 rounded-l-none rounded-r-xl border border-white shadow-none'
 						>
 							<Search className='h-4 w-4' />
@@ -249,7 +274,7 @@ const FiltersFull = () => {
 							key='any'
 							variant='ghost'
 							className={cn(
-								'flex h-auto min-h-0 flex-col items-center justify-center rounded-lg p-2 text-white hover:bg-black',
+								'flex h-auto min-h-0 flex-col items-center justify-center rounded-lg p-2 text-white hover:bg-white/10',
 								!localFilters.eventType
 									? 'border-[3px] border-white bg-black'
 									: 'border-2 border-white/70'
@@ -264,7 +289,7 @@ const FiltersFull = () => {
 								key={type}
 								variant='ghost'
 								className={cn(
-									'flex h-auto min-h-0 flex-col items-center justify-center rounded-lg p-2 text-white hover:bg-black',
+									'flex h-auto min-h-0 flex-col items-center justify-center rounded-lg p-2 text-white hover:bg-white/10',
 									localFilters.eventType === type ||
 										(!localFilters.eventType &&
 											type === 'any')
@@ -300,34 +325,6 @@ const FiltersFull = () => {
 						))}
 					</div>
 				</div>
-				<div>
-					<h4 className='mb-2 font-bold text-white'>Валюта</h4>
-					<Select
-						value={localFilters.currency || 'any'}
-						onValueChange={value =>
-							setLocalFilters(prev => ({
-								...prev,
-								currency: value as
-									| 'BYN'
-									| 'USD'
-									| 'EUR'
-									| 'RUB'
-									| 'any'
-							}))
-						}
-					>
-						<SelectTrigger className='w-full rounded-xl border-white text-white'>
-							<SelectValue placeholder='Select currency' />
-						</SelectTrigger>
-						<SelectContent className='bg-black'>
-							<SelectItem value='any'>Любая</SelectItem>
-							<SelectItem value='BYN'>BYN</SelectItem>
-							<SelectItem value='USD'>USD</SelectItem>
-							<SelectItem value='EUR'>EUR</SelectItem>
-							<SelectItem value='RUB'>RUB</SelectItem>
-						</SelectContent>
-					</Select>
-				</div>
 
 				{/* Price Range (using Slider instead of Select) */}
 
@@ -342,7 +339,10 @@ const FiltersFull = () => {
 								htmlFor='start-date'
 								className='mb-1 block text-white'
 							>
-								С какого числа
+								С какого числа{' '}
+								<span className='text-xs text-gray-400'>
+									(необязательное поле)
+								</span>
 							</Label>
 							<DatePicker
 								// dateFormat='MM/dd/yyyy, h:mm aa'
@@ -376,7 +376,7 @@ const FiltersFull = () => {
 								timeIntervals={15}
 								dateFormat='Pp'
 								className='w- rounded-md border border-white bg-black p-2 text-white'
-								placeholderText='Выберите дату (необязательно)'
+								placeholderText='Выберите дату '
 								calendarClassName='react-datepicker-dark hide-weekdays only-current-month-days forcells no-outside-days'
 								dayClassName={() =>
 									'react-datepicker__day-dark'
@@ -423,7 +423,10 @@ const FiltersFull = () => {
 							htmlFor='end-date'
 							className='mb-1 block text-white'
 						>
-							До какого числа
+							До какого числа{' '}
+							<span className='text-xs text-gray-400'>
+								(необязательное поле)
+							</span>
 						</Label>
 						<DatePicker
 							selected={
@@ -461,7 +464,7 @@ const FiltersFull = () => {
 							timeIntervals={15}
 							dateFormat='Pp'
 							className='w- rounded-md border border-white bg-black p-2 text-white'
-							placeholderText='Укажите финальную точку'
+							placeholderText='Выберите дату '
 							calendarClassName='react-datepicker-dark hide-weekdays only-current-month-days forcells no-outside-days'
 							dayClassName={() => 'react-datepicker__day-dark'}
 							weekDayClassName={() =>
@@ -501,10 +504,41 @@ const FiltersFull = () => {
 						/>
 					</div>
 					{/* </div> */}
-					<div className='mb-2 flex items-center justify-between'>
-						<h4 className='font-bold text-white'>
-							Малый диапазон цены
+					<div>
+						<h4 className='mb-2 mt-4 font-bold text-white'>
+							Валюта
 						</h4>
+						<Select
+							value={localFilters.currency || 'any'}
+							onValueChange={value =>
+								setLocalFilters(prev => ({
+									...prev,
+									currency: value as
+										| 'BYN'
+										| 'USD'
+										| 'EUR'
+										| 'RUB'
+										| 'any'
+								}))
+							}
+						>
+							<SelectTrigger className='w-full rounded-xl border-white text-white'>
+								<SelectValue placeholder='Select currency' />
+							</SelectTrigger>
+							<SelectContent className='bg-black'>
+								<SelectItem value='any'>Любая</SelectItem>
+								<SelectItem value='BYN'>BYN</SelectItem>
+								<SelectItem value='USD'>USD</SelectItem>
+								<SelectItem value='EUR'>EUR</SelectItem>
+								<SelectItem value='RUB'>RUB</SelectItem>
+							</SelectContent>
+						</Select>
+					</div>
+					<h4 className='mb-2 mt-4 font-bold text-white'>
+						Выберите диапазон для определённой валюты
+					</h4>
+					<div className='mb-2 flex items-center justify-between'>
+						<h4 className='text-white'>Малый диапазон цены</h4>
 						<span className='text-xs text-gray-400'>
 							{/* {sliderStates.smallRangeActive
 								? 'Активирован'
@@ -653,14 +687,14 @@ const FiltersFull = () => {
 				<div className='mt-6 flex gap-4'>
 					<Button
 						onClick={handleSubmit}
-						className='bg-primary-700 flex-1 rounded-xl border border-white bg-black text-white'
+						className='bg-primary-700 flex-1 rounded-xl border border-white bg-black text-white hover:bg-white/10'
 					>
 						Применить
 					</Button>
 					<Button
 						onClick={handleReset}
 						variant='outline'
-						className='flex-1 rounded-xl border-white text-white'
+						className='flex-1 rounded-xl border-white text-white hover:bg-white/10'
 					>
 						Сбросить фильтры
 					</Button>

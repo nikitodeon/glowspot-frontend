@@ -294,3 +294,30 @@
 .react-datepicker__aria-live {
 	display: none !important;
 }
+/* .marker-popup {
+	
+	@apply text-white;
+	@apply p-0;
+	@apply m-0;
+	@apply !flex;
+	@apply justify-between;
+	@apply items-center;
+	@apply gap-3;
+}
+
+.marker-popup-image {
+	@apply h-10 w-10 rounded-lg bg-white object-cover;
+}
+
+.marker-popup-price {
+	@apply text-sm font-semibold text-black;
+}
+
+.marker-popup-title {
+	@apply cursor-pointer hover:text-blue-300 hover:underline;
+	@apply focus:outline-none;
+}
+
+.marker-popup-price-unit {
+	@apply text-xs font-normal text-black;
+} */

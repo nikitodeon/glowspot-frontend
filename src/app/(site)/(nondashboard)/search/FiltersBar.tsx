@@ -1,9 +1,10 @@
 'use client'
 
 import { debounce } from 'lodash'
-import { Filter, Grid, List, Search } from 'lucide-react'
+import { Filter, Grid, LayoutDashboard, List, Search } from 'lucide-react'
+import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Button } from '@/components/ui/commonApp/button'
@@ -40,6 +41,18 @@ const FiltersBar = () => {
 	const viewMode = useAppSelector(state => state.global.viewMode)
 	const [searchInput, setSearchInput] = useState(filters.location)
 
+	// Сохранение состояния открытия/закрытия дополнительных фильтров
+	useEffect(() => {
+		const savedFiltersState = localStorage.getItem('filtersState')
+		if (savedFiltersState) {
+			const { isFiltersFullOpen, viewMode } =
+				JSON.parse(savedFiltersState)
+			dispatch(toggleFiltersFullOpen(isFiltersFullOpen))
+			dispatch(setViewMode(viewMode))
+		}
+	}, [dispatch])
+
+	// Обновление URL
 	const updateURL = debounce((newFilters: FiltersState) => {
 		const cleanFilters = cleanParams(newFilters)
 		const updatedSearchParams = new URLSearchParams()
@@ -89,6 +102,55 @@ const FiltersBar = () => {
 		updateURL(newFilters)
 	}
 
+	// Сохранение состояния фильтров (открытие/закрытие фильтров и вид)
+	const handleToggleFilters = () => {
+		const newState = !isFiltersFullOpen
+		dispatch(toggleFiltersFullOpen(newState))
+		localStorage.setItem(
+			'filtersState',
+			JSON.stringify({ isFiltersFullOpen: newState, viewMode })
+		)
+	}
+
+	const handleViewModeChange = (newViewMode: 'grid' | 'list') => {
+		dispatch(setViewMode(newViewMode))
+		localStorage.setItem(
+			'filtersState',
+			JSON.stringify({ isFiltersFullOpen, viewMode: newViewMode })
+		)
+	}
+	const handleLocationSearch = async () => {
+		try {
+			const response = await fetch(
+				`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+					searchInput
+				)}.json?access_token=${
+					process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+				}&fuzzyMatch=true`
+			)
+			const data = await response.json()
+			if (data.features && data.features.length > 0) {
+				const [lng, lat] = data.features[0].center
+				dispatch(
+					setFilters({
+						location: searchInput,
+						coordinates: [lng, lat]
+					})
+				)
+
+				updateURL({
+					...filters,
+					location: searchInput,
+					coordinates: [lng, lat]
+				})
+			}
+		} catch (err) {
+			console.error('Error search location:', err)
+		}
+	}
+	useEffect(() => {
+		setSearchInput(filters.location)
+	}, [filters.location])
 	return (
 		<div className='flex w-full items-center justify-between py-5'>
 			{/* Filters */}
@@ -96,86 +158,18 @@ const FiltersBar = () => {
 				<Button
 					variant='outline'
 					className={cn(
-						'border-primary-400 hover:bg-primary-500 hover:text-primary-100 gap-2 rounded-xl text-white',
-						isFiltersFullOpen && 'bg-primary-700 text-primary-100'
+						'border-primary-400 hover:bg-primary-500 hover:text-primary-100 gap-2 rounded-xl text-white hover:bg-white/10',
+						isFiltersFullOpen && ''
 					)}
-					onClick={() => dispatch(toggleFiltersFullOpen())}
+					onClick={handleToggleFilters}
 				>
 					<Filter className='h-4 w-4 text-white' />
-					<span>Больше фильтров</span>
+					{isFiltersFullOpen ? (
+						<span>Скрыть фильтры</span>
+					) : (
+						<span>Больше фильтров</span>
+					)}
 				</Button>
-
-				<div className='flex items-center'>
-					<Input
-						placeholder='Город / локация'
-						value={searchInput}
-						onChange={e => setSearchInput(e.target.value)}
-						className='border-primary-400 w-40 rounded-l-xl rounded-r-none border-r-0 text-white'
-					/>
-					<Button
-						onClick={() =>
-							handleFilterChange('location', searchInput, null)
-						}
-						className='border-l-none border-primary-400 hover:bg-primary-700 hover:text-primary-50 rounded-l-none rounded-r-xl border shadow-none'
-					>
-						<Search className='h-4 w-4' />
-					</Button>
-				</div>
-
-				{/* Ценовой фильтр
-				<div className='flex gap-1'>
-					<Select
-						value={filters.priceRange[0]?.toString() || 'any'}
-						onValueChange={value =>
-							handleFilterChange('priceRange', value, true)
-						}
-					>
-						<SelectTrigger className='border-primary-400 w-24 rounded-xl text-white'>
-							<SelectValue>
-								{filters.priceRange[0] != null
-									? `от ${filters.priceRange[0]} BYN`
-									: 'Мин. цена'}
-							</SelectValue>
-						</SelectTrigger>
-						<SelectContent className='bg-black text-white'>
-							<SelectItem value='any'>Любая</SelectItem>
-							{bynPrices.map(price => (
-								<SelectItem
-									key={price}
-									value={price.toString()}
-								>
-									от {price} BYN
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-
-					<Select
-						value={filters.priceRange[1]?.toString() || 'any'}
-						onValueChange={value =>
-							handleFilterChange('priceRange', value, false)
-						}
-					>
-						<SelectTrigger className='border-primary-400 w-24 rounded-xl text-white'>
-							<SelectValue>
-								{filters.priceRange[1] != null
-									? `до ${filters.priceRange[1]} BYN`
-									: 'Макс. цена'}
-							</SelectValue>
-						</SelectTrigger>
-						<SelectContent className='bg-black text-white'>
-							<SelectItem value='any'>Любая</SelectItem>
-							{bynPrices.map(price => (
-								<SelectItem
-									key={price}
-									value={price.toString()}
-								>
-									до {price} BYN
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div> */}
 
 				{/* Статус и оплата */}
 				<div className='flex gap-1'>
@@ -225,7 +219,7 @@ const FiltersBar = () => {
 						handleFilterChange('eventType', value, null)
 					}
 				>
-					<SelectTrigger className='border-primary-400 w-32 rounded-xl text-white'>
+					<SelectTrigger className='border-primary-400 w-38 rounded-xl text-white'>
 						<SelectValue placeholder='Тип мероприятия'>
 							{filters.eventType && filters.eventType !== 'any'
 								? (EventTypeLabelsRu as any)[filters.eventType] // Костыль для обхода ошибки типов
@@ -250,30 +244,58 @@ const FiltersBar = () => {
 						))}
 					</SelectContent>
 				</Select>
+				<div className='flex items-center'>
+					<Input
+						placeholder='Город / локация'
+						value={searchInput}
+						onChange={e => setSearchInput(e.target.value)}
+						className='border-primary-400 w-40 rounded-l-xl rounded-r-none border-r-0 text-white'
+					/>
+					<Button
+						// onClick={() =>
+						// 	handleFilterChange('location', searchInput, null)
+						// }
+						onClick={handleLocationSearch}
+						className='border-l-none border-primary-400 hover:bg-primary-700 hover:text-primary-50 rounded-l-none rounded-r-xl border shadow-none'
+					>
+						<Search className='h-4 w-4' />
+					</Button>
+				</div>
 			</div>
 
 			{/* Переключение видов */}
+			<Link href='/dashboard/hosting' className='ml-auto'>
+				<Button
+					variant='ghost'
+					className={cn(
+						'textkk-white/60 rounded-xl border px-3 py-1 text-white hover:bg-white/10'
+						// viewMode === 'grid' && ' text-white'
+					)}
+
+					// onClick={() => handleViewModeChange('grid')}
+				>
+					<LayoutDashboard className='h-5 w-5' /> Панель управления
+				</Button>
+			</Link>
 			<div className='flex items-center justify-between gap-4 p-2'>
 				<div className='flex rounded-xl border'>
 					<Button
 						variant='ghost'
 						className={cn(
-							'hover:bg-primary-600 hover:text-primary-50 rounded-none rounded-l-xl px-3 py-1 text-white',
-							viewMode === 'list' &&
-								'bg-primary-700 text-primary-50'
+							'rounded-none rounded-l-xl px-3 py-1 text-white/60',
+							viewMode === 'list' && 'text-white'
 						)}
-						onClick={() => dispatch(setViewMode('list'))}
+						onClick={() => handleViewModeChange('list')}
 					>
 						<List className='h-5 w-5' />
 					</Button>
 					<Button
 						variant='ghost'
 						className={cn(
-							'hover:bg-primary-600 hover:text-primary-50 rounded-none rounded-r-xl px-3 py-1 text-white',
-							viewMode === 'grid' &&
-								'bg-primary-700 text-primary-50'
+							'rounded-none rounded-r-xl px-3 py-1 text-white/60',
+							viewMode === 'grid' && 'text-white'
 						)}
-						onClick={() => dispatch(setViewMode('grid'))}
+						onClick={() => handleViewModeChange('grid')}
 					>
 						<Grid className='h-5 w-5' />
 					</Button>

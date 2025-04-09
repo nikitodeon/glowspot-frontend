@@ -69,7 +69,11 @@ const GridCard = ({
 			</div>
 
 			<div className='p-4 text-white'>
-				<Link href={propertyLink} className='hover:underline'>
+				<Link
+					href={propertyLink}
+					className='hover:underline'
+					// scroll={false}
+				>
 					<h3 className='mb-1 line-clamp-1 text-lg font-semibold'>
 						{event.title}
 					</h3>

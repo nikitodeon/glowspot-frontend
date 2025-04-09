@@ -33,7 +33,7 @@ interface InitialStateTypes {
 
 export const initialState: InitialStateTypes = {
 	filters: {
-		location: 'Minsk',
+		location: 'Минск',
 		status: 'any',
 		// beds: 'any',
 		// baths: 'any',
@@ -45,7 +45,7 @@ export const initialState: InitialStateTypes = {
 		dateRange: [null, null] as [string | null, string | null],
 		currency: 'any',
 		// squareFeet: [null, null],
-		coordinates: [53.9, 27.57]
+		coordinates: [27.57, 53.9]
 	},
 	isFiltersFullOpen: true,
 	viewMode: 'grid'
@@ -84,8 +84,14 @@ export const globalSlice = createSlice({
 				state.filters = { ...state.filters, ...action.payload }
 			}
 		},
-		toggleFiltersFullOpen: state => {
-			state.isFiltersFullOpen = !state.isFiltersFullOpen
+		toggleFiltersFullOpen: (
+			state,
+			action: PayloadAction<boolean | undefined>
+		) => {
+			state.isFiltersFullOpen =
+				action.payload !== undefined
+					? action.payload
+					: !state.isFiltersFullOpen
 		},
 		setViewMode: (state, action: PayloadAction<'grid' | 'list'>) => {
 			state.viewMode = action.payload
