@@ -4,7 +4,7 @@ import { ArrowLeft, Trash, Trash2, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/commonApp/button'
 import {
@@ -56,6 +56,13 @@ const EventDetailsPage = () => {
 			'GetFavoriteEventsDocument'
 		]
 	})
+	const [isMounted, setIsMounted] = useState(false)
+
+	useEffect(() => {
+		setIsMounted(true)
+	}, [])
+
+	if (!isMounted) return null
 
 	//   const [leaveEvent] = useLeaveEventMutation()
 

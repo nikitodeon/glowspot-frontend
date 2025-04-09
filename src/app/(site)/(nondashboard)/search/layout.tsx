@@ -1,31 +1,46 @@
-// src/app/(site)/(nondashboard)/search/layout.tsx
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 
 import { setFilters } from '@/store/redux'
-import { useAppDispatch, useAppSelector } from '@/store/redux/redux'
+import { useAppDispatch } from '@/store/redux/redux'
 
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { cleanParams } from '@/lib/utils'
 
-// src/app/(site)/(nondashboard)/search/layout.tsx
+export default function Layout({
+	children,
+	modal
+}: {
+	children: React.ReactNode
+	modal: React.ReactNode
+}) {
+	const [isMounted, setIsMounted] = useState(false)
 
-// src/app/(site)/(nondashboard)/search/layout.tsx
+	useEffect(() => {
+		setIsMounted(true)
+	}, [])
 
-// src/app/(site)/(nondashboard)/search/layout.tsx
+	if (!isMounted) return null
 
-// src/app/(site)/(nondashboard)/search/layout.tsx
+	return (
+		<div
+			className='mx-auto flex w-full flex-col px-5'
+			style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}
+		>
+			<Suspense fallback={null}>
+				<FilterInitializer />
+				{children}
+				{modal}
+			</Suspense>
+		</div>
+	)
+}
 
-// src/app/(site)/(nondashboard)/search/layout.tsx
-
-export default function Layout({ children }: { children: React.ReactNode }) {
+function FilterInitializer() {
 	const searchParams = useSearchParams()
 	const dispatch = useAppDispatch()
-	const isFiltersFullOpen = useAppSelector(
-		state => state.global.isFiltersFullOpen
-	)
 
 	useEffect(() => {
 		const initialFilters = Array.from(searchParams.entries()).reduce(
@@ -46,12 +61,5 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		dispatch(setFilters(cleanParams(initialFilters)))
 	}, [searchParams, dispatch])
 
-	return (
-		<div
-			className='mx-auto flex w-full flex-col px-5'
-			style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}
-		>
-			{children}
-		</div>
-	)
+	return null
 }

@@ -1,9 +1,18 @@
 'use client'
 
-import { ArrowLeft, Trash2, UserMinus, UserPlus, X } from 'lucide-react'
+import { Arrow } from '@radix-ui/react-dropdown-menu'
+import {
+	ArrowLeft,
+	ArrowRight,
+	Trash2,
+	UserMinus,
+	UserPlus,
+	X
+} from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 
 import {
 	Dialog,
@@ -14,8 +23,6 @@ import { Button } from '@/components/ui/commonApp/button'
 
 import {
 	useDeleteEventMutation,
-	//   useJoinEventMutation,
-	//   useLeaveEventMutation
 	useGetEventByIdQuery
 } from '@/graphql/generated/output'
 
@@ -34,8 +41,9 @@ const destructiveButtonClass = cn(
 export default function EnhancedEventModal({
 	params
 }: {
-	params: { id: string }
+	params: Promise<{ id: string }>
 }) {
+	const { id } = use(params)
 	const router = useRouter()
 	const { user } = useCurrent()
 	const userId = user?.id
@@ -43,9 +51,11 @@ export default function EnhancedEventModal({
 	const [isDeleting, setIsDeleting] = useState(false)
 	const [isJoining, setIsJoining] = useState(false)
 	const [isLeaving, setIsLeaving] = useState(false)
+	const [isMounted, setIsMounted] = useState(false)
 
 	const { data, loading, error } = useGetEventByIdQuery({
-		variables: { getEventByIdId: params.id }
+		variables: { getEventByIdId: id },
+		skip: !isMounted
 	})
 
 	const [deleteEvent] = useDeleteEventMutation({
@@ -55,22 +65,21 @@ export default function EnhancedEventModal({
 		]
 	})
 
-	//   const [joinEvent] = useJoinEventMutation()
-	//   const [leaveEvent] = useLeaveEventMutation()
-
-	const handleClose = () => router.back()
-
 	useEffect(() => {
+		setIsMounted(true)
+		const originalStyle = window.getComputedStyle(document.body).overflow
 		document.body.style.overflow = 'hidden'
 		return () => {
-			document.body.style.overflow = 'auto'
+			document.body.style.overflow = originalStyle
 		}
 	}, [])
+
+	const handleClose = () => router.back()
 
 	const handleDelete = async () => {
 		setIsDeleting(true)
 		try {
-			await deleteEvent({ variables: { id: params.id } })
+			await deleteEvent({ variables: { id } })
 			router.back()
 		} catch (err) {
 			console.error('Error deleting event:', err)
@@ -79,30 +88,26 @@ export default function EnhancedEventModal({
 		}
 	}
 
-	//   const handleJoin = async () => {
-	//     setIsJoining(true)
-	//     try {
-	//       await joinEvent({ variables: { eventId: params.id } })
-	//       // Можно добавить обновление данных или рефетч
-	//     } catch (err) {
-	//       console.error('Error joining event:', err)
-	//     } finally {
-	//       setIsJoining(false)
-	//     }
-	//   }
+	const FormatDateTime = ({ dateString }: { dateString: string }) => {
+		const [formattedDate, setFormattedDate] = useState('')
 
-	//   const handleLeave = async () => {
-	//     setIsLeaving(true)
-	//     try {
-	//       await leaveEvent({ variables: { eventId: params.id } })
-	//       // Можно добавить обновление данных или рефетч
-	//     } catch (err) {
-	//       console.error('Error leaving event:', err)
-	//     } finally {
-	//       setIsLeaving(false)
-	//     }
-	//   }
+		useEffect(() => {
+			const date = new Date(dateString)
+			setFormattedDate(
+				date.toLocaleString('ru-RU', {
+					day: 'numeric',
+					month: 'long',
+					year: 'numeric',
+					hour: '2-digit',
+					minute: '2-digit'
+				})
+			)
+		}, [dateString])
 
+		return <>{formattedDate}</>
+	}
+
+	if (!isMounted) return null
 	if (loading) return <div className='p-4 text-white'>Loading...</div>
 	if (error)
 		return <div className='p-4 text-red-500'>Error loading event</div>
@@ -114,21 +119,9 @@ export default function EnhancedEventModal({
 	const isOrganizer = userId === event.organizer.id
 	const isParticipant = event.participants?.some(p => p.id === userId)
 
-	// Форматирование даты и времени
-	const formatDateTime = (dateString: string) => {
-		const date = new Date(dateString)
-		return date.toLocaleString('ru-RU', {
-			day: 'numeric',
-			month: 'long',
-			year: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit'
-		})
-	}
-
 	return (
 		<Dialog defaultOpen open onOpenChange={handleClose}>
-			<DialogOverlay className='overflowhhh-scroll fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
+			<DialogOverlay className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
 				<DialogContent className='relative z-50 max-h-[90vh] w-full max-w-3xl overflow-y-auto border border-white/10 bg-black p-0 shadow-xl'>
 					<button
 						onClick={handleClose}
@@ -145,20 +138,30 @@ export default function EnhancedEventModal({
 								width={800}
 								height={400}
 								className='h-auto w-full object-cover'
+								priority
 							/>
 						</div>
 					)}
 
-					<div className='maxпппп-h-[80vh] overflowпппппп-y-auto p-6'>
-						<div className='mb-4 flex items-start justify-between'>
+					<div className='mb-4 max-h-[80vh] p-6'>
+						<div className='flex items-start justify-between'>
 							<div>
 								<h2 className='text-2xl font-bold text-white'>
 									{event.title}
 								</h2>
 								<p className='text-gray-400'>
-									{formatDateTime(event.startTime)}
-									{event.endTime &&
-										` - ${formatDateTime(event.endTime)}`}
+									<FormatDateTime
+										dateString={event.startTime}
+									/>
+									{event.endTime && (
+										<>
+											{' '}
+											-{' '}
+											<FormatDateTime
+												dateString={event.endTime}
+											/>
+										</>
+									)}
 								</p>
 							</div>
 							{event.isVerified && (
@@ -206,7 +209,7 @@ export default function EnhancedEventModal({
 								<>
 									<Button
 										variant='outline'
-										className='border-white/20 text-white hover:bg-white/10'
+										className='mb-8 border-white/20 text-white hover:bg-white/10'
 									>
 										Редактировать
 									</Button>
@@ -220,8 +223,21 @@ export default function EnhancedEventModal({
 										<Trash2 className='mr-2 h-4 w-4' />
 										Удалить
 									</Button>
-
-									{/* Диалог подтверждения удаления */}
+									{/* <Link
+										href={`/search/event/${event.id}`}
+										className='ml-auto'
+									> */}
+									<Button
+										variant='outline'
+										className='ml-auto border-white/20 text-white hover:bg-white/10'
+										onClick={() => {
+											window.location.href = `/search/event/${event.id}`
+										}}
+									>
+										На страницу мероприятия
+										<ArrowRight className='ml-2 h-4 w-4' />
+									</Button>
+									{/* </Link> */}
 									<Dialog
 										open={openDeleteDialog}
 										onOpenChange={setOpenDeleteDialog}
@@ -269,7 +285,6 @@ export default function EnhancedEventModal({
 								<Button
 									variant='outline'
 									className='border-red-500/30 text-red-500 hover:bg-red-500/10 hover:text-red-400'
-									//   onClick={handleLeave}
 									disabled={isLeaving}
 								>
 									<UserMinus className='mr-2 h-4 w-4' />
@@ -281,7 +296,6 @@ export default function EnhancedEventModal({
 								<Button
 									variant='default'
 									className='bg-green-600 text-white hover:bg-green-700'
-									//   onClick={handleJoin}
 									disabled={isJoining}
 								>
 									<UserPlus className='mr-2 h-4 w-4' />

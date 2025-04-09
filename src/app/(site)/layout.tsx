@@ -10,11 +10,9 @@ import { useGetEventByIdLazyQuery } from '@/graphql/generated/output'
 import StoreProvider from '@/store/redux/redux'
 
 export default function SiteLayout({
-	children,
-	modal
+	children
 }: Readonly<{
 	children: React.ReactNode
-	modal: React.ReactNode
 }>) {
 	const pathname = usePathname()
 	const params = useParams()
@@ -53,10 +51,7 @@ export default function SiteLayout({
 				<div className='fixed inset-y-0 z-50 h-[65px] w-full'>
 					<HeaderWithProps text={headerText} />
 				</div>
-				<StoreProvider>
-					{modal}
-					{children}
-				</StoreProvider>
+				<StoreProvider>{children}</StoreProvider>
 			</div>
 		</div>
 	)

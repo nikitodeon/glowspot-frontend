@@ -200,7 +200,7 @@ const Listings = () => {
 								onFavoriteToggle={() =>
 									handleFavoriteToggle(event.id, isFavorite)
 								}
-								propertyLink={`/search?modalEventId=${event.id}`}
+								propertyLink={`/search/event/${event.id}`}
 							/>
 						)
 					})}
