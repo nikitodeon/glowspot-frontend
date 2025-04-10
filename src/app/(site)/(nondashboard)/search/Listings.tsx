@@ -1,7 +1,7 @@
 'use client'
 
 import { ApolloCache } from '@apollo/client'
-import React from 'react'
+import React, { useState } from 'react'
 import { toast } from 'sonner'
 
 import {
@@ -24,6 +24,9 @@ import GridCard from './GridCard'
 const Listings = () => {
 	const { user } = useCurrent()
 	const userId = user?.id
+	const [localFavorites, setLocalFavorites] = useState<
+		Record<string, boolean>
+	>({})
 
 	const filters = useAppSelector(state => state.global.filters)
 	const viewMode = useAppSelector(state => state.global.viewMode)
@@ -165,10 +168,25 @@ const Listings = () => {
 		eventId: string,
 		isCurrentlyFavorite: boolean
 	) => {
-		if (isCurrentlyFavorite) {
-			await removeFromFavorites({ variables: { eventId } })
-		} else {
-			await addToFavorites({ variables: { eventId } })
+		// Оптимистичное обновление UI
+		setLocalFavorites(prev => ({
+			...prev,
+			[eventId]: !isCurrentlyFavorite
+		}))
+
+		try {
+			if (isCurrentlyFavorite) {
+				await removeFromFavorites({ variables: { eventId } })
+			} else {
+				await addToFavorites({ variables: { eventId } })
+			}
+		} catch (error) {
+			// Откат при ошибке
+			setLocalFavorites(prev => ({
+				...prev,
+				[eventId]: isCurrentlyFavorite
+			}))
+			toast.error('Произошла ошибка')
 		}
 	}
 
@@ -187,9 +205,11 @@ const Listings = () => {
 				<div className='w-full p-4'>
 					{events.map((event: any) => {
 						const isFavorite =
+							localFavorites[event.id] ??
 							event.favoritedBy?.some(
 								(u: any) => u.id === userId
-							) ?? false
+							) ??
+							false
 						const Card =
 							viewMode === 'grid' ? GridCard : CardCompact
 						return (

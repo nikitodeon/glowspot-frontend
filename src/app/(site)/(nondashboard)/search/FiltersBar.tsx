@@ -184,7 +184,9 @@ const FiltersBar = () => {
 						</SelectTrigger>
 						<SelectContent className='bg-black text-white'>
 							<SelectItem value='any'>Любой статус</SelectItem>
-							<SelectItem value='UPCOMING'>Будет</SelectItem>
+							<SelectItem value='UPCOMING'>
+								Предстоящее
+							</SelectItem>
 							<SelectItem value='ONGOING'>В процессе</SelectItem>
 							<SelectItem value='COMPLETED'>Завершено</SelectItem>
 							<SelectItem value='CANCELLED'>Отменено</SelectItem>

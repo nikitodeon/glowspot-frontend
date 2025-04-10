@@ -1,0 +1,33 @@
+mutation UpdateEvent(
+	$input: UpdateEventInput!
+	$photos: [Upload!]
+	$id: String!
+) {
+	updateEvent(input: $input, photos: $photos, id: $id) {
+		id
+		title
+		description
+		startTime
+		endTime
+		photoUrls
+		eventType
+		paymentType
+		price
+		currency
+		isPrivate
+		maxParticipants
+		tags
+		ageRestriction
+		status
+		location {
+			id
+			address
+			city
+			placeName
+		}
+		organizer {
+			id
+			username
+		}
+	}
+}

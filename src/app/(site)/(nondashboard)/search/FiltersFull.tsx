@@ -61,8 +61,14 @@ const FiltersFull = () => {
 		router.push(`${pathname}?${updatedSearchParams.toString()}`)
 	}, 300)
 	const handleSubmit = () => {
-		dispatch(setFilters(localFilters))
-		updateURL(localFilters)
+		const filtersToApply = {
+			...localFilters,
+			location: filters.location, // сохраняем прежнюю локацию
+			coordinates: filters.coordinates // сохраняем прежние координаты
+		}
+
+		dispatch(setFilters(filtersToApply))
+		updateURL(filtersToApply)
 	}
 
 	const handleReset = () => {
@@ -207,44 +213,44 @@ const FiltersFull = () => {
 	// 		return
 	// 	}
 	// }
-	const handleLocationSearch = async () => {
-		try {
-			const response = await fetch(
-				`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-					searchInput
-				)}.json?access_token=${
-					process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-				}&fuzzyMatch=true`
-			)
-			const data = await response.json()
-			if (data.features && data.features.length > 0) {
-				const [lng, lat] = data.features[0].center
-				dispatch(
-					setFilters({
-						location: searchInput,
-						coordinates: [lng, lat]
-					})
-				)
-				updateURL({
-					...filters,
-					location: searchInput,
-					coordinates: [lng, lat]
-				})
-			}
-		} catch (err) {
-			console.error('Error search location:', err)
-		}
-	}
+	// const handleLocationSearch = async () => {
+	// 	try {
+	// 		const response = await fetch(
+	// 			`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+	// 				searchInput
+	// 			)}.json?access_token=${
+	// 				process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+	// 			}&fuzzyMatch=true`
+	// 		)
+	// 		const data = await response.json()
+	// 		if (data.features && data.features.length > 0) {
+	// 			const [lng, lat] = data.features[0].center
+	// 			dispatch(
+	// 				setFilters({
+	// 					location: searchInput,
+	// 					coordinates: [lng, lat]
+	// 				})
+	// 			)
+	// 			updateURL({
+	// 				...filters,
+	// 				location: searchInput,
+	// 				coordinates: [lng, lat]
+	// 			})
+	// 		}
+	// 	} catch (err) {
+	// 		console.error('Error search location:', err)
+	// 	}
+	// }
 
-	useEffect(() => {
-		setSearchInput(filters.location)
-	}, [filters.location])
+	// useEffect(() => {
+	// 	setSearchInput(filters.location)
+	// }, [filters.location])
 	if (!isFiltersFullOpen) return null
 	return (
 		<div className='mmbg-black h-full overflow-auto rounded-lg bg-black px-4 pb-10'>
 			<div className='flex flex-col space-y-6'>
 				{/* Location */}
-				<div>
+				{/* <div>
 					<h4 className='mb-2 font-bold text-white'>Location</h4>
 					<div className='flex items-center'>
 						<Input
@@ -260,7 +266,7 @@ const FiltersFull = () => {
 							<Search className='h-4 w-4' />
 						</Button>
 					</div>
-				</div>
+				</div> */}
 
 				{/* Event Type */}
 				<div>

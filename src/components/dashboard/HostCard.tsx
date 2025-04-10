@@ -1,7 +1,7 @@
 'use client'
 
 import { useMutation } from '@apollo/client'
-import { Calendar, Clock, Heart, Trash, Trash2 } from 'lucide-react'
+import { Calendar, Clock, Heart, SquarePen, Trash, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -20,6 +20,12 @@ import {
 import { DeleteEventDocument } from '@/graphql/generated/output'
 
 import { getMediaSource } from '@/utils/get-media-source'
+
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger
+} from '../ui/commonAuth/Tooltip'
 
 import { cn } from '@/lib/utils'
 
@@ -142,19 +148,38 @@ const HostCard = ({
 						</button>
 					</Link>
 				</div>
-				<div className='absolute bottom-4 right-4'>
+				<div className='absolute bottom-4 right-4 flex'>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Link href={`/dashboard/hosting/${event.id}/edit`}>
+								<Button className='flex items-center gap-1 rounded-full border border-white/10 bg-black px-3 py-1 text-xs font-medium text-white hover:bg-white/10'>
+									<SquarePen className='h-4 w-4' />
+								</Button>
+							</Link>
+						</TooltipTrigger>
+						<TooltipContent className='border-2 border-white/10 bg-black text-white'>
+							Изменить
+						</TooltipContent>
+					</Tooltip>
 					<Dialog
 						open={openDeleteDialog}
 						onOpenChange={setOpenDeleteDialog}
 					>
-						<DialogTrigger asChild>
-							<button
-								className='flex items-center gap-1 rounded-full border border-white/10 bg-black px-3 py-1 text-xs font-medium text-white hover:bg-white/10 hover:text-red-400'
-								onClick={e => e.stopPropagation()}
-							>
-								<Trash className='h-4 w-4' />
-							</button>
-						</DialogTrigger>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<DialogTrigger asChild>
+									<button
+										className='flex items-center gap-1 rounded-full border border-white/10 bg-black px-3 py-1 text-xs font-medium text-white hover:bg-white/10 hover:text-red-400'
+										onClick={e => e.stopPropagation()}
+									>
+										<Trash className='h-4 w-4' />
+									</button>
+								</DialogTrigger>
+							</TooltipTrigger>
+							<TooltipContent className='border-2 border-white/10 bg-black text-white'>
+								Удалить
+							</TooltipContent>
+						</Tooltip>
 						<DialogContent className='border-white/10 bg-black text-white'>
 							<DialogHeader>
 								<DialogTitle className='text-white'>

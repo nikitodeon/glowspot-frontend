@@ -55,6 +55,8 @@ interface FormFieldProps {
 		| 'tags'
 		| 'datepicker'
 		| 'title'
+		| 'select-update'
+		| 'select-update-new'
 	// Добавлен новый тип
 	placeholder?: string
 	options?: { value: string; label: string }[]
@@ -103,6 +105,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 					<Textarea
 						placeholder={placeholder}
 						{...field}
+						maxLength={2000}
 						rows={3}
 						className={`border-gray-200 p-4 ${inputClassName}`}
 					/>
@@ -125,6 +128,26 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 									key={option.value}
 									value={option.value}
 									className='cursor-pointer hover:bg-gray-800 focus:bg-gray-800'
+								>
+									{option.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				)
+			case 'select-update-new':
+				return null
+			case 'select-update':
+				return (
+					<Select value={field.value} onValueChange={field.onChange}>
+						<SelectTrigger>
+							<SelectValue placeholder={placeholder} />
+						</SelectTrigger>
+						<SelectContent className='w-full border-gray-200 bg-black text-white shadow'>
+							{options?.map(option => (
+								<SelectItem
+									key={option.value}
+									value={option.value}
 								>
 									{option.label}
 								</SelectItem>
@@ -270,7 +293,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 						type={type}
 						placeholder={placeholder}
 						{...field}
-						maxLength={30}
+						maxLength={50}
 						className={`border-gray-200 p-4 ${inputClassName}`}
 						disabled={disabled}
 					/>
@@ -322,7 +345,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 									: initialValue
 						})}
 					</FormControl>
-					<FormMessage className='text-red-400' />
+					<FormMessage className='text-red-500' />
 				</FormItem>
 			)}
 		/>
@@ -383,7 +406,7 @@ const MultiInputField: React.FC<MultiInputFieldProps> = ({
 				className='text-customgreys-dirtyGrey mt-2'
 			>
 				<Plus className='mr-2 h-4 w-4' />
-				Add Item
+				Добавить
 			</Button>
 		</div>
 	)

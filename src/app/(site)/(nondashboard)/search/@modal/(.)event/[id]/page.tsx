@@ -4,6 +4,7 @@ import { Arrow } from '@radix-ui/react-dropdown-menu'
 import {
 	ArrowLeft,
 	ArrowRight,
+	SquarePen,
 	Trash2,
 	UserMinus,
 	UserPlus,
@@ -20,6 +21,13 @@ import {
 	DialogOverlay
 } from '@/components/ui/commonApp/ModalDialog'
 import { Button } from '@/components/ui/commonApp/button'
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious
+} from '@/components/ui/commonApp/carousel'
 
 import {
 	useDeleteEventMutation,
@@ -127,19 +135,38 @@ export default function EnhancedEventModal({
 						onClick={handleClose}
 						className='absolute right-4 top-4 z-10 rounded-full p-2 text-white hover:bg-white/10'
 					>
-						<X className='h-6 w-6' />
+						<X className='h-6 w-6 text-gray-400' />
 					</button>
 
-					{photoUrl && (
-						<div className='w-full overflow-hidden rounded-t-lg'>
-							<Image
-								src={getMediaSource(photoUrl)}
-								alt={event.title}
-								width={800}
-								height={400}
-								className='h-auto w-full object-cover'
-								priority
-							/>
+					{event.photoUrls && event.photoUrls.length > 0 && (
+						<div className='relative h-96 w-full overflow-hidden rounded-t-lg'>
+							<Carousel className='h-full w-full'>
+								<CarouselContent className='h-full'>
+									{event.photoUrls.map(item => (
+										<CarouselItem
+											key={item}
+											className='h-full'
+										>
+											<div className='relative h-full w-full'>
+												<Image
+													alt='Event Image'
+													src={getMediaSource(item)}
+													fill
+													className='object-cover'
+													sizes='(max-width: 768px) 100vw, 33vw'
+													priority
+												/>
+											</div>
+										</CarouselItem>
+									))}
+								</CarouselContent>
+								{event.photoUrls.length > 1 && (
+									<>
+										<CarouselPrevious className='left-2 bg-black/50 text-white hover:bg-black/70' />
+										<CarouselNext className='right-2 bg-black/50 text-white hover:bg-black/70' />
+									</>
+								)}
+							</Carousel>
 						</div>
 					)}
 
@@ -207,12 +234,17 @@ export default function EnhancedEventModal({
 						<div className='flex flex-wrap gap-4'>
 							{isOrganizer ? (
 								<>
-									<Button
-										variant='outline'
-										className='mb-8 border-white/20 text-white hover:bg-white/10'
+									<Link
+										href={`/dashboard/hosting/${event.id}/edit`}
 									>
-										Редактировать
-									</Button>
+										<Button
+											variant='outline'
+											className='mb-8 border-white/20 text-white hover:bg-white/10'
+										>
+											<SquarePen className='h-4 w-4' />{' '}
+											Редактировать
+										</Button>
+									</Link>
 									<Button
 										variant='destructive'
 										className={destructiveButtonClass}

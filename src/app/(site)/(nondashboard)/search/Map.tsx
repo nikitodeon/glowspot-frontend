@@ -14,6 +14,9 @@ import {
 
 import { useAppSelector } from '@/store/redux/redux'
 
+import { formatDate } from '@/utils/format-date'
+import { getMediaSource } from '@/utils/get-media-source'
+
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string
 
 const Map = () => {
@@ -158,8 +161,26 @@ const createEventMarker = (
 	map: mapboxgl.Map,
 	onClick: (eventId: string) => void
 ) => {
+	// Форматируем дату и время
+	const formatDate = (dateString: string) => {
+		const date = new Date(dateString)
+		return date.toLocaleDateString('ru-RU', {
+			day: 'numeric',
+			month: 'short'
+			// year: 'numeric'
+		})
+	}
+
+	const formatTime = (dateString: string) => {
+		const date = new Date(dateString)
+		return date.toLocaleTimeString('ru-RU', {
+			hour: '2-digit',
+			minute: '2-digit'
+		})
+	}
+
 	const el = document.createElement('div')
-	el.className = 'custom-marker'
+	el.className = 'custom-marker '
 	el.style.backgroundImage = 'url("/logos/glowpinsmile.png")'
 	el.style.width = '32px'
 	el.style.height = '40px'
@@ -167,24 +188,48 @@ const createEventMarker = (
 	el.style.cursor = 'pointer'
 
 	const popupContent = document.createElement('div')
-	popupContent.className = 'p-2'
+	popupContent.className =
+		'bg-black text-white border border-white/10 rounded-lg p-3'
 	popupContent.innerHTML = `
-    <div class="flex items-start gap-2">
-      <div class="w-12 h-12 bg-gray-200 rounded"></div>
-      <div>
-        <button 
-          class="text-left font-medium text-blue-600 hover:text-blue-800 transition-colors"
-          data-event-id="${event.id}"
-          id="event-button-${event.id}"
-        >
-          ${event.title}
-        </button>
-        <p class="text-sm mt-1">
-          ${event.paymentType === 'FREE' ? 'Бесплатно' : `${event.price} ${event.currency}`}
-        </p>
-      </div>
-    </div>
-  `
+	  <div class="flex items-start gap-3">
+		<div class="flex-shrink-0 w-12 h-12 rounded overflow-hidden">
+		  <img 
+			src="${getMediaSource(event.photoUrls[0])}" 
+			alt="${event.title}"
+			class="w-full h-full object-cover"
+			onerror="this.src='/placeholder-event.jpg'"
+		  />
+		</div>
+		<div class="flex-1 min-w-0">
+		  <button 
+			class="text-left font-medium text-white hover:text-white/80 transition-colors w-full"
+			data-event-id="${event.id}"
+			id="event-button-${event.id}"
+		  >
+			${event.title}
+		  </button>
+		  <div class="flex items-center mt-1 text-sm">
+			<span class="text-white/80">
+			  ${event.paymentType === 'FREE' ? '' : `${event.price} ${event.currency}`}
+			</span>
+			
+			<span class="text-white/80 flex items-center   ">
+			  <!-- SVG иконка календаря -->
+			  <svg class=" w-[18px] h-[18px] mr-2   text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+			  </svg>
+			  <span class="${event.paymentType === 'FREE' ? 'mr-[16px]' : ''}">
+			  ${formatDate(event.startTime)}</span>
+			  <!-- SVG иконка часов -->
+			  <svg class="mr-1 ml-[-8px]  w-[18px] h-[18px] text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+			  </svg>
+			  ${formatTime(event.startTime)}
+			</span>
+		  </div>
+		</div>
+	  </div>
+	`
 
 	const button = popupContent.querySelector('button')
 	button?.addEventListener('click', e => {
@@ -199,11 +244,13 @@ const createEventMarker = (
 			event.location.coordinates.latitude
 		])
 		.setPopup(
-			new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupContent)
+			new mapboxgl.Popup({
+				offset: 25,
+				className: 'mapboxgl-popup-custom'
+			}).setDOMContent(popupContent)
 		)
 		.addTo(map)
 
 	return marker
 }
-
 export default Map

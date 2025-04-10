@@ -42,6 +42,13 @@ import {
 	Wifi
 } from 'lucide-react'
 
+import {
+	EventProperty,
+	EventStatus,
+	EventType,
+	PaymentType
+} from '@/graphql/generated/output'
+
 // export enum AmenityEnum {
 // 	WasherDryer = 'WasherDryer',
 // 	AirConditioning = 'AirConditioning',
@@ -103,6 +110,13 @@ export enum HighlightEnum {
 	CloseToTransit = 'CloseToTransit',
 	GreatView = 'GreatView',
 	QuietNeighborhood = 'QuietNeighborhood'
+}
+export enum EventStatusEnum {
+	Archived = 'ARCHIVED',
+	Cancelled = 'CANCELLED',
+	Completed = 'COMPLETED',
+	Ongoing = 'ONGOING',
+	Upcoming = 'UPCOMING'
 }
 
 export const HighlightIcons: Record<HighlightEnum, LucideIcon> = {
@@ -198,7 +212,7 @@ export const EventTypeIcons: Record<EventTypeEnum, LucideIcon> = {
 // 	KIDS_EVENT: 'Для детей'
 // }
 
-export const EventTypeLabelsRu: Record<EventTypeEnum, string> = {
+export const EventTypeLabelsRu: Record<EventType, string> = {
 	[EventTypeEnum.EXHIBITION]: 'Выставка',
 	[EventTypeEnum.MEETUP]: 'Встреча',
 	[EventTypeEnum.WALK]: 'Прогулка',
@@ -219,6 +233,50 @@ export const EventTypeLabelsRu: Record<EventTypeEnum, string> = {
 	[EventTypeEnum.KARAOKE]: 'Караоке',
 	[EventTypeEnum.CYBERSPORT]: 'Киберспорт',
 	[EventTypeEnum.KIDS_EVENT]: 'Для детей'
+}
+export const EventTypeTranslations: Record<EventType, string> = {
+	[EventType.BookClub]: 'Книжный клуб',
+	[EventType.Concert]: 'Концерт',
+	[EventType.Cybersport]: 'Киберспорт',
+	[EventType.Dance]: 'Танцы',
+	[EventType.Exhibition]: 'Выставка',
+	[EventType.Festival]: 'Фестиваль',
+	[EventType.Karaoke]: 'Караоке',
+	[EventType.KidsEvent]: 'Для детей',
+	[EventType.Lecture]: 'Лекция',
+	[EventType.Meetup]: 'Встреча',
+	[EventType.Movie]: 'Кино',
+	[EventType.Other]: 'Другое',
+	[EventType.Party]: 'Вечеринка',
+	[EventType.Sport]: 'Спорт',
+	[EventType.Standup]: 'Стендап',
+	[EventType.Theatre]: 'Театр',
+	[EventType.Walk]: 'Прогулка'
+}
+
+export const EventPropertyTranslations: Record<EventProperty, string> = {
+	[EventProperty.Age_18Plus]: '18+',
+	[EventProperty.Age_21Plus]: '21+',
+	[EventProperty.AlcoholFree]: 'Без алкоголя',
+	[EventProperty.Charity]: 'Благотворительное',
+	[EventProperty.FamilyFriendly]: 'Для всей семьи',
+	[EventProperty.HealthyLifestyle]: 'ЗОЖ',
+	[EventProperty.Indoor]: 'В помещении',
+	[EventProperty.Online]: 'Онлайн',
+	[EventProperty.Outdoor]: 'На улице',
+	[EventProperty.PetFriendly]: 'Можно с питомцами'
+}
+export const EventStatusTranslations: Record<EventStatus, string> = {
+	[EventStatus.Archived]: 'Архивировано',
+	[EventStatus.Cancelled]: 'Отменено',
+	[EventStatus.Completed]: 'Завершено',
+	[EventStatus.Ongoing]: 'Активное',
+	[EventStatus.Upcoming]: 'Предстоящее'
+}
+export const PaymentTypeTranslations: Record<PaymentType, string> = {
+	[PaymentType.Donation]: 'По желанию',
+	[PaymentType.Free]: 'Бесплатно',
+	[PaymentType.PaymentRequired]: 'Требуется оплата'
 }
 
 // Add this constant at the end of the file

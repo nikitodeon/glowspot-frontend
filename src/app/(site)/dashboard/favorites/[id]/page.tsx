@@ -8,6 +8,13 @@ import React, { useState } from 'react'
 
 import { Button } from '@/components/ui/commonApp/button'
 import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious
+} from '@/components/ui/commonApp/carousel'
+import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
@@ -18,6 +25,9 @@ import {
 } from '@/components/ui/commonApp/dialog'
 
 import {
+	EventProperty,
+	EventStatus,
+	EventType,
 	useDeleteEventMutation,
 	useGetEventByIdQuery,
 	//   useLeaveEventMutation,
@@ -28,6 +38,11 @@ import { useCurrent } from '@/hooks/useCurrent'
 
 import { getMediaSource } from '@/utils/get-media-source'
 
+import {
+	EventPropertyTranslations,
+	EventStatusTranslations,
+	EventTypeTranslations
+} from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 const destructiveButtonClass = cn(
@@ -165,16 +180,36 @@ const FavoriteEventDetailsPage = () => {
 			<div className='mb-8 overflow-hidden rounded-xl border border-white/20 bg-black p-6 shadow-lg transition-all hover:shadow-xl'>
 				<div className='flex flex-col gap-6 md:flex-row'>
 					<div className='w-full md:w-1/3'>
-						{event.photoUrls?.[0] && (
+						{event.photoUrls && (
 							<div className='group relative h-64 w-full overflow-hidden rounded-lg border border-white/20'>
-								<Image
-									src={getMediaSource(event.photoUrls[0])}
-									alt={event.title}
-									width={400}
-									height={300}
-									className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
-								/>
-								<div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100'></div>
+								<Carousel className='h-full w-full'>
+									<CarouselContent className='h-full'>
+										{event.photoUrls.map(item => (
+											<CarouselItem
+												key={item}
+												className='h-full'
+											>
+												<div className='relative h-full w-full'>
+													<Image
+														alt='Event Image'
+														src={getMediaSource(
+															item
+														)}
+														fill
+														className='object-cover'
+														sizes='(max-width: 768px) 100vw, 33vw'
+													/>
+												</div>
+											</CarouselItem>
+										))}
+									</CarouselContent>
+									{event.photoUrls.length > 1 && (
+										<>
+											<CarouselPrevious />
+											<CarouselNext />
+										</>
+									)}
+								</Carousel>
 							</div>
 						)}
 					</div>
@@ -238,9 +273,9 @@ const FavoriteEventDetailsPage = () => {
 									Тип мероприятия
 								</h3>
 								<p className='text-white'>
-									{event.eventType === 'PARTY'
-										? 'Вечеринка'
-										: event.eventType}
+									{EventTypeTranslations[
+										event.eventType as EventType
+									] || event.eventType}
 								</p>
 							</div>
 
@@ -369,9 +404,9 @@ const FavoriteEventDetailsPage = () => {
 								Статус:
 							</strong>{' '}
 							<span className='text-white'>
-								{event.status === 'UPCOMING'
-									? 'Предстоящее'
-									: event.status}
+								{EventStatusTranslations[
+									event.status as EventStatus
+								] || event.status}
 							</span>
 						</li>
 						<li className='rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'>
@@ -394,11 +429,9 @@ const FavoriteEventDetailsPage = () => {
 												key={prop}
 												className='text-white'
 											>
-												{prop === 'AGE_18_PLUS'
-													? '18+'
-													: prop === 'INDOOR'
-														? 'В помещении'
-														: prop}
+												{EventPropertyTranslations[
+													prop as EventProperty
+												] || prop}
 											</li>
 										))}
 									</ul>

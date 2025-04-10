@@ -32,67 +32,47 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
 	const pathname = usePathname()
 	const { toggleSidebar, open } = useSidebar()
 
-	const navLinks =
-		// userType === 'manager'
-		// 	? [
-		// 			{
-		// 				icon: Building,
-		// 				label: 'Properties',
-		// 				href: '/managers/properties'
-		// 			},
-		// 			{
-		// 				icon: FileText,
-		// 				label: 'Applications',
-		// 				href: '/managers/applications'
-		// 			},
-		// 			{
-		// 				icon: Settings,
-		// 				label: 'Settings',
-		// 				href: '/managers/settings'
-		// 			}
-		// 		]
-		// :
-		[
-			{
-				icon: Heart,
-				label: 'Избранное',
-				href: '/dashboard/favorites'
-			},
-			{
-				icon: PartyPopper,
-				label: 'Участие',
-				href: '/dashboard/attending'
-			},
+	const navLinks = [
+		{
+			icon: Heart,
+			label: 'Избранное',
+			href: '/dashboard/favorites'
+		},
+		{
+			icon: PartyPopper,
+			label: 'Участие',
+			href: '/dashboard/attending'
+		},
 
-			{
-				icon: NotebookPen,
-				label: 'Организация',
-				href: '/dashboard/hosting'
-			},
+		{
+			icon: NotebookPen,
+			label: 'Организация',
+			href: '/dashboard/hosting'
+		},
 
-			{
-				icon: MapPinned,
-				label: 'Карта',
-				href: '/search'
-			},
-			{
-				icon: Settings,
-				label: 'Настройки',
-				href: '/dashboard/settings'
-			},
-			{
-				icon: House,
-				label: 'Главная',
-				href: '/'
-			}
-		]
+		{
+			icon: MapPinned,
+			label: 'Карта',
+			href: '/search'
+		},
+		{
+			icon: Settings,
+			label: 'Настройки',
+			href: '/dashboard/settings'
+		},
+		{
+			icon: House,
+			label: 'Главная',
+			href: '/'
+		}
+	]
 
 	return (
 		<Sidebar
 			collapsible='icon'
 			className='fixed left-0 bg-black shadow-lg'
 			style={{
-				top: `${NAVBAR_HEIGHT}px`,
+				top: `${NAVBAR_HEIGHT - 40}px`,
 				height: `calc(100vh - ${NAVBAR_HEIGHT}px)`
 			}}
 		>

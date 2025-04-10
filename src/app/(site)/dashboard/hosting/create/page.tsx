@@ -30,6 +30,12 @@ import {
 	eventSchema
 } from '@/schemas/events/create-event.schema'
 
+import {
+	EventPropertyTranslations,
+	EventTypeTranslations,
+	PaymentTypeTranslations
+} from '@/lib/constants'
+
 const NewEvent = () => {
 	const [createEvent] = useMutation(CreateEventDocument, {
 		refetchQueries: [
@@ -111,7 +117,7 @@ const NewEvent = () => {
 			currency: 'BYN',
 			isPrivate: false,
 			address: '',
-			city: 'Minsk',
+			city: 'Минск',
 			tags: []
 		}
 	})
@@ -191,17 +197,17 @@ const NewEvent = () => {
 						{/* Basic Information */}
 						<div className='space-y-4 border-b border-white/20 pb-6'>
 							<h2 className='mb-4 text-lg font-semibold text-white'>
-								Basic Information
+								Базовая информация
 							</h2>
 							<CustomFormField
 								name='title'
-								label='Event Title'
+								label='Название мероприятия'
 								className='border-white/20'
 								type='title'
 							/>
 							<CustomFormField
 								name='description'
-								label='Description'
+								label='Описание'
 								type='textarea'
 								className='border-white/20'
 							/>
@@ -210,17 +216,17 @@ const NewEvent = () => {
 						{/* Date & Time */}
 						<div className='space-y-6'>
 							<h2 className='mb-4 text-lg font-semibold'>
-								Date & Time
+								Дата и время
 							</h2>
 							<div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
 								<CustomFormField
 									name='startTime'
-									label='Start Time'
+									label='Время начала'
 									type='datepicker'
 								/>
 								<CustomFormField
 									name='endTime'
-									label='End Time (optional)'
+									label='Время окончания (необязательно)'
 									type='datepicker'
 								/>
 							</div>
@@ -229,15 +235,15 @@ const NewEvent = () => {
 						{/* Event Type */}
 						<div className='space-y-6 border-b pb-6'>
 							<h2 className='mb-4 text-lg font-semibold text-white'>
-								Event Type
+								Тип мероприятия
 							</h2>
 							<CustomFormField
 								name='eventType'
-								label='Event Type'
+								label='Тип мероприятия'
 								type='select'
 								options={Object.values(EventType).map(type => ({
 									value: type,
-									label: type
+									label: EventTypeTranslations[type]
 								}))}
 								className=''
 							/>
@@ -247,14 +253,14 @@ const NewEvent = () => {
 								options={Object.values(EventProperty).map(
 									type => ({
 										value: type,
-										label: type
+										label: EventPropertyTranslations[type]
 									})
 								)}
-								label='Event Properties'
+								label='Особенности мероприятия'
 							/>
 							<CustomFormField
 								name='tags'
-								label='Tags (comma separated)'
+								label='Тэги'
 								type='multi-input'
 								className='border-white/20'
 							/>
@@ -263,16 +269,16 @@ const NewEvent = () => {
 						{/* Payment Information */}
 						<div className='space-y-6 border-b border-white/20 pb-6'>
 							<h2 className='mb-4 text-lg font-semibold text-white'>
-								Payment Information
+								Об оплате
 							</h2>
 							<CustomFormField
 								name='paymentType'
-								label='Payment Type'
+								label='Тип оплаты'
 								type='select'
 								options={Object.values(PaymentType).map(
 									type => ({
 										value: type,
-										label: type
+										label: PaymentTypeTranslations[type]
 									})
 								)}
 								className='border-white/20'
@@ -281,14 +287,14 @@ const NewEvent = () => {
 								<div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
 									<CustomFormField
 										name='price'
-										label='Price'
+										label='Цена'
 										type='number'
 										min={0}
 										className='border-white/20'
 									/>
 									<CustomFormField
 										name='currency'
-										label='Currency'
+										label='Валюта'
 										type='select'
 										options={[
 											{ value: 'BYN', label: 'BYN' },
@@ -305,18 +311,18 @@ const NewEvent = () => {
 						{/* Event Settings */}
 						<div className='space-y-6 border-b border-white/20 pb-6'>
 							<h2 className='mb-4 text-lg font-semibold text-white'>
-								Event Settings
+								Настройки мероприятия
 							</h2>
 							<div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
 								<CustomFormField
 									name='isPrivate'
-									label='Private Event'
+									label='Приватное мероприятие'
 									type='switch'
 									className='border-white/20'
 								/>
 								<CustomFormField
 									name='maxParticipants'
-									label='Max Participants (optional)'
+									label='Максимальное количество участников(необязательно)'
 									type='number'
 									min={1}
 									className='border-white/20'
@@ -324,7 +330,7 @@ const NewEvent = () => {
 							</div>
 							<CustomFormField
 								name='ageRestriction'
-								label='Age Restriction (optional)'
+								label='Возрастное ограничение(необязательно)'
 								type='number'
 								min={0}
 								max={21}
@@ -335,22 +341,22 @@ const NewEvent = () => {
 						{/* Location */}
 						<div className='space-y-6 border-b border-white/20 pb-6'>
 							<h2 className='mb-4 text-lg font-semibold text-white'>
-								Location
+								Место проведения
 							</h2>
 							<CustomFormField
 								name='address'
-								label='Address'
+								label='Улица и дом'
 								className='border-white/20'
 							/>
 							<div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
 								<CustomFormField
 									name='city'
-									label='City'
+									label='Город'
 									className='border-white/20'
 								/>
 								<CustomFormField
 									name='placeName'
-									label='Place/Venue Name (optional)'
+									label='Название места/заведения (необязательно)'
 									className='border-white/20'
 								/>
 							</div>
@@ -359,7 +365,7 @@ const NewEvent = () => {
 						{/* Photos Section */}
 						<div>
 							<h2 className='mb-4 text-lg font-semibold text-white'>
-								Event Photos
+								Картинки мероприятия
 							</h2>
 
 							{previews.length > 0 && (
@@ -403,7 +409,7 @@ const NewEvent = () => {
 								onClick={() => fileInputRef.current?.click()}
 								className='border-white/20 text-white hover:bg-white/10'
 							>
-								Upload Photos
+								Загрузить картинки
 							</Button>
 
 							<FormField

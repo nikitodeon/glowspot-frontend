@@ -56,7 +56,10 @@ const GridCard = ({
 
 				<button
 					className='absolute right-3 top-3 cursor-pointer rounded-full bg-white/20 p-2 hover:bg-white/30'
-					onClick={onFavoriteToggle}
+					onClick={e => {
+						e.stopPropagation()
+						onFavoriteToggle()
+					}}
 				>
 					<Heart
 						className={`h-4 w-4 ${

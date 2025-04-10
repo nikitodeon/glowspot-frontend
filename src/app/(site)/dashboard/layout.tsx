@@ -47,9 +47,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 		<SidebarProvider>
 			{/* <Provider store={store}> */}
 			<QueryClientProvider client={queryClient}>
-				<div className='bg-primary-100 min-h-screen w-full'>
+				<div className='bg-primary-100 minпп-h-screen w-full'>
 					{/* <Navbar /> */}
-					<div style={{ marginTop: `${NAVBAR_HEIGHT}px` }}>
+					<div style={{ marginTop: `${NAVBAR_HEIGHT - 40}px` }}>
 						<main className='flex'>
 							<Sidebar
 								userType={

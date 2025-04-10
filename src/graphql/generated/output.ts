@@ -228,6 +228,7 @@ export type Mutation = {
   removeSocialLink: Scalars['Boolean']['output'];
   reorderSocialLinks: Scalars['Boolean']['output'];
   resetPassword: Scalars['Boolean']['output'];
+  updateEvent: EventModel;
   updateSocialLink: Scalars['Boolean']['output'];
   verifyAccount: AuthModel;
 };
@@ -331,6 +332,13 @@ export type MutationReorderSocialLinksArgs = {
 
 export type MutationResetPasswordArgs = {
   data: ResetPasswordInput;
+};
+
+
+export type MutationUpdateEventArgs = {
+  id: Scalars['String']['input'];
+  input: UpdateEventInput;
+  photos?: InputMaybe<Array<Scalars['Upload']['input']>>;
 };
 
 
@@ -461,6 +469,26 @@ export type TotpModel = {
   secret: Scalars['String']['output'];
 };
 
+export type UpdateEventInput = {
+  address: Scalars['String']['input'];
+  ageRestriction?: InputMaybe<Scalars['Float']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  currency?: InputMaybe<Scalars['String']['input']>;
+  description: Scalars['String']['input'];
+  endTime?: InputMaybe<Scalars['DateTime']['input']>;
+  eventProperties: Array<EventProperty>;
+  eventType: EventType;
+  isPrivate: Scalars['Boolean']['input'];
+  maxParticipants?: InputMaybe<Scalars['Float']['input']>;
+  paymentType: PaymentType;
+  photoUrls: Array<Scalars['String']['input']>;
+  placeName?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
+  startTime: Scalars['DateTime']['input'];
+  tags: Array<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
+};
+
 export type UserLocationModel = {
   __typename?: 'UserLocationModel';
   city: Scalars['String']['output'];
@@ -572,6 +600,15 @@ export type RemoveFromFavoritesMutationVariables = Exact<{
 
 
 export type RemoveFromFavoritesMutation = { __typename?: 'Mutation', removeFromFavorites: boolean };
+
+export type UpdateEventMutationVariables = Exact<{
+  input: UpdateEventInput;
+  photos?: InputMaybe<Array<Scalars['Upload']['input']> | Scalars['Upload']['input']>;
+  id: Scalars['String']['input'];
+}>;
+
+
+export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent: { __typename?: 'EventModel', id: string, title: string, description: string, startTime: any, endTime?: any | null, photoUrls: Array<string>, eventType: EventType, paymentType: PaymentType, price?: number | null, currency?: string | null, isPrivate: boolean, maxParticipants?: number | null, tags: Array<string>, ageRestriction?: number | null, status: EventStatus, location: { __typename?: 'LocationModel', id: string, address?: string | null, city: string, placeName?: string | null }, organizer: { __typename?: 'UserModel', id: string, username: string } } };
 
 export type ChangeEmailMutationVariables = Exact<{
   data: ChangeEmailInput;
@@ -1113,6 +1150,65 @@ export function useRemoveFromFavoritesMutation(baseOptions?: Apollo.MutationHook
 export type RemoveFromFavoritesMutationHookResult = ReturnType<typeof useRemoveFromFavoritesMutation>;
 export type RemoveFromFavoritesMutationResult = Apollo.MutationResult<RemoveFromFavoritesMutation>;
 export type RemoveFromFavoritesMutationOptions = Apollo.BaseMutationOptions<RemoveFromFavoritesMutation, RemoveFromFavoritesMutationVariables>;
+export const UpdateEventDocument = gql`
+    mutation UpdateEvent($input: UpdateEventInput!, $photos: [Upload!], $id: String!) {
+  updateEvent(input: $input, photos: $photos, id: $id) {
+    id
+    title
+    description
+    startTime
+    endTime
+    photoUrls
+    eventType
+    paymentType
+    price
+    currency
+    isPrivate
+    maxParticipants
+    tags
+    ageRestriction
+    status
+    location {
+      id
+      address
+      city
+      placeName
+    }
+    organizer {
+      id
+      username
+    }
+  }
+}
+    `;
+export type UpdateEventMutationFn = Apollo.MutationFunction<UpdateEventMutation, UpdateEventMutationVariables>;
+
+/**
+ * __useUpdateEventMutation__
+ *
+ * To run a mutation, you first call `useUpdateEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateEventMutation, { data, loading, error }] = useUpdateEventMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *      photos: // value for 'photos'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateEventMutation(baseOptions?: Apollo.MutationHookOptions<UpdateEventMutation, UpdateEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateEventMutation, UpdateEventMutationVariables>(UpdateEventDocument, options);
+      }
+export type UpdateEventMutationHookResult = ReturnType<typeof useUpdateEventMutation>;
+export type UpdateEventMutationResult = Apollo.MutationResult<UpdateEventMutation>;
+export type UpdateEventMutationOptions = Apollo.BaseMutationOptions<UpdateEventMutation, UpdateEventMutationVariables>;
 export const ChangeEmailDocument = gql`
     mutation ChangeEmail($data: ChangeEmailInput!) {
   changeEmail(data: $data)

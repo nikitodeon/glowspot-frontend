@@ -13,17 +13,17 @@ const datetimeLocalSchema = z.string().refine(val => {
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 
 export const eventSchema = z.object({
-	title: z.string().min(1, 'Title is required').max(30),
-	description: z.string().min(1, 'Description is required'),
+	title: z.string().min(1, 'Название обязательно').max(50),
+	description: z.string().min(1, 'Описание обязательно').max(2000),
 	startTime: datetimeLocalSchema,
 	endTime: datetimeLocalSchema.optional(),
 	photos: z
 		.array(
 			z.instanceof(File).refine(file => file.size <= MAX_FILE_SIZE, {
-				message: 'Max image size is 10MB'
+				message: 'Максимальный размер файла 10MB'
 			})
 		)
-		.min(1, 'At least one photo is required'),
+		.min(1, 'Пожалуйста, добавьте хотя бы одно фото'),
 
 	eventType: z.nativeEnum(EventType),
 	// eventProperties: z.array(z.string()).optional(),
@@ -32,11 +32,11 @@ export const eventSchema = z.object({
 	price: z.coerce.number().min(0).optional(),
 	currency: z.string().default('BYN'),
 	isPrivate: z.boolean().default(false),
-	maxParticipants: z.coerce.number().int().min(1).optional(),
+	maxParticipants: z.coerce.number().int().optional(),
 	tags: z.array(z.string()).optional(),
 	ageRestriction: z.coerce.number().int().min(0).max(21).optional(),
-	address: z.string().min(1, 'Address is required'),
-	city: z.string().min(1, 'City is required'),
+	address: z.string().min(1, 'Адрес обязателен'),
+	city: z.string().min(1, 'Город обязателен'),
 	placeName: z.string().optional()
 })
 
