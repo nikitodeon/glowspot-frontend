@@ -1,8 +1,10 @@
 import { useMutation } from '@apollo/client'
-import { Calendar, Clock, Heart, LogOut, Trash } from 'lucide-react'
+import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
+import { Calendar, Clock, Heart, LogOut, Plus, Trash } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/commonApp/button'
 import {
@@ -15,14 +17,15 @@ import {
 	DialogTrigger
 } from '@/components/ui/commonApp/dialog'
 
-import {
-	DeleteEventDocument
-	// LeaveEventDocument
-} from '@/graphql/generated/output'
+import { DeleteEventDocument } from '@/graphql/generated/output'
 
 import { getMediaSource } from '@/utils/get-media-source'
 
 import { cn } from '@/lib/utils'
+
+// Adds messages only in a dev environment
+loadDevMessages()
+loadErrorMessages()
 
 const destructiveButtonClass = cn(
 	'bg-transparent text-red-500 border border-red-500/30 hover:bg-red-500/10',
@@ -34,6 +37,8 @@ interface EventCardProps {
 	event: any
 	isFavorite: boolean
 	onFavoriteToggle: () => void
+	isParticipating: boolean
+	onParticipationToggle: (isCurrentlyParticipating: boolean) => void
 	propertyLink: string
 	userId: string
 }
@@ -42,6 +47,8 @@ const AttendCard = ({
 	event,
 	isFavorite,
 	onFavoriteToggle,
+	isParticipating,
+	onParticipationToggle,
 	propertyLink,
 	userId
 }: EventCardProps) => {
@@ -57,16 +64,9 @@ const AttendCard = ({
 		refetchQueries: [
 			'GetMyOrganizedEvents',
 			'GetEventsWhereIParticipate',
-			'GetFavoriteEventsDocument'
+			'GetFavoriteEvents'
 		]
 	})
-
-	//   const [leaveEvent] = useMutation(LeaveEventDocument, {
-	//     refetchQueries: [
-	//       'GetEventsWhereIParticipate',
-	//       'GetFavoriteEventsDocument'
-	//     ]
-	//   })
 
 	const eventDate = new Date(event.startTime).toLocaleDateString('ru-RU', {
 		day: 'numeric',
@@ -79,7 +79,6 @@ const AttendCard = ({
 	})
 
 	const isOrganizer = userId === event.organizer.id
-	const isParticipant = event.participants.some((p: any) => p.id === userId)
 
 	const handleDelete = async () => {
 		setIsDeleting(true)
@@ -90,29 +89,37 @@ const AttendCard = ({
 			setOpenDeleteDialog(false)
 		} catch (error) {
 			console.error('Error deleting event:', error)
-			alert('Не удалось удалить мероприятие')
 		} finally {
 			setIsDeleting(false)
 		}
 	}
 
-	//   const handleLeave = async () => {
-	//     setIsLeaving(true)
-	//     try {
-	//       await leaveEvent({
-	//         variables: { eventId: event.id }
-	//       })
-	//       setOpenLeaveDialog(false)
-	//     } catch (error) {
-	//       console.error('Error leaving event:', error)
-	//       alert('Не удалось покинуть мероприятие')
-	//     } finally {
-	//       setIsLeaving(false)
-	//     }
-	//   }
+	const handleLeave = async () => {
+		setIsLeaving(true)
+		try {
+			onParticipationToggle(true)
+			toast.success('Вы покинули мероприятие')
+			setOpenLeaveDialog(false)
+		} catch (err) {
+			console.error('Error leaving event:', err)
+			toast.error('Ошибка при выходе из мероприятия')
+		} finally {
+			setIsLeaving(false)
+		}
+	}
+
+	const handleJoin = () => {
+		try {
+			onParticipationToggle(false)
+			toast.success('Вы присоединились к мероприятию')
+		} catch (err) {
+			console.error('Error joining event:', err)
+			toast.error('Ошибка при присоединении к мероприятию')
+		}
+	}
 
 	return (
-		<div className='mmborder-white mb-5 w-full overflow-hidden rounded-xl border bg-black shadow-lg transition-transform hover:scale-[1.02]'>
+		<div className='mb-5 w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-lg transition-transform hover:scale-[1.02]'>
 			<div className='relative'>
 				<div className='relative h-48 w-full'>
 					<Image
@@ -126,7 +133,7 @@ const AttendCard = ({
 				</div>
 
 				<button
-					className='hover:bg-white-10 absolute bottom-4 right-4 cursor-pointer rounded-full border border-white/20 bg-black/50 p-2 hover:bg-black/70'
+					className='absolute bottom-4 right-4 cursor-pointer rounded-full border border-white/20 bg-black/50 p-2 hover:bg-black/70'
 					onClick={e => {
 						e.stopPropagation()
 						onFavoriteToggle()
@@ -164,6 +171,7 @@ const AttendCard = ({
 						{eventTime}
 					</span>
 				</div>
+
 				<div className='absolute bottom-4 left-4'>
 					<Link href={propertyLink}>
 						<button className='flex items-center gap-1 rounded-full border border-white/10 bg-black px-3 py-1 text-xs font-medium text-white hover:bg-white/10'>
@@ -213,32 +221,13 @@ const AttendCard = ({
 										onClick={handleDelete}
 										disabled={isDeleting}
 									>
-										{isDeleting ? (
-											<span className='flex items-center gap-2'>
-												<svg
-													className='h-4 w-4 animate-spin'
-													viewBox='0 0 24 24'
-												>
-													<circle
-														cx='12'
-														cy='12'
-														r='10'
-														stroke='currentColor'
-														strokeWidth='4'
-														fill='none'
-													/>
-												</svg>
-												Удаление...
-											</span>
-										) : (
-											'Удалить'
-										)}
+										{isDeleting ? 'Удаление...' : 'Удалить'}
 									</Button>
 								</DialogFooter>
 							</DialogContent>
 						</Dialog>
 					</div>
-				) : isParticipant ? (
+				) : isParticipating ? (
 					<div className='absolute bottom-4 right-4'>
 						<Dialog
 							open={openLeaveDialog}
@@ -276,35 +265,26 @@ const AttendCard = ({
 									<Button
 										variant='destructive'
 										className={destructiveButtonClass}
-										// onClick={handleLeave}
+										onClick={handleLeave}
 										disabled={isLeaving}
 									>
-										{isLeaving ? (
-											<span className='flex items-center gap-2'>
-												<svg
-													className='h-4 w-4 animate-spin'
-													viewBox='0 0 24 24'
-												>
-													<circle
-														cx='12'
-														cy='12'
-														r='10'
-														stroke='currentColor'
-														strokeWidth='4'
-														fill='none'
-													/>
-												</svg>
-												Выход...
-											</span>
-										) : (
-											'Покинуть'
-										)}
+										{isLeaving ? 'Выход...' : 'Покинуть'}
 									</Button>
 								</DialogFooter>
 							</DialogContent>
 						</Dialog>
 					</div>
-				) : null}
+				) : (
+					<div className='absolute bottom-4 right-4'>
+						<button
+							className='flex items-center gap-1 rounded-full border border-white/10 bg-black px-3 py-1 text-xs font-medium text-white hover:bg-white/10 hover:text-green-400'
+							onClick={handleJoin}
+						>
+							<Plus className='h-4 w-4' />
+							Вступить
+						</button>
+					</div>
+				)}
 			</div>
 		</div>
 	)

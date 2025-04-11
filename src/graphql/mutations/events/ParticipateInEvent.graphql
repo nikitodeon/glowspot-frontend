@@ -1,0 +1,3 @@
+mutation ParticipateInEvent($eventId: String!) {
+	participateInEvent(eventId: $eventId)
+}

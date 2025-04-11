@@ -35,6 +35,7 @@ query GetEventById($getEventByIdId: String!) {
 			username
 			displayName
 			avatar
+			isVerified
 		}
 		participants {
 			id

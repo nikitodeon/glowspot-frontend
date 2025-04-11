@@ -218,6 +218,7 @@ export type Mutation = {
   deleteEvent: Scalars['Boolean']['output'];
   disableTotp: Scalars['Boolean']['output'];
   enableTotp: Scalars['Boolean']['output'];
+  leaveEvent: Scalars['Boolean']['output'];
   loginUser: AuthModel;
   logoutUser: Scalars['Boolean']['output'];
   newPassword: Scalars['Boolean']['output'];
@@ -292,6 +293,11 @@ export type MutationDeleteEventArgs = {
 
 export type MutationEnableTotpArgs = {
   data: EnableTotpInput;
+};
+
+
+export type MutationLeaveEventArgs = {
+  eventId: Scalars['String']['input'];
 };
 
 
@@ -594,6 +600,20 @@ export type DeleteEventMutationVariables = Exact<{
 
 export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent: boolean };
 
+export type LeaveEventMutationVariables = Exact<{
+  eventId: Scalars['String']['input'];
+}>;
+
+
+export type LeaveEventMutation = { __typename?: 'Mutation', leaveEvent: boolean };
+
+export type ParticipateInEventMutationVariables = Exact<{
+  eventId: Scalars['String']['input'];
+}>;
+
+
+export type ParticipateInEventMutation = { __typename?: 'Mutation', participateInEvent: boolean };
+
 export type RemoveFromFavoritesMutationVariables = Exact<{
   eventId: Scalars['String']['input'];
 }>;
@@ -715,7 +735,7 @@ export type GetEventByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetEventByIdQuery = { __typename?: 'Query', getEventById: { __typename?: 'EventModel', id: string, title: string, description: string, startTime: any, endTime?: any | null, photoUrls: Array<string>, eventType: EventType, eventProperties: Array<EventProperty>, paymentType: PaymentType, price?: number | null, currency?: string | null, postedDate: any, isVerified: boolean, isPrivate: boolean, maxParticipants?: number | null, tags: Array<string>, status: EventStatus, ageRestriction?: number | null, createdAt: any, updatedAt: any, location: { __typename?: 'LocationModel', id: string, placeName?: string | null, city: string, address?: string | null, coordinates: { __typename?: 'Coordinates', longitude: number, latitude: number } }, organizer: { __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }, participants?: Array<{ __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }> | null, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null } };
+export type GetEventByIdQuery = { __typename?: 'Query', getEventById: { __typename?: 'EventModel', id: string, title: string, description: string, startTime: any, endTime?: any | null, photoUrls: Array<string>, eventType: EventType, eventProperties: Array<EventProperty>, paymentType: PaymentType, price?: number | null, currency?: string | null, postedDate: any, isVerified: boolean, isPrivate: boolean, maxParticipants?: number | null, tags: Array<string>, status: EventStatus, ageRestriction?: number | null, createdAt: any, updatedAt: any, location: { __typename?: 'LocationModel', id: string, placeName?: string | null, city: string, address?: string | null, coordinates: { __typename?: 'Coordinates', longitude: number, latitude: number } }, organizer: { __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null, isVerified: boolean }, participants?: Array<{ __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }> | null, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null } };
 
 export type GetEventsWhereIParticipateQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1119,6 +1139,68 @@ export function useDeleteEventMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteEventMutationHookResult = ReturnType<typeof useDeleteEventMutation>;
 export type DeleteEventMutationResult = Apollo.MutationResult<DeleteEventMutation>;
 export type DeleteEventMutationOptions = Apollo.BaseMutationOptions<DeleteEventMutation, DeleteEventMutationVariables>;
+export const LeaveEventDocument = gql`
+    mutation LeaveEvent($eventId: String!) {
+  leaveEvent(eventId: $eventId)
+}
+    `;
+export type LeaveEventMutationFn = Apollo.MutationFunction<LeaveEventMutation, LeaveEventMutationVariables>;
+
+/**
+ * __useLeaveEventMutation__
+ *
+ * To run a mutation, you first call `useLeaveEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLeaveEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [leaveEventMutation, { data, loading, error }] = useLeaveEventMutation({
+ *   variables: {
+ *      eventId: // value for 'eventId'
+ *   },
+ * });
+ */
+export function useLeaveEventMutation(baseOptions?: Apollo.MutationHookOptions<LeaveEventMutation, LeaveEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LeaveEventMutation, LeaveEventMutationVariables>(LeaveEventDocument, options);
+      }
+export type LeaveEventMutationHookResult = ReturnType<typeof useLeaveEventMutation>;
+export type LeaveEventMutationResult = Apollo.MutationResult<LeaveEventMutation>;
+export type LeaveEventMutationOptions = Apollo.BaseMutationOptions<LeaveEventMutation, LeaveEventMutationVariables>;
+export const ParticipateInEventDocument = gql`
+    mutation ParticipateInEvent($eventId: String!) {
+  participateInEvent(eventId: $eventId)
+}
+    `;
+export type ParticipateInEventMutationFn = Apollo.MutationFunction<ParticipateInEventMutation, ParticipateInEventMutationVariables>;
+
+/**
+ * __useParticipateInEventMutation__
+ *
+ * To run a mutation, you first call `useParticipateInEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useParticipateInEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [participateInEventMutation, { data, loading, error }] = useParticipateInEventMutation({
+ *   variables: {
+ *      eventId: // value for 'eventId'
+ *   },
+ * });
+ */
+export function useParticipateInEventMutation(baseOptions?: Apollo.MutationHookOptions<ParticipateInEventMutation, ParticipateInEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ParticipateInEventMutation, ParticipateInEventMutationVariables>(ParticipateInEventDocument, options);
+      }
+export type ParticipateInEventMutationHookResult = ReturnType<typeof useParticipateInEventMutation>;
+export type ParticipateInEventMutationResult = Apollo.MutationResult<ParticipateInEventMutation>;
+export type ParticipateInEventMutationOptions = Apollo.BaseMutationOptions<ParticipateInEventMutation, ParticipateInEventMutationVariables>;
 export const RemoveFromFavoritesDocument = gql`
     mutation RemoveFromFavorites($eventId: String!) {
   removeFromFavorites(eventId: $eventId)
@@ -1768,6 +1850,7 @@ export const GetEventByIdDocument = gql`
       username
       displayName
       avatar
+      isVerified
     }
     participants {
       id

@@ -23,6 +23,11 @@ import {
 	DialogTitle,
 	DialogTrigger
 } from '@/components/ui/commonApp/dialog'
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage
+} from '@/components/ui/commonAuth/Avatar'
 
 import {
 	EventProperty,
@@ -180,11 +185,11 @@ const EventDetailsPage = () => {
 							<h1 className='mb-2 text-3xl font-bold text-white'>
 								{event.title}
 							</h1>
-							{event.isVerified && (
+							{/* {event.isVerified && (
 								<span className='flex items-center rounded-full border border-white/20 bg-black px-3 py-1 text-xs font-medium text-blue-400'>
 									Проверено
 								</span>
-							)}
+							)} */}
 						</div>
 
 						<div className='mb-6 grid grid-cols-1 gap-4 md:grid-cols-2'>
@@ -325,30 +330,45 @@ const EventDetailsPage = () => {
 					</div>
 
 					{event.participants && event.participants.length > 0 ? (
-						<div className='space-y-3'>
-							{event.participants.map(participant => (
-								<div
-									key={participant.id}
-									className='flex items-center gap-3 rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'
-								>
-									<div className='relative h-10 w-10 overflow-hidden rounded-full border border-white/20'>
-										<Image
-											src={
-												getMediaSource(
+						<div className='relative'>
+							{/* Скроллируемый контейнер */}
+							<div
+								className='max-h-[400px] space-y-3 overflow-y-auto pr-2'
+								style={{
+									scrollbarWidth: 'thin',
+									scrollbarColor: '#3f3f46 transparent'
+								}}
+							>
+								{event.participants.map(participant => (
+									<div
+										key={participant.id}
+										className='flex items-center gap-3 rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'
+									>
+										<Avatar className='h-12 w-12'>
+											<AvatarImage
+												src={getMediaSource(
 													participant.avatar
-												) || '/default-avatar.png'
-											}
-											alt={participant.displayName}
-											width={40}
-											height={40}
-											className='h-full w-full object-cover'
-										/>
+												)}
+											/>
+											<AvatarFallback className='text-lg'>
+												{participant.username?.[0] ||
+													'O'}
+											</AvatarFallback>
+										</Avatar>
+										<div className='min-w-0 flex-1'>
+											<p className='truncate font-medium text-white'>
+												{participant.displayName}
+											</p>
+											<p className='truncate text-sm text-gray-400'>
+												@{participant.username}
+											</p>
+										</div>
 									</div>
-									<span className='font-medium text-white'>
-										{participant.displayName}
-									</span>
-								</div>
-							))}
+								))}
+							</div>
+
+							{/* Индикатор скролла (опционально) */}
+							<div className='kkbg-gradient-to-t kkfrom-black pointer-events-none absolute bottom-0 left-0 right-4 h-4 to-transparent'></div>
 						</div>
 					) : (
 						<p className='text-gray-400'>Пока нет участников</p>

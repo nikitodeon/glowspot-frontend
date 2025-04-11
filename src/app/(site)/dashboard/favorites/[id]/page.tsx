@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowLeft, Trash, Trash2 } from 'lucide-react'
+import { ArrowLeft, CheckCircle, Trash, Trash2, XCircle } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
@@ -23,6 +23,11 @@ import {
 	DialogTitle,
 	DialogTrigger
 } from '@/components/ui/commonApp/dialog'
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage
+} from '@/components/ui/commonAuth/Avatar'
 
 import {
 	EventProperty,
@@ -242,7 +247,7 @@ const FavoriteEventDetailsPage = () => {
 								</p>
 							</div>
 
-							<div className='rounded-lg border border-white/10 bg-black p-4 transition-colors hover:border-white/20'>
+							<div className='relative rounded-lg border border-white/10 bg-black p-4 transition-colors hover:border-white/20'>
 								<h3 className='mb-1 text-sm font-medium text-gray-400'>
 									Дата окончания
 								</h3>
@@ -311,6 +316,7 @@ const FavoriteEventDetailsPage = () => {
 									event.maxParticipants > 0 ? (
 										`/${event.maxParticipants}`
 									) : (
+										//  null
 										<span className='ml-1'>/∞</span>
 									)}
 								</p>
@@ -330,11 +336,11 @@ const FavoriteEventDetailsPage = () => {
 							</div>
 						)}
 
-						<div className='mb-6 max-w-3xl'>
+						<div className='mb-6'>
 							<h3 className='mb-2 text-sm font-medium text-gray-400'>
 								Описание
 							</h3>
-							<p className='whitespace-pre-line break-words text-gray-300'>
+							<p className='whitespace-pre-line text-gray-300'>
 								{event.description}
 							</p>
 						</div>
@@ -362,85 +368,60 @@ const FavoriteEventDetailsPage = () => {
 							)}
 						</div>
 					</div>
-
-					{event.participants && event.participants.length > 0 ? (
-						<div className='space-y-3'>
-							{event.participants.map(participant => (
-								<div
-									key={participant.id}
-									className='flex items-center gap-3 rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'
-								>
-									<div className='relative h-10 w-10 overflow-hidden rounded-full border border-white/20'>
-										<Image
-											src={
-												getMediaSource(
-													participant.avatar
-												) || '/default-avatar.png'
-											}
-											alt={participant.displayName}
-											width={40}
-											height={40}
-											className='h-full w-full object-cover'
-										/>
-									</div>
-									<span className='font-medium text-white'>
-										{participant.displayName}
-									</span>
-								</div>
-							))}
-						</div>
-					) : (
-						<p className='text-gray-400'>Пока нет участников</p>
-					)}
+					<p className='text-gray-400'>
+						{event.participants?.length || 0} участников
+						{event.maxParticipants && event.maxParticipants > 0
+							? ` (максимум ${event.maxParticipants})`
+							: null}
+					</p>
 				</div>
 
 				<div className='rounded-xl border border-white/20 bg-black p-6'>
 					<h2 className='mb-4 text-xl font-bold text-white'>
-						Детали
+						Организатор
 					</h2>
-					<ul className='space-y-3'>
-						<li className='rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'>
-							<strong className='font-medium text-gray-300'>
-								Статус:
-							</strong>{' '}
-							<span className='text-white'>
-								{EventStatusTranslations[
-									event.status as EventStatus
-								] || event.status}
-							</span>
-						</li>
-						<li className='rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'>
-							<strong className='font-medium text-gray-300'>
-								Приватное:
-							</strong>{' '}
-							<span className='text-white'>
-								{event.isPrivate ? 'Да' : 'Нет'}
-							</span>
-						</li>
-						{event.eventProperties &&
-							event.eventProperties.length > 0 && (
-								<li className='rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'>
-									<strong className='font-medium text-gray-300'>
-										Свойства:
-									</strong>
-									<ul className='mt-2 space-y-2 pl-4'>
-										{event.eventProperties.map(prop => (
-											<li
-												key={prop}
-												className='text-white'
-											>
-												{EventPropertyTranslations[
-													prop as EventProperty
-												] || prop}
-											</li>
-										))}
-									</ul>
-								</li>
+					<div className='flex items-center gap-3 rounded-lg border border-white/10 p-3 transition-colors hover:border-white/20'>
+						<Avatar className='h-12 w-12'>
+							<AvatarImage
+								src={getMediaSource(event.organizer.avatar)}
+							/>
+							<AvatarFallback className='text-lg'>
+								{event.organizer.username?.[0] || 'O'}
+							</AvatarFallback>
+						</Avatar>
+						<div>
+							<div className='flex items-center gap-2'>
+								<h3 className='font-medium text-white'>
+									{event.organizer.displayName}
+								</h3>
+								{event.organizer.isVerified ? (
+									<div className='flex items-center gap-1'>
+										<CheckCircle className='h-4 w-4 text-green-500' />
+										<span className='text-xs text-green-500'>
+											Подтверждён
+										</span>
+									</div>
+								) : (
+									<div className='flex items-center gap-1'>
+										<XCircle className='h-4 w-4 text-yellow-500' />
+										<span className='text-xs text-yellow-500'>
+											Не верифицирован
+										</span>
+									</div>
+								)}
+							</div>
+							<p className='text-sm text-gray-400'>
+								@{event.organizer.username}
+							</p>
+							{!event.organizer.isVerified && (
+								<p className='mt-1 text-xs text-gray-500'>
+									* Верификация может занять некоторое время.
+								</p>
 							)}
-					</ul>
+						</div>
+					</div>
 				</div>
 			</div>
-
 			{isOrganizer ? (
 				<div className='mt-10 flex justify-center'>
 					<Dialog

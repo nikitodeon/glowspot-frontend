@@ -1,8 +1,9 @@
 'use client'
 
-import { ApolloCache } from '@apollo/client'
+import { ApolloCache, gql } from '@apollo/client'
 import { Plus, Search } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
 import { toast } from 'sonner'
 
 import AttendCard from '@/components/dashboard/AttendCard'
@@ -11,9 +12,12 @@ import HostCard from '@/components/dashboard/HostCard'
 import {
 	GetEventsWhereIParticipateDocument,
 	GetFavoriteEventsDocument,
+	GetFilteredEventsDocument,
 	GetMyOrganizedEventsDocument,
 	useAddToFavoritesMutation,
 	useGetEventsWhereIParticipateQuery,
+	useLeaveEventMutation,
+	useParticipateInEventMutation,
 	useRemoveFromFavoritesMutation
 } from '@/graphql/generated/output'
 
@@ -23,14 +27,21 @@ const ParticipatingEvents = () => {
 	const { user } = useCurrent()
 	const userId = user?.id
 
-	const { data, loading: isLoading } = useGetEventsWhereIParticipateQuery()
+	const [isJoining, setIsJoining] = useState(false)
+	const [isLeaving, setIsLeaving] = useState(false)
+	const { data, loading: isLoading } = useGetEventsWhereIParticipateQuery({
+		fetchPolicy: 'cache-and-network',
+		nextFetchPolicy: 'cache-first'
+	})
 
-	const updateBothCaches = (
+	const [participateInEvent] = useParticipateInEventMutation()
+	const [leaveEvent] = useLeaveEventMutation()
+
+	const updateFavoriteCaches = (
 		cache: ApolloCache<any>,
 		eventId: string,
 		isFavorite: boolean
 	) => {
-		// Обновляем кэш для мероприятий, в которых я участвую
 		cache.updateQuery(
 			{ query: GetEventsWhereIParticipateDocument },
 			oldData => {
@@ -61,6 +72,32 @@ const ParticipatingEvents = () => {
 				}
 			}
 		)
+
+		cache.updateQuery({ query: GetFavoriteEventsDocument }, oldData => {
+			if (!oldData?.getFavoriteEvents) return oldData
+
+			return {
+				getFavoriteEvents: oldData.getFavoriteEvents.map(
+					(event: any) => {
+						if (event.id === eventId) {
+							return {
+								...event,
+								favoritedBy: isFavorite
+									? [
+											...(event.favoritedBy || []),
+											{ __typename: 'User', id: userId }
+										]
+									: event.favoritedBy?.filter(
+											(user: any) => user.id !== userId
+										) || []
+							}
+						}
+						return event
+					}
+				)
+			}
+		})
+
 		cache.updateQuery({ query: GetMyOrganizedEventsDocument }, oldData => {
 			if (!oldData?.getMyOrganizedEvents) return oldData
 
@@ -85,6 +122,56 @@ const ParticipatingEvents = () => {
 				)
 			}
 		})
+	}
+
+	const updateParticipationCaches = (
+		cache: ApolloCache<any>,
+		eventId: string,
+		isParticipating: boolean,
+		currentUser: {
+			id: string
+			username: string
+			displayName: string
+			avatar: string
+		}
+	) => {
+		cache.updateQuery(
+			{ query: GetEventsWhereIParticipateDocument },
+			oldData => {
+				if (!oldData?.getEventsWhereIParticipate) return oldData
+
+				return {
+					getEventsWhereIParticipate: isParticipating
+						? [
+								...oldData.getEventsWhereIParticipate,
+								{ __typename: 'Event', id: eventId }
+							]
+						: oldData.getEventsWhereIParticipate.filter(
+								(event: any) => event.id !== eventId
+							)
+				}
+			}
+		)
+
+		const updateParticipants = (event: any) => {
+			const userObj = {
+				__typename: 'User',
+				id: currentUser.id,
+				username: currentUser.username,
+				displayName: currentUser.displayName,
+				avatar: currentUser.avatar
+			}
+
+			return {
+				...event,
+				participants: isParticipating
+					? [...(event.participants || []), userObj]
+					: event.participants?.filter(
+							(user: any) => user.id !== currentUser.id
+						) || []
+			}
+		}
+
 		cache.updateQuery({ query: GetFavoriteEventsDocument }, oldData => {
 			if (!oldData?.getFavoriteEvents) return oldData
 
@@ -92,20 +179,22 @@ const ParticipatingEvents = () => {
 				getFavoriteEvents: oldData.getFavoriteEvents.map(
 					(event: any) => {
 						if (event.id === eventId) {
-							return {
-								...event,
-								favoritedBy: isFavorite
-									? [
-											...(event.favoritedBy || []),
-											{
-												__typename: 'User',
-												id: userId
-											}
-										]
-									: event.favoritedBy?.filter(
-											(user: any) => user.id !== userId
-										) || []
-							}
+							return updateParticipants(event)
+						}
+						return event
+					}
+				)
+			}
+		})
+
+		cache.updateQuery({ query: GetMyOrganizedEventsDocument }, oldData => {
+			if (!oldData?.getMyOrganizedEvents) return oldData
+
+			return {
+				getMyOrganizedEvents: oldData.getMyOrganizedEvents.map(
+					(event: any) => {
+						if (event.id === eventId) {
+							return updateParticipants(event)
 						}
 						return event
 					}
@@ -114,7 +203,56 @@ const ParticipatingEvents = () => {
 		})
 	}
 
-	// Mutation для добавления в избранное
+	const handleJoin = async (eventId: string) => {
+		setIsJoining(true)
+		try {
+			await participateInEvent({
+				variables: { eventId },
+				update: cache => {
+					if (!userId || !user) return
+
+					updateParticipationCaches(cache, eventId, true, {
+						id: user.id,
+						username: user.username,
+						displayName: user.displayName,
+						avatar: user.avatar || ''
+					})
+				}
+			})
+			toast.success('Вы присоединились к мероприятию')
+		} catch (err) {
+			console.error('Error joining event:', err)
+			toast.error('Ошибка при присоединении к мероприятию')
+		} finally {
+			setIsJoining(false)
+		}
+	}
+
+	const handleLeave = async (eventId: string) => {
+		setIsLeaving(true)
+		try {
+			await leaveEvent({
+				variables: { eventId },
+				update: cache => {
+					if (!userId || !user) return
+
+					updateParticipationCaches(cache, eventId, false, {
+						id: user.id,
+						username: user.username,
+						displayName: user.displayName,
+						avatar: user.avatar || ''
+					})
+				}
+			})
+			toast.success('Вы покинули мероприятие')
+		} catch (err) {
+			console.error('Error leaving event:', err)
+			toast.error('Ошибка при выходе из мероприятия')
+		} finally {
+			setIsLeaving(false)
+		}
+	}
+
 	const [addToFavorites] = useAddToFavoritesMutation({
 		onCompleted: () => toast.success('Добавлено в избранное'),
 		onError: err => {
@@ -124,11 +262,10 @@ const ParticipatingEvents = () => {
 		update: (cache, result, context) => {
 			const eventId = context.variables?.eventId
 			if (!eventId || !userId) return
-			updateBothCaches(cache, eventId, true)
+			updateFavoriteCaches(cache, eventId, true)
 		}
 	})
 
-	// Mutation для удаления из избранного
 	const [removeFromFavorites] = useRemoveFromFavoritesMutation({
 		onCompleted: () => toast.success('Удалено из избранного'),
 		onError: err => {
@@ -138,7 +275,7 @@ const ParticipatingEvents = () => {
 		update: (cache, result, context) => {
 			const eventId = context.variables?.eventId
 			if (!eventId || !userId) return
-			updateBothCaches(cache, eventId, false)
+			updateFavoriteCaches(cache, eventId, false)
 		}
 	})
 
@@ -150,6 +287,17 @@ const ParticipatingEvents = () => {
 			await removeFromFavorites({ variables: { eventId } })
 		} else {
 			await addToFavorites({ variables: { eventId } })
+		}
+	}
+
+	const handleParticipationToggle = async (
+		eventId: string,
+		isCurrentlyParticipating: boolean
+	) => {
+		if (isCurrentlyParticipating) {
+			await handleLeave(eventId)
+		} else {
+			await handleJoin(eventId)
 		}
 	}
 
@@ -171,6 +319,9 @@ const ParticipatingEvents = () => {
 				{participatingEvents?.map(event => {
 					const isFavorite =
 						event.favoritedBy?.some(u => u.id === userId) ?? false
+					const isParticipating =
+						event.participants?.some(u => u.id === userId) ?? false
+
 					return (
 						<AttendCard
 							key={event.id}
@@ -179,6 +330,13 @@ const ParticipatingEvents = () => {
 							isFavorite={isFavorite}
 							onFavoriteToggle={() =>
 								handleFavoriteToggle(event.id, isFavorite)
+							}
+							isParticipating={isParticipating}
+							onParticipationToggle={() =>
+								handleParticipationToggle(
+									event.id,
+									isParticipating
+								)
 							}
 							propertyLink={`/dashboard/attending/${event.id}`}
 						/>
@@ -199,9 +357,6 @@ const ParticipatingEvents = () => {
 							<h2 className='mb-1 text-xl font-bold text-white hover:underline'>
 								Найти мероприятия на карте
 							</h2>
-							{/* <p className='mb-2 line-clamp-1 text-gray-600'>
-								Присоединяйтесь к новому мероприятию
-							</p> */}
 						</div>
 					</Link>
 				</div>

@@ -101,7 +101,7 @@ const Map = () => {
 
 		const handleEventClick = (eventId: string) => {
 			// Ключевое изменение - используем replace вместо push
-			router.replace(`/search?eventId=${eventId}`, {
+			router.push(`/search/event/${eventId}`, {
 				scroll: false
 			})
 		}
