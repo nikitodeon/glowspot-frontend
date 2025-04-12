@@ -5,7 +5,6 @@ import {
 	ArrowLeft,
 	CheckCircle,
 	Trash,
-	Trash2,
 	UserMinus,
 	UserPlus,
 	X,
@@ -28,9 +27,6 @@ import {
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
 	DialogTitle,
 	DialogTrigger
 } from '@/components/ui/commonApp/dialog'
@@ -41,28 +37,19 @@ import {
 } from '@/components/ui/commonAuth/Avatar'
 
 import {
-	EventProperty,
-	EventStatus,
 	EventType,
 	GetEventByIdDocument,
-	GetEventsWhereIParticipateDocument,
-	GetFilteredEventsDocument,
 	useDeleteEventMutation,
 	useGetEventByIdQuery,
 	useLeaveEventMutation,
 	useParticipateInEventMutation
-	//   useLeaveEventMutation
 } from '@/graphql/generated/output'
 
 import { useCurrent } from '@/hooks/useCurrent'
 
 import { getMediaSource } from '@/utils/get-media-source'
 
-import {
-	EventPropertyTranslations,
-	EventStatusTranslations,
-	EventTypeTranslations
-} from '@/lib/constants'
+import { EventTypeTranslations } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 const destructiveButtonClass = cn(
@@ -96,7 +83,6 @@ const AttendingEventDetailsPage = () => {
 		]
 	})
 
-	//   const [leaveEvent] = useLeaveEventMutation()
 	const [participateInEvent] = useParticipateInEventMutation()
 	const [leaveEvent] = useLeaveEventMutation({
 		refetchQueries: ['GetEventsWhereIParticipate']
@@ -146,22 +132,22 @@ const AttendingEventDetailsPage = () => {
 		// )
 	}
 
-	const handleDelete = async () => {
-		setIsDeleting(true)
-		try {
-			await deleteEvent({
-				variables: {
-					id: id as string
-				}
-			})
-			router.push('/dashboard/attending')
-		} catch (err) {
-			console.error('Error deleting event:', err)
-			alert('Не удалось удалить мероприятие')
-		} finally {
-			setIsDeleting(false)
-		}
-	}
+	// const handleDelete = async () => {
+	// 	setIsDeleting(true)
+	// 	try {
+	// 		await deleteEvent({
+	// 			variables: {
+	// 				id: id as string
+	// 			}
+	// 		})
+	// 		router.push('/dashboard/attending')
+	// 	} catch (err) {
+	// 		console.error('Error deleting event:', err)
+	// 		alert('Не удалось удалить мероприятие')
+	// 	} finally {
+	// 		setIsDeleting(false)
+	// 	}
+	// }
 	const handleJoin = async () => {
 		setIsJoining(true)
 		try {

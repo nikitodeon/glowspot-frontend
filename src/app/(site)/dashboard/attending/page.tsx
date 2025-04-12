@@ -1,18 +1,16 @@
 'use client'
 
-import { ApolloCache, gql } from '@apollo/client'
-import { Plus, Search } from 'lucide-react'
+import { ApolloCache } from '@apollo/client'
+import { Search } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 import AttendCard from '@/components/dashboard/AttendCard'
-import HostCard from '@/components/dashboard/HostCard'
 
 import {
 	GetEventsWhereIParticipateDocument,
 	GetFavoriteEventsDocument,
-	GetFilteredEventsDocument,
 	GetMyOrganizedEventsDocument,
 	useAddToFavoritesMutation,
 	useGetEventsWhereIParticipateQuery,
@@ -344,10 +342,7 @@ const ParticipatingEvents = () => {
 				})}
 
 				<div className='mb-5 w-full overflow-hidden rounded-xl border-2 border-dashed border-gray-600 bg-black shadow-lg transition-transform hover:scale-[1.02]'>
-					<Link
-						href='/dashboard/participating/create'
-						className='flex h-full flex-col'
-					>
+					<Link href='/search' className='flex h-full flex-col'>
 						<div className='relative h-48 w-full bg-black'>
 							<div className='flex h-full items-center justify-center'>
 								<Search className='h-16 w-16 text-white opacity-90' />

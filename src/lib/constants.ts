@@ -49,22 +49,6 @@ import {
 	PaymentType
 } from '@/graphql/generated/output'
 
-// export enum AmenityEnum {
-// 	WasherDryer = 'WasherDryer',
-// 	AirConditioning = 'AirConditioning',
-// 	Dishwasher = 'Dishwasher',
-// 	HighSpeedInternet = 'HighSpeedInternet',
-// 	HardwoodFloors = 'HardwoodFloors',
-// 	WalkInClosets = 'WalkInClosets',
-// 	Microwave = 'Microwave',
-// 	Refrigerator = 'Refrigerator',
-// 	Pool = 'Pool',
-// 	Gym = 'Gym',
-// 	Parking = 'Parking',
-// 	PetsAllowed = 'PetsAllowed',
-// 	WiFi = 'WiFi'
-// }
-
 export enum EventPropertyEnum {
 	AGE_18_PLUS = '18+',
 	AGE_21_PLUS = '21+',
@@ -137,14 +121,6 @@ export const HighlightIcons: Record<HighlightEnum, LucideIcon> = {
 	QuietNeighborhood: VolumeX
 }
 
-// export enum PropertyTypeEnum {
-// 	Rooms = 'Rooms',
-// 	Tinyhouse = 'Tinyhouse',
-// 	Apartment = 'Apartment',
-// 	Villa = 'Villa',
-// 	Townhouse = 'Townhouse',
-// 	Cottage = 'Cottage'
-// }
 export enum EventTypeEnum {
 	EXHIBITION = 'EXHIBITION',
 	MEETUP = 'MEETUP',
@@ -281,25 +257,3 @@ export const PaymentTypeTranslations: Record<PaymentType, string> = {
 
 // Add this constant at the end of the file
 export const NAVBAR_HEIGHT = 102 // in pixels
-
-// Test users for development
-export const testUsers = {
-	tenant: {
-		username: 'Carol White',
-		userId: 'us-east-2:76543210-90ab-cdef-1234-567890abcdef',
-		signInDetails: {
-			loginId: 'carol.white@example.com',
-			authFlowType: 'USER_SRP_AUTH'
-		}
-	},
-	tenantRole: 'tenant',
-	manager: {
-		username: 'John Smith',
-		userId: 'us-east-2:12345678-90ab-cdef-1234-567890abcdef',
-		signInDetails: {
-			loginId: 'john.smith@example.com',
-			authFlowType: 'USER_SRP_AUTH'
-		}
-	},
-	managerRole: 'manager'
-}

@@ -1,14 +1,12 @@
 import { Label } from '@radix-ui/react-label'
-import { debounce, set } from 'lodash'
-import { Home, Search } from 'lucide-react'
+import { debounce } from 'lodash'
+import { Home } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { useDispatch } from 'react-redux'
-import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/commonApp/button'
-import { Input } from '@/components/ui/commonApp/input'
 import {
 	Select,
 	SelectContent,
@@ -21,7 +19,7 @@ import { Slider } from '@/components/ui/commonApp/slider'
 import { FiltersState, initialState, setFilters } from '@/store/redux'
 import { useAppSelector } from '@/store/redux/redux'
 
-import { EventPropertyIcons, EventTypeIcons } from '@/lib/constants'
+import { EventTypeIcons } from '@/lib/constants'
 import { cleanParams, cn } from '@/lib/utils'
 
 const FiltersFull = () => {
@@ -30,10 +28,7 @@ const FiltersFull = () => {
 	const pathname = usePathname()
 	const filters = useAppSelector(state => state.global.filters)
 	const [localFilters, setLocalFilters] = useState(initialState.filters)
-	// const [sliderStates, setSliderStates] = useState({
-	// 	smallRangeActive: false,
-	// 	largeRangeActive: false
-	// })
+
 	const [isPriceFilterActive, setIsPriceFilterActive] = useState(false)
 	const [searchInput, setSearchInput] = useState(filters.location)
 	const isFiltersFullOpen = useAppSelector(
@@ -75,10 +70,7 @@ const FiltersFull = () => {
 		dispatch(setFilters(initialState.filters))
 		updateURL(initialState.filters)
 		setLocalFilters(initialState.filters)
-		// setSliderStates({
-		// 	smallRangeActive: false,
-		// 	largeRangeActive: false
-		// })
+
 		setIsPriceFilterActive(false)
 	}
 
@@ -97,11 +89,6 @@ const FiltersFull = () => {
 			priceRange: value
 		}))
 
-		// setSliderStates(prev => ({
-		// 	...prev,
-		// 	smallRangeActive: rangeType === 'small' || prev.smallRangeActive,
-		// 	largeRangeActive: rangeType === 'large' || prev.largeRangeActive
-		// }))
 		setIsPriceFilterActive(true)
 	}
 	useEffect(() => {
@@ -206,13 +193,6 @@ const FiltersFull = () => {
 	}
 	const currencyName = getCurrencyName(localFilters.currency)
 
-	// const handleDateChange = (dates: [Date | null, Date | null]) => {
-	// 	const [start, end] = dates
-	// 	if (start && end && start > end) {
-	// 		toast.error('Дата начала не может быть позже даты окончания')
-	// 		return
-	// 	}
-	// }
 	// const handleLocationSearch = async () => {
 	// 	try {
 	// 		const response = await fetch(
@@ -546,9 +526,6 @@ const FiltersFull = () => {
 					<div className='mb-2 flex items-center justify-between'>
 						<h4 className='text-white'>Малый диапазон цены</h4>
 						<span className='text-xs text-gray-400'>
-							{/* {sliderStates.smallRangeActive
-								? 'Активирован'
-								: 'Деактивирован'} */}
 							<span className='text-xs text-gray-400'>
 								{isPriceFilterActive ? 'Активен' : 'Не активен'}
 							</span>

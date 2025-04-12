@@ -5,10 +5,8 @@ import {
 	ArrowLeft,
 	CheckCircle,
 	Trash,
-	Trash2,
 	UserMinus,
 	UserPlus,
-	X,
 	XCircle
 } from 'lucide-react'
 import Image from 'next/image'
@@ -28,10 +26,6 @@ import {
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
 	DialogTrigger
 } from '@/components/ui/commonApp/dialog'
 import {

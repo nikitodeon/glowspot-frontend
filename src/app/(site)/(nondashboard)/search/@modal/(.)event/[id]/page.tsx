@@ -1,9 +1,7 @@
 'use client'
 
 import { ApolloCache } from '@apollo/client'
-import { Arrow } from '@radix-ui/react-dropdown-menu'
 import {
-	ArrowLeft,
 	ArrowRight,
 	Heart,
 	HeartOff,

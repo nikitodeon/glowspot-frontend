@@ -1,8 +1,8 @@
+'use client'
+
 import {
-	Building,
-	FileText,
+	CheckCircle,
 	Heart,
-	Home,
 	House,
 	MapPinned,
 	Menu,
@@ -14,6 +14,8 @@ import {
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
+
+import { useCurrent } from '@/hooks/useCurrent'
 
 import {
 	Sidebar,
@@ -28,9 +30,11 @@ import {
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
-const AppSidebar = ({ userType }: AppSidebarProps) => {
+const AppSidebar = () => {
 	const pathname = usePathname()
 	const { toggleSidebar, open } = useSidebar()
+	const { user } = useCurrent()
+	const isAdmin = user?.isAdmin
 
 	const navLinks = [
 		{
@@ -43,13 +47,11 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
 			label: 'Участие',
 			href: '/dashboard/attending'
 		},
-
 		{
 			icon: NotebookPen,
 			label: 'Организация',
 			href: '/dashboard/hosting'
 		},
-
 		{
 			icon: MapPinned,
 			label: 'Карта',
@@ -64,13 +66,23 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
 			icon: House,
 			label: 'Главная',
 			href: '/'
-		}
+		},
+		...(isAdmin
+			? [
+					{
+						icon: CheckCircle,
+						label: 'Верификация',
+						href: '/dashboard/verify',
+						isAdmin: true
+					}
+				]
+			: [])
 	]
 
 	return (
 		<Sidebar
 			collapsible='icon'
-			className='fixed left-0 bg-black shadow-lg'
+			className='fixed left-0 border-r border-gray-900 bg-black'
 			style={{
 				top: `${NAVBAR_HEIGHT - 40}px`,
 				height: `calc(100vh - ${NAVBAR_HEIGHT}px)`
@@ -88,12 +100,10 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
 							{open ? (
 								<>
 									<h1 className='text-xl font-bold text-white'>
-										{userType === 'manager'
-											? 'Manager View'
-											: 'Управление'}
+										Управление
 									</h1>
 									<button
-										className='rounded-md p-2'
+										className='rounded-md p-2 hover:bg-gray-900'
 										onClick={() => toggleSidebar()}
 									>
 										<X className='h-6 w-6 text-white' />
@@ -101,10 +111,10 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
 								</>
 							) : (
 								<button
-									className='rounded-md p-2'
+									className='rounded-md p-2 hover:bg-gray-900'
 									onClick={() => toggleSidebar()}
 								>
-									<Menu className='h-6 w-6 text-[#7f8fa3]' />
+									<Menu className='h-6 w-6 text-gray-400' />
 								</button>
 							)}
 						</div>
@@ -124,11 +134,11 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
 									className={cn(
 										'flex items-center transition-colors',
 										isActive
-											? 'ььborder ььborder-white ььbg-[#3c404e]'
-											: 'hover:bgnn-gray-800',
+											? 'bgjj-[#1f2937] borderkk-[0.5px] border-l-4 border-white bg-black'
+											: 'hover:bg-[#0d0d0d]',
 										open
-											? 'px-7 py-7'
-											: 'justify-center p-7'
+											? 'px-6 py-5'
+											: 'justify-center p-5'
 									)}
 								>
 									<Link
@@ -139,24 +149,31 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
 										<div className='flex items-center gap-3'>
 											<link.icon
 												className={cn(
-													'h-5 w-5 transition-colors',
+													'h-5 w-5',
 													isActive
 														? 'text-white'
-														: 'text-[#7f8fa3]',
-													!open && 'mx-auto ml-3' // Центрируем иконку в свернутом состоянии
+														: 'text-gray-400',
+													!open && 'mx-auto'
 												)}
 											/>
-											{open && ( // Показываем текст только когда сайдбар открыт
-												<span
-													className={cn(
-														'font-medium transition-colors',
-														isActive
-															? 'text-white'
-															: 'text-[#7f8fa3]'
+											{open && (
+												<div className='flex flex-col'>
+													<span
+														className={cn(
+															'font-medium',
+															isActive
+																? 'text-white'
+																: 'text-gray-400'
+														)}
+													>
+														{link.label}
+													</span>
+													{link.isAdmin && (
+														<span className='mt-0.5 text-xs text-gray-500'>
+															Админ
+														</span>
 													)}
-												>
-													{link.label}
-												</span>
+												</div>
 											)}
 										</div>
 									</Link>

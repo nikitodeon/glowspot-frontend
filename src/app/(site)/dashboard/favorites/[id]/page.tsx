@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowLeft, CheckCircle, Trash, Trash2, XCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle, Trash, XCircle } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
@@ -30,12 +30,9 @@ import {
 } from '@/components/ui/commonAuth/Avatar'
 
 import {
-	EventProperty,
-	EventStatus,
 	EventType,
 	useDeleteEventMutation,
 	useGetEventByIdQuery,
-	//   useLeaveEventMutation,
 	useRemoveFromFavoritesMutation
 } from '@/graphql/generated/output'
 
@@ -43,11 +40,7 @@ import { useCurrent } from '@/hooks/useCurrent'
 
 import { getMediaSource } from '@/utils/get-media-source'
 
-import {
-	EventPropertyTranslations,
-	EventStatusTranslations,
-	EventTypeTranslations
-} from '@/lib/constants'
+import { EventTypeTranslations } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 const destructiveButtonClass = cn(

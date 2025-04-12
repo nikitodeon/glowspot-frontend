@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client'
-import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
 import { Calendar, Clock, Heart, LogOut, Plus, Trash } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -23,9 +22,9 @@ import { getMediaSource } from '@/utils/get-media-source'
 
 import { cn } from '@/lib/utils'
 
-// Adds messages only in a dev environment
-loadDevMessages()
-loadErrorMessages()
+// Adds apollo messages
+// loadDevMessages()
+// loadErrorMessages()
 
 const destructiveButtonClass = cn(
 	'bg-transparent text-red-500 border border-red-500/30 hover:bg-red-500/10',

@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowLeft, Trash, Trash2 } from 'lucide-react'
+import { ArrowLeft, Trash } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'

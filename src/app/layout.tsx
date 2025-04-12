@@ -19,8 +19,6 @@ import { ToastProvider } from '@/providers/ToastProvider'
 import '@/styles/globals.css'
 import '@/styles/themes.css'
 
-// import StoreProvider from "@/state/redux";
-
 export const metadata: Metadata = {
 	title: {
 		absolute: SITE_NAME,
@@ -82,10 +80,8 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
 	children
-	// modal
 }: Readonly<{
 	children: React.ReactNode
-	// modal: React.ReactNode
 }>) {
 	const locale = await getLocale()
 	const messages = await getMessages()
@@ -103,10 +99,8 @@ export default async function RootLayout({
 						> */}
 						<ToastProvider />
 
-						{/* <StoreProvider> */}
 						{children}
-						{/* {modal} */}
-						{/* </StoreProvider>	 */}
+
 						{/* </ThemeProvider> */}
 					</NextIntlClientProvider>
 				</ApolloClientProvider>

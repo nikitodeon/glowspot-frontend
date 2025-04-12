@@ -1,15 +1,12 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { PropsWithChildren } from 'react'
 
-import { LogoImage } from '@/components/images/LogoImage'
 import { Button } from '@/components/ui/commonAuth/Button'
 import {
 	Card,
 	CardContent,
 	CardFooter,
-	CardHeader,
-	CardTitle
+	CardHeader
 } from '@/components/ui/commonAuth/Card'
 import RotatingLogo from '@/components/ui/elements/RotatingLogo'
 

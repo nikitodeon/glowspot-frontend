@@ -8,19 +8,14 @@ import { Provider } from 'react-redux'
 
 import globalReducer from '@/store/redux'
 
-// import { api } from "@/state/api";
-
 /* REDUX STORE */
 const rootReducer = combineReducers({
 	global: globalReducer
-	//   [api.reducerPath]: api.reducer,
 })
 
 export const makeStore = () => {
 	return configureStore({
 		reducer: rootReducer
-		// middleware: (getDefaultMiddleware) =>
-		//   getDefaultMiddleware().concat(api.middleware),
 	})
 }
 

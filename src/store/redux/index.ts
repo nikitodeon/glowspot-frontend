@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export interface FiltersState {
 	location: string
-	// beds: string
+
 	status:
 		| 'UPCOMING'
 		| 'ONGOING'
@@ -11,16 +11,13 @@ export interface FiltersState {
 		| 'ARCHIVED'
 		| 'any'
 	paymentType: 'FREE' | 'PAYMENT_REQUIRED' | 'DONATION' | 'any'
-	// baths: string
-	// propertyType: string
-	// amenities: string[]
+
 	eventType: 'any' | EventTypeEnum | null
 	eventProperties: string[]
-	// availableFrom: string
+
 	priceRange: [number, number] | [null, null]
 	dateRange: any
-	// dateRange: [string | null, string | null]
-	// squareFeet: [number, number] | [null, null]
+
 	coordinates: [number, number]
 	currency: string
 }
@@ -35,16 +32,15 @@ export const initialState: InitialStateTypes = {
 	filters: {
 		location: 'Минск',
 		status: 'any',
-		// beds: 'any',
-		// baths: 'any',
+
 		paymentType: 'any',
 		eventType: 'any',
 		eventProperties: [],
-		// availableFrom: 'any',
+
 		priceRange: [null, null],
 		dateRange: [null, null] as [string | null, string | null],
 		currency: 'any',
-		// squareFeet: [null, null],
+
 		coordinates: [27.57, 53.9]
 	},
 	isFiltersFullOpen: true,

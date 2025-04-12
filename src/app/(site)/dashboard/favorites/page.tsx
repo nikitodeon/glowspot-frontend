@@ -1,24 +1,19 @@
 'use client'
 
 import { ApolloCache, gql } from '@apollo/client'
-import { Plus, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-import AttendCard from '@/components/dashboard/AttendCard'
 import FavoriteCard from '@/components/dashboard/FavoriteCard'
-import HostCard from '@/components/dashboard/HostCard'
 
-// import Event from'@/graphql/generated/output'
 import {
 	GetEventsWhereIParticipateDocument,
 	GetFavoriteEventsDocument,
-	GetFilteredEventsDocument,
 	GetMyOrganizedEventsDocument,
 	useAddToFavoritesMutation,
 	useDeleteEventMutation,
-	useGetEventsWhereIParticipateQuery,
 	useGetFavoriteEventsQuery,
 	useLeaveEventMutation,
 	useParticipateInEventMutation,
@@ -31,18 +26,11 @@ const FavoriteEvents = () => {
 	const { user } = useCurrent()
 	const userId = user?.id
 
-	const [openLeaveDialog, setOpenLeaveDialog] = useState(false)
-	const [isDeleting, setIsDeleting] = useState(false)
-	const [isJoining, setIsJoining] = useState(false)
-	const [isLeaving, setIsLeaving] = useState(false)
 	const { data, loading: isLoading } = useGetFavoriteEventsQuery({
 		fetchPolicy: 'cache-and-network',
 		nextFetchPolicy: 'cache-first'
 	})
 	const favoriteEvents = data?.getFavoriteEvents || []
-	const [deleteEvent] = useDeleteEventMutation({
-		refetchQueries: [{ query: GetFavoriteEventsDocument }]
-	})
 
 	const [participateInEvent] = useParticipateInEventMutation()
 	const [leaveEvent] = useLeaveEventMutation()
@@ -215,30 +203,7 @@ const FavoriteEvents = () => {
 	// 		}
 	// 	})
 	// }
-	// const handleJoin = async (eventId: string) => {
-	// 	setIsJoining(true)
-	// 	try {
-	// 		await participateInEvent({
-	// 			variables: { eventId },
-	// 			update: cache => {
-	// 				if (!userId || !user) return
 
-	// 				updateParticipationCaches(cache, eventId, false, {
-	// 					id: user.id,
-	// 					username: user.username,
-	// 					displayName: user.displayName,
-	// 					avatar: user.avatar || ''
-	// 				})
-	// 			}
-	// 		})
-	// 		toast.success('Вы присоединились к мероприятию')
-	// 	} catch (err) {
-	// 		console.error('Error joining event:', err)
-	// 		toast.error('Ошибка при присоединении к мероприятию')
-	// 	} finally {
-	// 		setIsJoining(false)
-	// 	}
-	// }
 	const updateCaches = (
 		cache: ApolloCache<any>,
 		eventId: string,
@@ -499,9 +464,6 @@ const FavoriteEvents = () => {
 		)
 	}
 
-	// const isOrganizer = userId === event.organizer.id
-	// const isParticipant = event.participants?.some(p => p.id === userId)
-
 	return (
 		<div className='px-8 pb-5 pt-8'>
 			<div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
@@ -533,10 +495,7 @@ const FavoriteEvents = () => {
 				})}
 
 				<div className='mb-5 w-full overflow-hidden rounded-xl border-2 border-dashed border-gray-600 bg-black shadow-lg transition-transform hover:scale-[1.02]'>
-					<Link
-						href='/dashboard/participating/create'
-						className='flex h-full flex-col'
-					>
+					<Link href='/search' className='flex h-full flex-col'>
 						<div className='relative h-48 w-full bg-black'>
 							<div className='flex h-full items-center justify-center'>
 								<Search className='h-16 w-16 text-white opacity-90' />

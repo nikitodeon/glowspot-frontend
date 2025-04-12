@@ -39,33 +39,24 @@ const DiscoverSection = () => {
 					<p className='mt-4 text-lg text-gray-600'>
 						Куда пойти? Мы знаем ответ!
 					</p>
-					<p className='mx-auto mt-2 max-w-3xl text-gray-500'>
-						Searching for your dream rental property has never been
-						easier. With our user-friendly search feature, you can
-						quickly find the perfect home that meets all your needs.
-						Start your search today and discover your dream rental
-						property!
-					</p>
+					<p className='mx-auto mt-2 max-w-3xl text-gray-500'></p>
 				</motion.div>
 				<div className='grid grid-cols-1 gap-8 text-center md:grid-cols-3 lg:gap-12 xl:gap-16'>
 					{[
 						{
 							imageSrc: '/landing-icon-wand.png',
-							title: 'Search for Properties',
-							description:
-								'Browse through our extensive collection of rental properties in your desired location.'
+							title: '',
+							description: ''
 						},
 						{
 							imageSrc: '/landing-icon-calendar.png',
-							title: 'Book Your Rental',
-							description:
-								"Once you've found the perfect rental property, easily book it online with just a few clicks."
+							title: '',
+							description: ''
 						},
 						{
 							imageSrc: '/landing-icon-heart.png',
-							title: 'Enjoy your New Home',
-							description:
-								'Move into your new rental property and start enjoying your dream home.'
+							title: '',
+							description: ''
 						}
 					].map((card, index) => (
 						<motion.div key={index} variants={itemVariants}>

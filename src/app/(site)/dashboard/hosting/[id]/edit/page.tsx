@@ -1,6 +1,6 @@
 'use client'
 
-import { useMutation, useQuery } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
@@ -41,12 +41,6 @@ import {
 	EventTypeTranslations,
 	PaymentTypeTranslations
 } from '@/lib/constants'
-
-// interface EditEventProps {
-// 	params: {
-// 		id: string
-// 	}
-// }
 
 const EditEvent = () => {
 	const { id } = useParams()

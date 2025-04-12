@@ -1,6 +1,6 @@
 'use client'
 
-import { LayoutDashboard, Loader, LogOut, User } from 'lucide-react'
+import { LayoutDashboard, Loader, LogOut } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -57,12 +57,7 @@ export function ProfileMenu() {
 						</h2>
 					</div>
 					<DropdownMenuSeparator />
-					{/* <Link href={`/${user.username}`}>
-						<DropdownMenuItem>
-							<User className='mr-2 size-2' />
-							{t('channel')}
-						</DropdownMenuItem>
-					</Link> */}
+
 					<Link href='/dashboard/hosting'>
 						<DropdownMenuItem>
 							<LayoutDashboard className='mr-2 size-2' />

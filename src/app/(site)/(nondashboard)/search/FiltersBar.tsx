@@ -26,9 +26,7 @@ import {
 import { useAppSelector } from '@/store/redux/redux'
 
 import { EventTypeIcons, EventTypeLabelsRu } from '@/lib/constants'
-import { cleanParams, cn, formatPriceValue } from '@/lib/utils'
-
-const bynPrices = [0, 15, 30, 50, 70, 100, 150]
+import { cleanParams, cn } from '@/lib/utils'
 
 const FiltersBar = () => {
 	const dispatch = useDispatch()
@@ -265,7 +263,6 @@ const FiltersBar = () => {
 				</div>
 			</div>
 
-			{/* Переключение видов */}
 			<Link href='/dashboard/hosting' className='ml-auto'>
 				<Button
 					variant='ghost'
@@ -279,6 +276,8 @@ const FiltersBar = () => {
 					<LayoutDashboard className='h-5 w-5' /> Панель управления
 				</Button>
 			</Link>
+			{/* Переключение видов */}
+
 			<div className='flex items-center justify-between gap-4 p-2'>
 				<div className='flex rounded-xl border'>
 					<Button

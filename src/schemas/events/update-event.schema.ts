@@ -26,7 +26,7 @@ export const eventSchema = z
 			.optional(),
 		existingPhotos: z.array(z.string()).optional(),
 		eventType: z.nativeEnum(EventType),
-		// eventType: z.string(),
+
 		eventProperties: z.nativeEnum(EventProperty).array().optional(),
 		paymentType: z.nativeEnum(PaymentType),
 		price: z.coerce.number().min(0).optional(),

@@ -26,7 +26,7 @@ export const eventSchema = z.object({
 		.min(1, 'Пожалуйста, добавьте хотя бы одно фото'),
 
 	eventType: z.nativeEnum(EventType),
-	// eventProperties: z.array(z.string()).optional(),
+
 	eventProperties: z.nativeEnum(EventProperty).array().optional(),
 	paymentType: z.nativeEnum(PaymentType),
 	price: z.coerce.number().min(0).optional(),

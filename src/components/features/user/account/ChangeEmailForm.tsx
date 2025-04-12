@@ -15,7 +15,6 @@ import {
 	FormLabel
 } from '@/components/ui/commonAuth/Form'
 import { Input } from '@/components/ui/commonAuth/Input'
-import { Separator } from '@/components/ui/commonAuth/Separator'
 import { Skeleton } from '@/components/ui/commonAuth/Skeleton'
 import { FormWrapper } from '@/components/ui/elements/FormWrapper'
 

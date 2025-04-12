@@ -44,7 +44,6 @@ const Listings = () => {
 	// const dateRange: [string | null, string | null] | undefined =
 	// 	startRaw || end ? [startRaw || null, end] : undefined
 
-	// console.log('✅ Отправляемый dateRange:', dateRange)
 	console.log('GraphQL dateRange filter being sent:', filters.dateRange)
 	function isValidDate(date: Date): boolean {
 		return !isNaN(date.getTime())

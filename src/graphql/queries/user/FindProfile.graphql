@@ -6,18 +6,12 @@ query FindProfile {
 		email
 		avatar
 		bio
+		isAdmin
 		isVerified
 		isTotpEnabled
 		notificationSettings {
 			siteNotifications
 			telegramNotifications
 		}
-		# stream {
-		# 	serverUrl
-		# 	streamKey
-		# 	isChatEnabled
-		# 	isChatFollowersOnly
-		# 	isChatPremiumFollowersOnly
-		# }
 	}
 }

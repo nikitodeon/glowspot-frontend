@@ -1,12 +1,11 @@
 'use client'
 
-import { redirect, useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import React, { useEffect } from 'react'
 
 import { setFilters } from '@/store/redux'
 import { useAppDispatch, useAppSelector } from '@/store/redux/redux'
 
-import EventModal from './@modal/(.)event/[id]/page'
 import FiltersBar from './FiltersBar'
 import FiltersFull from './FiltersFull'
 import Listings from './Listings'
@@ -15,22 +14,14 @@ import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { cleanParams } from '@/lib/utils'
 
 const SearchPage = () => {
-	// const router = useRouter()
 	const searchParams = useSearchParams()
-	// const modalEventId = searchParams.get('modalEventId')
+
 	const dispatch = useAppDispatch()
 	const isFiltersFullOpen = useAppSelector(
 		state => state.global.isFiltersFullOpen
 	)
-	// if (modalEventId) {
-	// 	redirect(`/search/event/${modalEventId}`)
-	// }
-	useEffect(() => {
-		// if (modalEventId) {
-		// 	// Если есть modalEventId, перенаправляем на страницу события
-		// 	router.replace(`/search/event/${modalEventId}`)
-		// }
 
+	useEffect(() => {
 		const initialFilters = Array.from(searchParams.entries()).reduce(
 			(acc: any, [key, value]) => {
 				if (key === 'priceRange' || key === 'squareFeet') {

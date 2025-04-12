@@ -14,7 +14,6 @@ import {
 
 import { useAppSelector } from '@/store/redux/redux'
 
-import { formatDate } from '@/utils/format-date'
 import { getMediaSource } from '@/utils/get-media-source'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string
@@ -26,9 +25,9 @@ const Map = () => {
 	const resizeObserverRef = useRef<ResizeObserver | null>(null)
 
 	const filters = useAppSelector(state => state.global.filters)
-	const isFiltersFullOpen = useAppSelector(
-		state => state.global.isFiltersFullOpen
-	)
+	// const isFiltersFullOpen = useAppSelector(
+	// 	state => state.global.isFiltersFullOpen
+	// )
 
 	const [shouldInitMap, setShouldInitMap] = useState(false)
 
@@ -100,7 +99,6 @@ const Map = () => {
 		mapRef.current = map
 
 		const handleEventClick = (eventId: string) => {
-			// Ключевое изменение - используем replace вместо push
 			router.push(`/search/event/${eventId}`, {
 				scroll: false
 			})

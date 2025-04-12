@@ -1,4 +1,4 @@
-import { Plus, Search } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 

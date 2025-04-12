@@ -12,7 +12,6 @@ import {
 	GetFavoriteEventsDocument,
 	GetMyOrganizedEventsDocument,
 	useAddToFavoritesMutation,
-	useGetEventsWhereIParticipateQuery,
 	useGetMyOrganizedEventsQuery,
 	useRemoveFromFavoritesMutation
 } from '@/graphql/generated/output'
