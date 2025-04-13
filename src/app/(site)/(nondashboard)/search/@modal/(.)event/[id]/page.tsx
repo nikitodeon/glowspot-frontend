@@ -14,7 +14,7 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { use, useEffect, useState } from 'react'
+import { use, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import {
@@ -69,7 +69,7 @@ export default function EnhancedEventModal({
 	const [isJoining, setIsJoining] = useState(false)
 	const [isLeaving, setIsLeaving] = useState(false)
 	const [isMounted, setIsMounted] = useState(false)
-
+	const dialogContentRef = useRef<HTMLDivElement>(null)
 	const { data, loading, error } = useGetEventByIdQuery({
 		variables: { getEventByIdId: id },
 		skip: !isMounted
@@ -274,10 +274,23 @@ export default function EnhancedEventModal({
 	const isParticipant = event.participants?.some(p => p.id === userId)
 	const isFavorite = event.favoritedBy?.some(user => user.id === userId)
 
+	const handleOverlayClick = (e: React.MouseEvent) => {
+		if (!dialogContentRef.current?.contains(e.target as Node)) {
+			handleClose()
+		}
+	}
+
 	return (
 		<Dialog defaultOpen open onOpenChange={handleClose}>
-			<DialogOverlay className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-				<DialogContent className='relative z-50 max-h-[90vh] w-full max-w-3xl overflow-y-auto border border-white/10 bg-black p-0 shadow-xl'>
+			<DialogOverlay
+				className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+				onClick={handleOverlayClick}
+			>
+				<DialogContent
+					className='relative z-50 max-h-[90vh] w-full max-w-3xl overflow-y-auto border border-white/10 bg-black p-0 shadow-xl'
+					ref={dialogContentRef}
+					// onClick={(e: any) => e.stopPropagation()}
+				>
 					<button
 						onClick={handleClose}
 						className='absolute right-4 top-4 z-10 rounded-full p-2 text-white hover:bg-white/10'
@@ -527,9 +540,9 @@ export default function EnhancedEventModal({
 						open={openLeaveDialog}
 						onOpenChange={setOpenLeaveDialog}
 					>
-						<DialogContent className='border-white/10 bg-black text-white'>
+						<DialogContent className='flex w-[500px] justify-center rounded-xl border-[1px] border-white bg-black text-white'>
 							<div className='space-y-4'>
-								<h3 className='text-lg font-medium text-white'>
+								<h3 className='mt-2 text-lg font-medium text-white'>
 									Покинуть мероприятие?
 								</h3>
 								<p className='text-gray-400'>
@@ -539,7 +552,7 @@ export default function EnhancedEventModal({
 								<div className='flex justify-end gap-2'>
 									<Button
 										variant='outline'
-										className='border-white/10 text-white hover:bg-white/10'
+										className='mb-3 border-white/10 text-white hover:bg-white/10'
 										onClick={() =>
 											setOpenLeaveDialog(false)
 										}

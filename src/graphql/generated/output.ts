@@ -114,6 +114,7 @@ export type EventFilterInput = {
   priceRange?: InputMaybe<Array<Scalars['Float']['input']>>;
   searchQuery?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<EventStatus>;
+  verifiedOnly?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type EventModel = {
@@ -729,7 +730,7 @@ export type GetFilteredEventsQueryVariables = Exact<{
 }>;
 
 
-export type GetFilteredEventsQuery = { __typename?: 'Query', getAllEvents: Array<{ __typename?: 'EventModel', ageRestriction?: number | null, createdAt: any, currency?: string | null, description: string, endTime?: any | null, eventProperties: Array<EventProperty>, eventType: EventType, id: string, isPrivate: boolean, isVerified: boolean, maxParticipants?: number | null, paymentType: PaymentType, photoUrls: Array<string>, postedDate: any, price?: number | null, startTime: any, status: EventStatus, tags: Array<string>, title: string, updatedAt: any, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null, location: { __typename?: 'LocationModel', placeName?: string | null, address?: string | null, city: string, coordinates: { __typename?: 'Coordinates', latitude: number, longitude: number } }, organizer: { __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }, participants?: Array<{ __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }> | null }> };
+export type GetFilteredEventsQuery = { __typename?: 'Query', getAllEvents: Array<{ __typename?: 'EventModel', ageRestriction?: number | null, createdAt: any, currency?: string | null, description: string, endTime?: any | null, eventProperties: Array<EventProperty>, eventType: EventType, id: string, isPrivate: boolean, isVerified: boolean, maxParticipants?: number | null, paymentType: PaymentType, photoUrls: Array<string>, postedDate: any, price?: number | null, startTime: any, status: EventStatus, tags: Array<string>, title: string, updatedAt: any, favoritedBy?: Array<{ __typename?: 'UserModel', id: string }> | null, location: { __typename?: 'LocationModel', placeName?: string | null, address?: string | null, city: string, coordinates: { __typename?: 'Coordinates', latitude: number, longitude: number } }, organizer: { __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null, isVerified: boolean }, participants?: Array<{ __typename?: 'UserModel', id: string, username: string, displayName: string, avatar?: string | null }> | null }> };
 
 export type GetEventByIdQueryVariables = Exact<{
   getEventByIdId: Scalars['String']['input'];
@@ -1761,6 +1762,7 @@ export const GetFilteredEventsDocument = gql`
       username
       displayName
       avatar
+      isVerified
     }
     participants {
       id

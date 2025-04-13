@@ -54,6 +54,7 @@ const Map = () => {
 				? undefined
 				: filters.priceRange.filter((v): v is number => v !== null),
 			currency: filters.currency !== 'any' ? filters.currency : undefined,
+			verifiedOnly: filters.verifiedOnly ? true : undefined, // Добавляем фильтр верификации
 			dateRange:
 				filters.dateRange &&
 				(filters.dateRange[0] || filters.dateRange[1])

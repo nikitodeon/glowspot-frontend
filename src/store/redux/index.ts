@@ -20,6 +20,7 @@ export interface FiltersState {
 
 	coordinates: [number, number]
 	currency: string
+	verifiedOnly: boolean
 }
 
 interface InitialStateTypes {
@@ -40,6 +41,7 @@ export const initialState: InitialStateTypes = {
 		priceRange: [null, null],
 		dateRange: [null, null] as [string | null, string | null],
 		currency: 'any',
+		verifiedOnly: false,
 
 		coordinates: [27.57, 53.9]
 	},
@@ -52,19 +54,22 @@ export const globalSlice = createSlice({
 	initialState,
 	reducers: {
 		setFilters: (state, action: PayloadAction<Partial<FiltersState>>) => {
+			// Добавляем обработку verifiedOnly
+			const payload = action.payload
+			if (typeof payload.verifiedOnly === 'string') {
+				payload.verifiedOnly = payload.verifiedOnly === 'true'
+			}
+
 			if (action.payload.dateRange) {
 				let dateRange: [string | null, string | null] = [null, null]
 
-				// Обработка случая, когда dateRange приходит как строка
 				if (typeof action.payload.dateRange === 'string') {
 					const parts = action.payload.dateRange.split(',')
 					dateRange = [
 						parts[0] && parts[0] !== 'null' ? parts[0] : null,
 						parts[1] && parts[1] !== 'null' ? parts[1] : null
 					]
-				}
-				// Обработка случая, когда dateRange - массив
-				else if (Array.isArray(action.payload.dateRange)) {
+				} else if (Array.isArray(action.payload.dateRange)) {
 					dateRange = [
 						action.payload.dateRange[0] || null,
 						action.payload.dateRange[1] || null
@@ -74,10 +79,21 @@ export const globalSlice = createSlice({
 				state.filters = {
 					...state.filters,
 					...action.payload,
-					dateRange
+					dateRange,
+					verifiedOnly:
+						typeof payload.verifiedOnly !== 'undefined'
+							? payload.verifiedOnly
+							: state.filters.verifiedOnly
 				}
 			} else {
-				state.filters = { ...state.filters, ...action.payload }
+				state.filters = {
+					...state.filters,
+					...action.payload,
+					verifiedOnly:
+						typeof payload.verifiedOnly !== 'undefined'
+							? payload.verifiedOnly
+							: state.filters.verifiedOnly
+				}
 			}
 		},
 		toggleFiltersFullOpen: (
@@ -94,7 +110,6 @@ export const globalSlice = createSlice({
 		}
 	}
 })
-
 export const { setFilters, toggleFiltersFullOpen, setViewMode } =
 	globalSlice.actions
 

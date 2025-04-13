@@ -36,6 +36,7 @@ export default function SiteLayout({
 		'/dashboard/attending': 'Участие в мероприятиях',
 		'/dashboard/favorites': 'Избранное',
 		'/dashboard/settings': 'Настройки',
+		'/dashboard/verify': 'Верификация организаторов',
 		'/search': 'Мероприятия на карте',
 
 		...(eventId ? { [`/dashboard/hosting/${eventId}`]: title } : {}),

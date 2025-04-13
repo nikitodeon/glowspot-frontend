@@ -28,6 +28,7 @@ query GetFilteredEvents($filter: EventFilterInput) {
 			username
 			displayName
 			avatar
+			isVerified
 		}
 		participants {
 			id

@@ -1,7 +1,8 @@
 'use client'
 
 import { ApolloCache } from '@apollo/client'
-import React, { useState } from 'react'
+import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import {
@@ -66,8 +67,8 @@ const Listings = () => {
 			priceRange: filters.priceRange.every(v => v === null)
 				? undefined
 				: filters.priceRange.filter((v): v is number => v !== null),
-			currency: filters.currency !== 'any' ? filters.currency : undefined, // Добавляем новое поле
-
+			currency: filters.currency !== 'any' ? filters.currency : undefined,
+			verifiedOnly: filters.verifiedOnly ? true : false, // Добавляем фильтр верификации
 			dateRange:
 				filters.dateRange &&
 				(filters.dateRange[0] || filters.dateRange[1])
@@ -84,10 +85,8 @@ const Listings = () => {
 					: undefined
 		}
 	}
-	console.log(
-		'[GraphQL] Sending filter.dateRange:',
-		queryVariables.filter.dateRange
-	)
+
+	console.log('[GraphQL] Sending filter:', queryVariables.filter)
 
 	const {
 		data,
@@ -98,7 +97,12 @@ const Listings = () => {
 	})
 
 	const events = data?.getAllEvents || []
-
+	useEffect(() => {
+		console.log('Query results:', {
+			data: events
+			//   loading,
+		})
+	}, [data])
 	const updateCache = (
 		cache: ApolloCache<any>,
 		eventId: string,
@@ -190,41 +194,73 @@ const Listings = () => {
 	}
 
 	if (isLoading) return <>Загрузка...</>
-	if (isError || !events) return <div>Не удалось получить события</div>
 
+	if (isError || !events)
+		return <div className='text-white'>Не удалось получить события</div>
+	// if (events.length === 0)
+	// 	return <div className='text-white'>Не удалось получить события</div>
 	return (
 		<div className='w-full'>
 			<h3 className='px-4 text-sm font-bold'>
-				{events.length}{' '}
-				<span className='font-normal text-gray-700'>
-					мероприятий в {filters.location}
+				<span className='text-gray-700dd font-normal text-white'>
+					Найдено {events.length}{' '}
+				</span>
+				<span className='text-gray-700dd font-normal text-white'>
+					{events.length === 0
+						? 'мероприятий'
+						: `мероприятий${events.length === 1 ? 'е' : ''}`}{' '}
+					{filters.location !== 'any' ? `в ${filters.location}` : ''}
 				</span>
 			</h3>
-			<div className='flex'>
-				<div className='w-full p-4'>
-					{events.map((event: any) => {
-						const isFavorite =
-							localFavorites[event.id] ??
-							event.favoritedBy?.some(
-								(u: any) => u.id === userId
-							) ??
-							false
-						const Card =
-							viewMode === 'grid' ? GridCard : CardCompact
-						return (
-							<Card
-								key={event.id}
-								event={event}
-								isFavorite={isFavorite}
-								onFavoriteToggle={() =>
-									handleFavoriteToggle(event.id, isFavorite)
-								}
-								propertyLink={`/search/event/${event.id}`}
-							/>
-						)
-					})}
+
+			{events.length === 0 ? (
+				<div className='flex flex-col items-center justify-center py-12'>
+					<div className='mb-6 h-[250px] w-[250px] overflow-hidden rounded-full bg-white'>
+						<Image
+							src='/logos/glownotfound.png'
+							alt='No events found'
+							width={250}
+							height={250}
+							className='h-full w-full scale-90 object-contain'
+						/>
+					</div>
+					<p className='text-gray-700dd text-lg font-medium text-white'>
+						По вашему запросу найдено 0 мероприятий
+					</p>
+					<p className='text-gray-500'>
+						Попробуйте изменить параметры фильтрации
+					</p>
 				</div>
-			</div>
+			) : (
+				<div className='flex'>
+					<div className='w-full p-4'>
+						{events.map((event: any) => {
+							const isFavorite =
+								localFavorites[event.id] ??
+								event.favoritedBy?.some(
+									(u: any) => u.id === userId
+								) ??
+								false
+							const Card =
+								viewMode === 'grid' ? GridCard : CardCompact
+							return (
+								<Card
+									key={event.id}
+									event={event}
+									isFavorite={isFavorite}
+									onFavoriteToggle={() =>
+										handleFavoriteToggle(
+											event.id,
+											isFavorite
+										)
+									}
+									propertyLink={`/search/event/${event.id}`}
+								/>
+							)
+						})}
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }

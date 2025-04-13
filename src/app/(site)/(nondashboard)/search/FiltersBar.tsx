@@ -1,7 +1,14 @@
 'use client'
 
 import { debounce } from 'lodash'
-import { Filter, Grid, LayoutDashboard, List, Search } from 'lucide-react'
+import {
+	Filter,
+	Grid,
+	LayoutDashboard,
+	List,
+	Search,
+	Verified
+} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -9,6 +16,7 @@ import { useDispatch } from 'react-redux'
 
 import { Button } from '@/components/ui/commonApp/button'
 import { Input } from '@/components/ui/commonApp/input'
+import { Label } from '@/components/ui/commonApp/label'
 import {
 	Select,
 	SelectContent,
@@ -16,6 +24,8 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/commonApp/select'
+import { Switch } from '@/components/ui/commonApp/switch'
+import { SwitchThumb } from '@/components/ui/commonApp/switch2'
 
 import {
 	FiltersState,
@@ -38,19 +48,35 @@ const FiltersBar = () => {
 	)
 	const viewMode = useAppSelector(state => state.global.viewMode)
 	const [searchInput, setSearchInput] = useState(filters.location)
+	const [initialLoad, setInitialLoad] = useState(false)
 
-	// Сохранение состояния открытия/закрытия дополнительных фильтров
 	useEffect(() => {
-		const savedFiltersState = localStorage.getItem('filtersState')
-		if (savedFiltersState) {
-			const { isFiltersFullOpen, viewMode } =
-				JSON.parse(savedFiltersState)
+		const savedState = localStorage.getItem('filtersState')
+		if (savedState) {
+			const {
+				isFiltersFullOpen,
+				viewMode,
+				filters: savedFilters
+			} = JSON.parse(savedState)
+
+			// Явное преобразование verifiedOnly в boolean
+			const verifiedOnly =
+				typeof savedFilters?.verifiedOnly === 'string'
+					? savedFilters.verifiedOnly === 'true'
+					: Boolean(savedFilters?.verifiedOnly)
+
 			dispatch(toggleFiltersFullOpen(isFiltersFullOpen))
 			dispatch(setViewMode(viewMode))
+			dispatch(
+				setFilters({
+					...filters,
+					verifiedOnly
+				})
+			)
 		}
+		setInitialLoad(true)
 	}, [dispatch])
 
-	// Обновление URL
 	const updateURL = debounce((newFilters: FiltersState) => {
 		const cleanFilters = cleanParams(newFilters)
 		const updatedSearchParams = new URLSearchParams()
@@ -62,8 +88,30 @@ const FiltersBar = () => {
 			)
 		})
 
+		// Сохраняем verifiedOnly как строку для надежности
+		localStorage.setItem(
+			'filtersState',
+			JSON.stringify({
+				isFiltersFullOpen,
+				viewMode,
+				filters: {
+					...newFilters,
+					verifiedOnly: newFilters.verifiedOnly.toString()
+				}
+			})
+		)
+
 		router.push(`${pathname}?${updatedSearchParams.toString()}`)
 	}, 300)
+
+	const handleVerifiedChange = (checked: boolean) => {
+		const newFilters = {
+			...filters,
+			verifiedOnly: checked
+		}
+		dispatch(setFilters(newFilters))
+		updateURL(newFilters)
+	}
 
 	const handleFilterChange = (
 		key: string,
@@ -83,11 +131,10 @@ const FiltersBar = () => {
 		} else if (key === 'coordinates') {
 			newValue = value === 'any' ? [0, 0] : value.map(Number)
 		} else if (key === 'paymentType' && value === 'FREE') {
-			// Сбрасываем ценовой диапазон для бесплатных мероприятий, но не фильтруем по цене
 			dispatch(
 				setFilters({
 					paymentType: 'FREE',
-					priceRange: [null, null] // Убираем ценовые ограничения
+					priceRange: [null, null]
 				})
 			)
 			return
@@ -100,13 +147,16 @@ const FiltersBar = () => {
 		updateURL(newFilters)
 	}
 
-	// Сохранение состояния фильтров (открытие/закрытие фильтров и вид)
 	const handleToggleFilters = () => {
 		const newState = !isFiltersFullOpen
 		dispatch(toggleFiltersFullOpen(newState))
 		localStorage.setItem(
 			'filtersState',
-			JSON.stringify({ isFiltersFullOpen: newState, viewMode })
+			JSON.stringify({
+				isFiltersFullOpen: newState,
+				viewMode,
+				filters
+			})
 		)
 	}
 
@@ -114,9 +164,14 @@ const FiltersBar = () => {
 		dispatch(setViewMode(newViewMode))
 		localStorage.setItem(
 			'filtersState',
-			JSON.stringify({ isFiltersFullOpen, viewMode: newViewMode })
+			JSON.stringify({
+				isFiltersFullOpen,
+				viewMode: newViewMode,
+				filters
+			})
 		)
 	}
+
 	const handleLocationSearch = async () => {
 		try {
 			const response = await fetch(
@@ -129,29 +184,29 @@ const FiltersBar = () => {
 			const data = await response.json()
 			if (data.features && data.features.length > 0) {
 				const [lng, lat] = data.features[0].center
-				dispatch(
-					setFilters({
-						location: searchInput,
-						coordinates: [lng, lat]
-					})
-				)
-
-				updateURL({
+				const newFilters = {
 					...filters,
 					location: searchInput,
-					coordinates: [lng, lat]
-				})
+					coordinates: [lng, lat] as [number, number]
+				}
+				dispatch(setFilters(newFilters))
+				updateURL(newFilters)
 			}
 		} catch (err) {
 			console.error('Error search location:', err)
 		}
 	}
+
 	useEffect(() => {
 		setSearchInput(filters.location)
 	}, [filters.location])
+
+	if (!initialLoad) {
+		return null
+	}
+
 	return (
 		<div className='flex w-full items-center justify-between py-5'>
-			{/* Filters */}
 			<div className='flex items-center justify-between gap-4 p-2'>
 				<Button
 					variant='outline'
@@ -169,7 +224,6 @@ const FiltersBar = () => {
 					)}
 				</Button>
 
-				{/* Статус и оплата */}
 				<div className='flex gap-1'>
 					<Select
 						value={filters.status}
@@ -212,7 +266,6 @@ const FiltersBar = () => {
 					</Select>
 				</div>
 
-				{/* Тип мероприятия */}
 				<Select
 					value={filters.eventType || 'any'}
 					onValueChange={value =>
@@ -222,7 +275,7 @@ const FiltersBar = () => {
 					<SelectTrigger className='border-primary-400 w-38 rounded-xl text-white'>
 						<SelectValue placeholder='Тип мероприятия'>
 							{filters.eventType && filters.eventType !== 'any'
-								? (EventTypeLabelsRu as any)[filters.eventType] // Костыль для обхода ошибки типов
+								? (EventTypeLabelsRu as any)[filters.eventType]
 								: 'Тип мероприятия'}
 						</SelectValue>
 					</SelectTrigger>
@@ -244,6 +297,30 @@ const FiltersBar = () => {
 						))}
 					</SelectContent>
 				</Select>
+
+				<div className='border-primary-400 flex items-center space-x-2 rounded-xl border px-3 py-1'>
+					<Verified className='h-5 w-5 text-white' />
+					<Label htmlFor='verified-only' className='text-white'>
+						Только верифицированные
+					</Label>
+					<Switch
+						id='verified-only'
+						checked={filters.verifiedOnly}
+						onCheckedChange={handleVerifiedChange}
+						className={`border-[1px] ${
+							filters.verifiedOnly
+								? 'border-white bg-black'
+								: 'border-gray-400 bg-white'
+						}`}
+					>
+						<SwitchThumb
+							className={`block h-4 w-4 rounded-full ${
+								filters.verifiedOnly ? 'bg-white' : 'bg-black'
+							}`}
+						/>
+					</Switch>
+				</div>
+
 				<div className='flex items-center'>
 					<Input
 						placeholder='Город / локация'
@@ -252,9 +329,6 @@ const FiltersBar = () => {
 						className='border-primary-400 w-40 rounded-l-xl rounded-r-none border-r-0 text-white'
 					/>
 					<Button
-						// onClick={() =>
-						// 	handleFilterChange('location', searchInput, null)
-						// }
 						onClick={handleLocationSearch}
 						className='border-l-none border-primary-400 hover:bg-primary-700 hover:text-primary-50 rounded-l-none rounded-r-xl border shadow-none'
 					>
@@ -263,20 +337,16 @@ const FiltersBar = () => {
 				</div>
 			</div>
 
-			<Link href='/dashboard/hosting' className='ml-auto'>
+			<Link href='/dashboard/attending' className='ml-auto'>
 				<Button
 					variant='ghost'
 					className={cn(
 						'textkk-white/60 rounded-xl border px-3 py-1 text-white hover:bg-white/10'
-						// viewMode === 'grid' && ' text-white'
 					)}
-
-					// onClick={() => handleViewModeChange('grid')}
 				>
 					<LayoutDashboard className='h-5 w-5' /> Панель управления
 				</Button>
 			</Link>
-			{/* Переключение видов */}
 
 			<div className='flex items-center justify-between gap-4 p-2'>
 				<div className='flex rounded-xl border'>
