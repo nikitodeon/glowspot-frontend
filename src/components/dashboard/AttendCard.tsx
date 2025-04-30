@@ -1,7 +1,15 @@
 'use client'
 
 import { useMutation } from '@apollo/client'
-import { Calendar, Clock, Heart, LogOut, Plus, Trash } from 'lucide-react'
+import {
+	Calendar,
+	Clock,
+	Heart,
+	LogOut,
+	Plus,
+	SquarePen,
+	Trash
+} from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -21,6 +29,12 @@ import {
 import { DeleteEventDocument } from '@/graphql/generated/output'
 
 import { getMediaSource } from '@/utils/get-media-source'
+
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger
+} from '../ui/commonApp/tooltip'
 
 import { cn } from '@/lib/utils'
 
@@ -227,7 +241,21 @@ const AttendCard = ({
 						</Dialog>
 					</div>
 				) : isParticipating ? (
-					<div className='absolute bottom-4 right-4'>
+					<div className='absolute bottom-4 right-4 flex'>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Link
+									href={`/dashboard/hosting/${event.id}/edit`}
+								>
+									<Button className='flex items-center gap-1 rounded-full border border-white/10 bg-black px-3 py-1 text-xs font-medium text-white hover:bg-white/10'>
+										<SquarePen className='h-4 w-4' />
+									</Button>
+								</Link>
+							</TooltipTrigger>
+							<TooltipContent className='border-2 border-white/10 bg-black text-white'>
+								Изменить
+							</TooltipContent>
+						</Tooltip>
 						<Dialog
 							open={openLeaveDialog}
 							onOpenChange={setOpenLeaveDialog}
