@@ -16,6 +16,8 @@ import { ApolloClientProvider } from '@/providers/ApolloClientProvider'
 // import { ThemeProvider } from '@/providers/ThemeProvider'
 import { ToastProvider } from '@/providers/ToastProvider'
 
+import StoreProvider from '@/store/redux/redux'
+
 import '@/styles/globals.css'
 import '@/styles/themes.css'
 
@@ -90,20 +92,22 @@ export default async function RootLayout({
 		<html lang={locale} suppressHydrationWarning>
 			<body className={GeistSans.variable}>
 				{/* <ColorSwitcher /> */}
-				<ApolloClientProvider>
-					<NextIntlClientProvider messages={messages}>
-						{/* <ThemeProvider
+				<StoreProvider>
+					<ApolloClientProvider>
+						<NextIntlClientProvider messages={messages}>
+							{/* <ThemeProvider
 							attribute='class'
 							defaultTheme='dark'
 							disableTransitionOnChange
 						> */}
-						<ToastProvider />
+							<ToastProvider />
 
-						{children}
+							{children}
 
-						{/* </ThemeProvider> */}
-					</NextIntlClientProvider>
-				</ApolloClientProvider>
+							{/* </ThemeProvider> */}
+						</NextIntlClientProvider>
+					</ApolloClientProvider>
+				</StoreProvider>
 			</body>
 		</html>
 	)

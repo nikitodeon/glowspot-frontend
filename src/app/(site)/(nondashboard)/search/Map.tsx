@@ -141,14 +141,13 @@ const Map = () => {
 		)
 
 	return (
-		<div className='relative grow basis-5/12 rounded-xl'>
+		<div className='relative h-full w-full rounded-xl'>
 			<div
-				className='map-container rounded-xl transition-all duration-500 ease-in-out'
+				className='map-container h-full w-full rounded-xl'
 				ref={mapContainerRef}
 				style={{
-					height: '100%',
-					width: '100%',
-					minHeight: '500px'
+					minHeight: '400px', // Фиксированная минимальная высота
+					height: '100%'
 				}}
 			/>
 		</div>

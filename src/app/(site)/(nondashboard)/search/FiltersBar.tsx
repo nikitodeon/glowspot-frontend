@@ -220,7 +220,12 @@ const FiltersBar = () => {
 					{isFiltersFullOpen ? (
 						<span>Скрыть фильтры</span>
 					) : (
-						<span>Больше фильтров</span>
+						<span>
+							<span className='hidden lg:inline'>
+								Больше фильтров
+							</span>
+							<span className='inline lg:hidden'>Фильтры</span>
+						</span>
 					)}
 				</Button>
 
@@ -231,7 +236,7 @@ const FiltersBar = () => {
 							handleFilterChange('status', value, null)
 						}
 					>
-						<SelectTrigger className='border-primary-400 w-36 rounded-xl text-white'>
+						<SelectTrigger className='border-primary-400 hidden w-36 rounded-xl text-white lg:flex'>
 							<SelectValue placeholder='Статус' />
 						</SelectTrigger>
 						<SelectContent className='bg-black text-white'>
@@ -252,7 +257,7 @@ const FiltersBar = () => {
 							handleFilterChange('paymentType', value, null)
 						}
 					>
-						<SelectTrigger className='border-primary-400 w-36 rounded-xl text-white'>
+						<SelectTrigger className='border-primary-400 hidden w-36 rounded-xl text-white lg:flex'>
 							<SelectValue placeholder='Оплата' />
 						</SelectTrigger>
 						<SelectContent className='bg-black text-white'>
@@ -272,7 +277,7 @@ const FiltersBar = () => {
 						handleFilterChange('eventType', value, null)
 					}
 				>
-					<SelectTrigger className='border-primary-400 w-38 rounded-xl text-white'>
+					<SelectTrigger className='border-primary-400 w-38 hidden rounded-xl text-white lg:flex'>
 						<SelectValue placeholder='Тип мероприятия'>
 							{filters.eventType && filters.eventType !== 'any'
 								? (EventTypeLabelsRu as any)[filters.eventType]
@@ -298,9 +303,12 @@ const FiltersBar = () => {
 					</SelectContent>
 				</Select>
 
-				<div className='border-primary-400 flex items-center space-x-2 rounded-xl border px-3 py-1'>
+				<div className='border-primary-400 flex h-9 items-center space-x-2 rounded-xl border px-3 py-1'>
 					<Verified className='h-5 w-5 text-white' />
-					<Label htmlFor='verified-only' className='text-white'>
+					<Label
+						htmlFor='verified-only'
+						className='hidden text-white sm:inline'
+					>
 						Только верифицированные
 					</Label>
 					<Switch
@@ -321,12 +329,12 @@ const FiltersBar = () => {
 					</Switch>
 				</div>
 
-				<div className='flex items-center'>
+				<div className='hidden items-center xl:flex'>
 					<Input
 						placeholder='Город / локация'
 						value={searchInput}
 						onChange={e => setSearchInput(e.target.value)}
-						className='border-primary-400 w-40 rounded-l-xl rounded-r-none border-r-0 text-white'
+						className='border-primary-400 w-full rounded-l-xl rounded-r-none border-r-0 text-white'
 					/>
 					<Button
 						onClick={handleLocationSearch}
@@ -337,7 +345,10 @@ const FiltersBar = () => {
 				</div>
 			</div>
 
-			<Link href='/dashboard/attending' className='ml-auto'>
+			<Link
+				href='/dashboard/attending'
+				className='ml-auto hidden 2xl:block'
+			>
 				<Button
 					variant='ghost'
 					className={cn(

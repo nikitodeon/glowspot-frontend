@@ -26,7 +26,7 @@ export default function Layout({
 
 	return (
 		<div
-			className='mx-auto flex w-full flex-col px-5'
+			className='mx-auto flex w-full flex-col lg:px-5'
 			style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}
 		>
 			<Suspense fallback={null}>

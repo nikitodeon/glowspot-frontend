@@ -59,7 +59,8 @@ const FiltersFull = () => {
 		const filtersToApply = {
 			...localFilters,
 			location: filters.location, // сохраняем прежнюю локацию
-			coordinates: filters.coordinates // сохраняем прежние координаты
+			coordinates: filters.coordinates, // сохраняем прежние координаты
+			verifiedOnly: filters.verifiedOnly
 		}
 
 		dispatch(setFilters(filtersToApply))
@@ -227,7 +228,7 @@ const FiltersFull = () => {
 	// }, [filters.location])
 	if (!isFiltersFullOpen) return null
 	return (
-		<div className='mmbg-black h-full overflow-auto rounded-lg bg-black px-4 pb-10'>
+		<div className='h-full overflow-y-auto overflow-x-hidden rounded-lg bg-black px-4 pb-10'>
 			<div className='flex flex-col space-y-6'>
 				{/* Location */}
 				{/* <div>
