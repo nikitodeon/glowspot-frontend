@@ -11,7 +11,12 @@ import { ProfileMenu } from './ProfileMenu'
 
 export function HeaderMenu() {
 	const t = useTranslations('layout.header.headerMenu')
-	const { isAuthenticated } = useAuth()
+	const { isAuthenticated, isHydrated } = useAuth()
+
+	// Не рендерим ничего, пока Zustand не завершил гидратацию
+	if (!isHydrated) {
+		return <div className='ml-auto flex items-center gap-x-4' />
+	}
 
 	return (
 		<div className='ml-auto flex items-center gap-x-4'>

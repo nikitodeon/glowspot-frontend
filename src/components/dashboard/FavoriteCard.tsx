@@ -191,6 +191,7 @@ const AttendCard = ({
 									onClick={e => e.stopPropagation()}
 								>
 									<Trash className='h-4 w-4' />
+									<span>Удалить</span>
 								</button>
 							</DialogTrigger>
 							<DialogContent className='border-white/10 bg-black text-white'>
@@ -238,6 +239,7 @@ const AttendCard = ({
 									onClick={e => e.stopPropagation()}
 								>
 									<LogOut className='h-4 w-4' />
+									<span>Выйти</span>
 								</button>
 							</DialogTrigger>
 							<DialogContent className='border-white/10 bg-black text-white'>
@@ -280,7 +282,7 @@ const AttendCard = ({
 							onClick={handleJoin}
 						>
 							<Plus className='h-4 w-4' />
-							Вступить
+							<span>Вступить</span>
 						</button>
 					</div>
 				)}

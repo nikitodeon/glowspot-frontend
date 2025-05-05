@@ -256,4 +256,4 @@ export const PaymentTypeTranslations: Record<PaymentType, string> = {
 }
 
 // Add this constant at the end of the file
-export const NAVBAR_HEIGHT = 102 // in pixels
+export const NAVBAR_HEIGHT = 50 // in pixels

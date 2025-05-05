@@ -14,11 +14,14 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<SidebarProvider>
 			<QueryClientProvider client={queryClient}>
-				<div className='bg-primary-100 minпп-h-screen w-full'>
-					<div style={{ marginTop: `${NAVBAR_HEIGHT - 40}px` }}>
+				<div className='bg-primary-100 flex h-screen w-full flex-col'>
+					<div
+						className='flex flex-1 overflow-hidden'
+						style={{ marginTop: `${NAVBAR_HEIGHT}px` }}
+					>
 						<main className='flex'>
 							<Sidebar />
-							<div className='flex-grow transition-all duration-300'>
+							<div className='flex-1 overflow-y-auto transition-all duration-300'>
 								{children}
 							</div>
 						</main>

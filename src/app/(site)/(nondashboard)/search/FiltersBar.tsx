@@ -26,6 +26,12 @@ import {
 } from '@/components/ui/commonApp/select'
 import { Switch } from '@/components/ui/commonApp/switch'
 import { SwitchThumb } from '@/components/ui/commonApp/switch2'
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger
+} from '@/components/ui/commonApp/tooltip'
 
 import {
 	FiltersState,
@@ -206,7 +212,7 @@ const FiltersBar = () => {
 	}
 
 	return (
-		<div className='flex w-full items-center justify-between py-5'>
+		<div className='flex w-full items-center justify-between pb-3 pt-5'>
 			<div className='flex items-center justify-between gap-4 p-2'>
 				<Button
 					variant='outline'
@@ -303,35 +309,46 @@ const FiltersBar = () => {
 					</SelectContent>
 				</Select>
 
-				<div className='border-primary-400 flex h-9 items-center space-x-2 rounded-xl border px-3 py-1'>
-					<Verified className='h-5 w-5 text-white' />
-					<Label
-						htmlFor='verified-only'
-						className='hidden text-white sm:inline'
-					>
-						Только верифицированные
-					</Label>
-					<Switch
-						id='verified-only'
-						checked={filters.verifiedOnly}
-						onCheckedChange={handleVerifiedChange}
-						className={`border-[1px] ${
-							filters.verifiedOnly
-								? 'border-white bg-black'
-								: 'border-gray-400 bg-white'
-						}`}
-					>
-						<SwitchThumb
-							className={`block h-4 w-4 rounded-full ${
-								filters.verifiedOnly ? 'bg-white' : 'bg-black'
-							}`}
-						/>
-					</Switch>
-				</div>
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<div className='border-primary-400 flex h-9 cursor-pointer items-center space-x-2 rounded-xl border px-3 py-1'>
+								<Verified className='h-5 w-5 text-white' />
+								<Label
+									htmlFor='verified-only'
+									className='hidden text-white sm:inline'
+								>
+									Только верифицированные
+								</Label>
+								<Switch
+									id='verified-only'
+									checked={filters.verifiedOnly}
+									onCheckedChange={handleVerifiedChange}
+									className={`border-[1px] ${
+										filters.verifiedOnly
+											? 'border-white bg-black'
+											: 'border-gray-400 bg-white'
+									}`}
+								>
+									<SwitchThumb
+										className={`block h-4 w-4 rounded-full ${
+											filters.verifiedOnly
+												? 'bg-white'
+												: 'bg-black'
+										}`}
+									/>
+								</Switch>
+							</div>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>Только верифицированные организаторы</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 
 				<div className='hidden items-center xl:flex'>
 					<Input
-						placeholder='Город / локация'
+						placeholder='Город'
 						value={searchInput}
 						onChange={e => setSearchInput(e.target.value)}
 						className='border-primary-400 w-full rounded-l-xl rounded-r-none border-r-0 text-white'

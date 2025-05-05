@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 
 import AttendCard from '@/components/dashboard/AttendCard'
+import LoadingCard from '@/components/dashboard/LoadingCards'
 
 import {
 	GetEventsWhereIParticipateDocument,
@@ -25,8 +26,8 @@ const ParticipatingEvents = () => {
 	const { user } = useCurrent()
 	const userId = user?.id
 
-	const [isJoining, setIsJoining] = useState(false)
-	const [isLeaving, setIsLeaving] = useState(false)
+	// const [isJoining, setIsJoining] = useState(false)
+	// const [isLeaving, setIsLeaving] = useState(false)
 	const { data, loading: isLoading } = useGetEventsWhereIParticipateQuery({
 		fetchPolicy: 'cache-and-network',
 		nextFetchPolicy: 'cache-first'
@@ -202,7 +203,7 @@ const ParticipatingEvents = () => {
 	}
 
 	const handleJoin = async (eventId: string) => {
-		setIsJoining(true)
+		// setIsJoining(true)
 		try {
 			await participateInEvent({
 				variables: { eventId },
@@ -222,12 +223,12 @@ const ParticipatingEvents = () => {
 			console.error('Error joining event:', err)
 			toast.error('Ошибка при присоединении к мероприятию')
 		} finally {
-			setIsJoining(false)
+			// setIsJoining(false)
 		}
 	}
 
 	const handleLeave = async (eventId: string) => {
-		setIsLeaving(true)
+		// setIsLeaving(true)
 		try {
 			await leaveEvent({
 				variables: { eventId },
@@ -247,7 +248,7 @@ const ParticipatingEvents = () => {
 			console.error('Error leaving event:', err)
 			toast.error('Ошибка при выходе из мероприятия')
 		} finally {
-			setIsLeaving(false)
+			// setIsLeaving(false)
 		}
 	}
 
@@ -299,7 +300,7 @@ const ParticipatingEvents = () => {
 		}
 	}
 
-	if (isLoading) return <div className='px-8 pb-5 pt-8'>Загрузка...</div>
+	if (isLoading) return <LoadingCard />
 
 	if (!userId) {
 		return (
@@ -341,7 +342,7 @@ const ParticipatingEvents = () => {
 					)
 				})}
 
-				<div className='mb-5 w-full overflow-hidden rounded-xl border-2 border-dashed border-gray-600 bg-black shadow-lg transition-transform hover:scale-[1.02]'>
+				<div className='mb-5 h-[360px] w-full overflow-hidden rounded-xl border-2 border-dashed border-gray-600 bg-black shadow-lg transition-transform hover:scale-[1.02]'>
 					<Link href='/search' className='flex h-full flex-col'>
 						<div className='relative h-48 w-full bg-black'>
 							<div className='flex h-full items-center justify-center'>

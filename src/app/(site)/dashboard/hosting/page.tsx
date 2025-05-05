@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 
 import HostCard from '@/components/dashboard/HostCard'
+import LoadingCards from '@/components/dashboard/LoadingCards'
 
 import {
 	GetEventsWhereIParticipateDocument,
@@ -154,7 +155,7 @@ const Events = () => {
 		}
 	}
 
-	if (isLoading) return <div className='px-8 pb-5 pt-8'>Загрузка...</div>
+	if (isLoading) return <LoadingCards />
 
 	if (!userId) {
 		return (
@@ -185,7 +186,7 @@ const Events = () => {
 					)
 				})}
 
-				<div className='mb-5 w-full overflow-hidden rounded-xl border-2 border-dashed border-gray-600 bg-black shadow-lg transition-transform hover:scale-[1.02]'>
+				<div className='mb-5 h-[360px] w-full overflow-hidden rounded-xl border-2 border-dashed border-gray-600 bg-black shadow-lg transition-transform hover:scale-[1.02]'>
 					<Link
 						href='/dashboard/hosting/create'
 						className='flex h-full flex-col'
@@ -199,9 +200,6 @@ const Events = () => {
 							<h2 className='mb-1 text-xl font-bold text-white hover:underline'>
 								Создать мероприятие
 							</h2>
-							{/* <p className='mb-2 line-clamp-1 text-gray-600'>
-								Добавьте новое мероприятие
-							</p> */}
 						</div>
 					</Link>
 				</div>

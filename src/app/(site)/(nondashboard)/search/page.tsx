@@ -44,17 +44,11 @@ const SearchPage = () => {
 	}, []) // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
-		<div
-			className='mx-auto mt-12 flex h-full w-full flex-col'
-			// style={{
-			// 	height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
-			// 	minHeight: '800px'
-			// }}
-		>
+		<div className='mx-auto mt-12 flex h-full w-full flex-col'>
 			<FiltersBar />
 
 			{/* Основной контейнер */}
-			<div className='relative mb-5 flex flex-1 flex-col gap-3 overflow-y-auto lg:flex-row'>
+			<div className='relative flex h-full flex-1 flex-col gap-3 overflow-y-auto lg:flex-row'>
 				{/* Боковые фильтры */}
 				<div
 					className={`absolute left-0 top-0 z-50 h-[400px] overflow-auto transition-all duration-300 ease-in-out lg:h-full ${
@@ -74,7 +68,7 @@ const SearchPage = () => {
 					</div>
 
 					{/* Листинги */}
-					<div className='w-full overflow-y-auto lg:basis-4/12'>
+					<div className='w-full lg:basis-4/12 lg:overflow-y-auto'>
 						<Listings />
 					</div>
 				</div>

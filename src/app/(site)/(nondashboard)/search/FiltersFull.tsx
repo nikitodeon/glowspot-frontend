@@ -30,7 +30,7 @@ const FiltersFull = () => {
 	const [localFilters, setLocalFilters] = useState(initialState.filters)
 
 	const [isPriceFilterActive, setIsPriceFilterActive] = useState(false)
-	const [searchInput, setSearchInput] = useState(filters.location)
+	// const [searchInput, setSearchInput] = useState(filters.location)
 	const isFiltersFullOpen = useAppSelector(
 		state => state.global.isFiltersFullOpen
 	)
@@ -68,9 +68,20 @@ const FiltersFull = () => {
 	}
 
 	const handleReset = () => {
-		dispatch(setFilters(initialState.filters))
-		updateURL(initialState.filters)
-		setLocalFilters(initialState.filters)
+		const preservedFilters = {
+			location: filters.location,
+			coordinates: filters.coordinates,
+			verifiedOnly: filters.verifiedOnly
+		}
+
+		const resetFilters = {
+			...initialState.filters,
+			...preservedFilters
+		}
+
+		dispatch(setFilters(resetFilters))
+		updateURL(resetFilters)
+		setLocalFilters(resetFilters)
 
 		setIsPriceFilterActive(false)
 	}

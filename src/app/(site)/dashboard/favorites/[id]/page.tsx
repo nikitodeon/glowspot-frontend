@@ -104,20 +104,7 @@ const FavoriteEventDetailsPage = () => {
 			console.error('Error removing from favorites:', err)
 		}
 	}
-	//   const [leaveEvent] = useLeaveEventMutation()
 
-	//   const handleLeaveEvent = async () => {
-	//     try {
-	//       await leaveEvent({
-	//         variables: {
-	//           eventId: id as string
-	//         }
-	//       })
-	//       router.push('/dashboard/events')
-	//     } catch (err) {
-	//       console.error('Error leaving event:', err)
-	//     }
-	//   }
 	if (loading) {
 		return (
 			<div className='flex min-h-screen items-center justify-center bg-black p-8'>

@@ -1,6 +1,7 @@
 'use client'
 
 import { Slot } from '@radix-ui/react-slot'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { VariantProps, cva } from 'class-variance-authority'
 import { PanelLeft } from 'lucide-react'
 import * as React from 'react'
@@ -8,7 +9,11 @@ import * as React from 'react'
 import { Button } from '@/components/ui/commonApp/button'
 import { Input } from '@/components/ui/commonApp/input'
 import { Separator } from '@/components/ui/commonApp/separator'
-import { Sheet, SheetContent } from '@/components/ui/commonApp/sheet'
+import {
+	Sheet,
+	SheetContent,
+	SheetTitle
+} from '@/components/ui/commonApp/sheet'
 import { Skeleton } from '@/components/ui/commonApp/skeleton'
 import {
 	Tooltip,
@@ -36,6 +41,7 @@ type SidebarContext = {
 	setOpenMobile: (open: boolean) => void
 	isMobile: boolean
 	toggleSidebar: () => void
+	closeSidebar: () => void
 }
 
 const SidebarContext = React.createContext<SidebarContext | null>(null)
@@ -119,7 +125,9 @@ const SidebarProvider = React.forwardRef<
 		// This makes it easier to style the sidebar with Tailwind classes.
 		const state = open ? 'expanded' : 'collapsed'
 
-		const contextValue = React.useMemo<SidebarContext>(
+		const contextValue = React.useMemo<
+			SidebarContext & { closeSidebar: () => void }
+		>(
 			() => ({
 				state,
 				open,
@@ -127,7 +135,14 @@ const SidebarProvider = React.forwardRef<
 				isMobile,
 				openMobile,
 				setOpenMobile,
-				toggleSidebar
+				toggleSidebar,
+				closeSidebar: () => {
+					if (isMobile) {
+						setOpenMobile(false)
+					} else {
+						setOpen(false)
+					}
+				}
 			}),
 			[
 				state,
@@ -213,14 +228,17 @@ const Sidebar = React.forwardRef<
 					<SheetContent
 						data-sidebar='sidebar'
 						data-mobile='true'
-						className='bg-sidebar text-sidebar-foreground w-[--sidebar-width] p-0 [&>button]:hidden'
+						className='text-sidebar-foreground w-[--sidebar-width] bg-black p-6' // Уберите p-0 и задайте padding для текста
 						style={
 							{
-								'--sidebar-width': SIDEBAR_WIDTH_MOBILE
-							} as React.CSSProperties
+								// "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
+							}
 						}
 						side={side}
 					>
+						<VisuallyHidden>
+							<SheetTitle>Navigation Menu</SheetTitle>
+						</VisuallyHidden>
 						<div className='flex h-full w-full flex-col'>
 							{children}
 						</div>

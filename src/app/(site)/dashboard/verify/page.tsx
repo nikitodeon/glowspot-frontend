@@ -140,37 +140,52 @@ const OrganizersVerificationTabs = () => {
 	const loadMore = () => {
 		setPage(prev => prev + 1)
 	}
-	const { user } = useCurrent()
-	const isAdmin = user?.isAdmin
-	if (!isAdmin) {
+	const { user, isLoadingProfile } = useCurrent()
+	if (isLoadingProfile || !user) {
 		return (
-			<div className='flex min-h-screen items-center justify-center bg-black p-6 text-gray-200'>
+			<div className='flex items-center justify-center bg-black p-6 text-gray-200'>
+				<Loader2 className='animate-spin' />
+			</div>
+		)
+	}
+
+	if (!user.isAdmin) {
+		return (
+			<div className='flex items-center justify-center bg-black p-6 text-gray-200'>
 				Доступ запрещен. Требуются права администратора
 			</div>
 		)
 	}
+
 	return (
-		<div className='min-h-screen bg-black p-6 text-gray-200'>
-			<Tabs value={tab} onValueChange={setTab} className='space-y-4'>
-				<TabsList className='grid w-full max-w-md grid-cols-2 gap-x-2 p-1'>
+		<div className='bg-black p-4 text-gray-200'>
+			<Tabs
+				value={tab}
+				onValueChange={setTab}
+				className='space-y-4 sm:w-full md:min-w-[500px]'
+			>
+				<TabsList className='grid grid-cols-2 gap-2 p-1 sm:max-w-md sm:gap-4'>
 					<TabsTrigger
 						value='search'
-						className='data-[state=active]:border-[1px] data-[state=active]:bg-black data-[state=active]:text-white'
+						className='py-1 text-xs data-[state=active]:border-[1px] data-[state=active]:bg-black data-[state=active]:text-white sm:py-2 sm:text-sm'
 					>
-						Поиск организаторов
+						Поиск
 					</TabsTrigger>
 					<TabsTrigger
 						value='latest'
-						className='data-[state=active]:border-[1px] data-[state=active]:bg-black data-[state=active]:text-white'
+						className='py-1 text-xs data-[state=active]:border-[1px] data-[state=active]:bg-black data-[state=active]:text-white sm:py-2 sm:text-sm'
 					>
-						Последние организаторы
+						Последние
 					</TabsTrigger>
 				</TabsList>
 
 				<TabsContent value='search' className='space-y-4'>
-					<form onSubmit={handleSearch} className='flex gap-2'>
+					<form
+						onSubmit={handleSearch}
+						className='flex flex-wrap gap-2'
+					>
 						<Input
-							className='flex-1 border-[2px] border-gray-600 bg-black text-white placeholder-gray-500 focus:ring-1 focus:ring-gray-600'
+							className='flex-1 border-[2px] border-gray-600 bg-black text-sm text-white placeholder-gray-500 focus:ring-1 focus:ring-gray-600 sm:text-base'
 							placeholder='Поиск по email или имени'
 							value={searchTerm}
 							onChange={e => setSearchTerm(e.target.value)}
@@ -181,56 +196,56 @@ const OrganizersVerificationTabs = () => {
 							disabled={isSearching}
 						>
 							{isSearching ? (
-								<Loader2 className='animate-spin' />
+								<Loader2 className='h-4 w-4 animate-spin' />
 							) : (
-								<Search className='' />
+								<Search className='h-4 w-4' />
 							)}
 						</Button>
 					</form>
 
 					{searchResults && (
 						<div className='space-y-4'>
-							<div className='flex gap-2'>
+							<div className='flex flex-wrap gap-2'>
 								<Button
 									variant='outline'
-									className='bg-emerald-900/50 text-emerald-400 hover:bg-emerald-900 hover:text-emerald-300'
+									className='bg-emerald-900/50 px-2 py-1 text-xs text-emerald-400 hover:bg-emerald-900 hover:text-emerald-300 sm:px-4 sm:py-2 sm:text-sm'
 									onClick={() => verifyUsers(true)}
 									disabled={
 										selectedUsers.length === 0 ||
 										isVerifying
 									}
 								>
-									<Check className='mr-2 h-4 w-4' />
+									<Check className='mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4' />
 									Верифицировать
 								</Button>
 								<Button
 									variant='outline'
-									className='bg-red-900/50 text-red-400 hover:bg-red-900 hover:text-red-300'
+									className='bg-red-900/50 px-2 py-1 text-xs text-red-400 hover:bg-red-900 hover:text-red-300 sm:px-4 sm:py-2 sm:text-sm'
 									onClick={() => verifyUsers(false)}
 									disabled={
 										selectedUsers.length === 0 ||
 										isVerifying
 									}
 								>
-									<X className='mr-2 h-4 w-4' />
-									Снять верификацию
+									<X className='mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4' />
+									Снять
 								</Button>
 							</div>
 
-							<div className='rounded-lg border border-gray-800'>
-								<Table>
+							<div className='overflow-x-auto rounded-lg border border-gray-800'>
+								<Table className='min-w-full'>
 									<TableHeader className='bg-black'>
 										<TableRow>
-											<TableHead className='w-12 text-gray-400'>
+											<TableHead className='w-8 px-2 text-xs text-gray-400 sm:w-12 sm:px-4 sm:text-sm'>
 												Выбрать
 											</TableHead>
-											<TableHead className='text-gray-400'>
+											<TableHead className='px-2 text-xs text-gray-400 sm:px-4 sm:text-sm'>
 												Email
 											</TableHead>
-											<TableHead className='text-gray-400'>
+											<TableHead className='px-2 text-xs text-gray-400 sm:px-4 sm:text-sm'>
 												Имя
 											</TableHead>
-											<TableHead className='text-gray-400'>
+											<TableHead className='px-2 text-xs text-gray-400 sm:px-4 sm:text-sm'>
 												Статус
 											</TableHead>
 										</TableRow>
@@ -241,7 +256,7 @@ const OrganizersVerificationTabs = () => {
 												key={user.id}
 												className='hover:bg-black'
 											>
-												<TableCell>
+												<TableCell className='px-2 sm:px-4'>
 													<Checkbox
 														checked={selectedUsers.includes(
 															user.id
@@ -251,24 +266,28 @@ const OrganizersVerificationTabs = () => {
 																user.id
 															)
 														}
-														className='border-gray-700 data-[state=checked]:bg-gray-600'
+														className='h-4 w-4 border-gray-700 data-[state=checked]:bg-gray-600'
 													/>
 												</TableCell>
-												<TableCell>
-													{user.email}
+												<TableCell className='px-2 text-xs sm:px-4 sm:text-sm'>
+													<div className='max-w-[100px] truncate sm:max-w-none'>
+														{user.email}
+													</div>
 												</TableCell>
-												<TableCell>
-													{user.displayName ||
-														user.username}
+												<TableCell className='px-2 text-xs sm:px-4 sm:text-sm'>
+													<div className='max-w-[80px] truncate sm:max-w-none'>
+														{user.displayName ||
+															user.username}
+													</div>
 												</TableCell>
-												<TableCell>
+												<TableCell className='px-2 text-xs sm:px-4 sm:text-sm'>
 													{user.isVerified ? (
 														<span className='text-emerald-400'>
-															Подтвержден
+															Подтв.
 														</span>
 													) : (
 														<span className='text-yellow-500'>
-															Не подтвержден
+															Не подтв.
 														</span>
 													)}
 												</TableCell>
@@ -291,32 +310,32 @@ const OrganizersVerificationTabs = () => {
 							<div className='flex justify-center'>
 								<Button
 									variant='outline'
-									className='bg-emerald-900/50 text-emerald-400 hover:bg-emerald-900 hover:text-emerald-300'
+									className='bg-emerald-900/50 px-2 py-1 text-xs text-emerald-400 hover:bg-emerald-900 hover:text-emerald-300 sm:px-4 sm:py-2 sm:text-sm'
 									onClick={() => verifyUsers(true)}
 									disabled={
 										selectedUsers.length === 0 ||
 										isVerifying
 									}
 								>
-									<Check className='mr-2 h-4 w-4' />
-									Верифицировать выбранных
+									<Check className='mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4' />
+									Верифицировать
 								</Button>
 							</div>
 
-							<div className='rounded-lg border border-gray-800'>
-								<Table>
+							<div className='overflow-x-auto rounded-lg border border-gray-800'>
+								<Table className='min-w-full'>
 									<TableHeader className='bg-black'>
 										<TableRow>
-											<TableHead className='w-12 text-gray-400'>
+											<TableHead className='w-8 px-2 text-xs text-gray-400 sm:w-12 sm:px-4 sm:text-sm'>
 												Выбрать
 											</TableHead>
-											<TableHead className='text-gray-400'>
+											<TableHead className='px-2 text-xs text-gray-400 sm:px-4 sm:text-sm'>
 												Email
 											</TableHead>
-											<TableHead className='text-gray-400'>
+											<TableHead className='px-2 text-xs text-gray-400 sm:px-4 sm:text-sm'>
 												Имя
 											</TableHead>
-											<TableHead className='text-gray-400'>
+											<TableHead className='px-2 text-xs text-gray-400 sm:px-4 sm:text-sm'>
 												Статус
 											</TableHead>
 										</TableRow>
@@ -327,7 +346,7 @@ const OrganizersVerificationTabs = () => {
 												key={user.id}
 												className='hover:bg-gray-900/50'
 											>
-												<TableCell>
+												<TableCell className='px-2 sm:px-4'>
 													<Checkbox
 														checked={selectedUsers.includes(
 															user.id
@@ -337,24 +356,28 @@ const OrganizersVerificationTabs = () => {
 																user.id
 															)
 														}
-														className='border-gray-700 data-[state=checked]:bg-gray-600'
+														className='h-4 w-4 border-gray-700 data-[state=checked]:bg-gray-600'
 													/>
 												</TableCell>
-												<TableCell>
-													{user.email}
+												<TableCell className='px-2 text-xs sm:px-4 sm:text-sm'>
+													<div className='max-w-[100px] truncate sm:max-w-none'>
+														{user.email}
+													</div>
 												</TableCell>
-												<TableCell>
-													{user.displayName ||
-														user.username}
+												<TableCell className='px-2 text-xs sm:px-4 sm:text-sm'>
+													<div className='max-w-[80px] truncate sm:max-w-none'>
+														{user.displayName ||
+															user.username}
+													</div>
 												</TableCell>
-												<TableCell>
+												<TableCell className='px-2 text-xs sm:px-4 sm:text-sm'>
 													{user.isVerified ? (
 														<span className='text-emerald-400'>
-															Подтвержден
+															Подтв.
 														</span>
 													) : (
 														<span className='text-yellow-500'>
-															Не подтвержден
+															Не подтв.
 														</span>
 													)}
 												</TableCell>
@@ -366,7 +389,7 @@ const OrganizersVerificationTabs = () => {
 
 							<Button
 								variant='outline'
-								className='ml-[25%] w-[50%] rounded-xl border-white text-white hover:bg-white/10'
+								className='ml-[10%] w-[80%] rounded-xl border-white px-2 py-1 text-xs text-white hover:bg-white/10 sm:ml-[25%] sm:w-[50%] sm:px-4 sm:py-2 sm:text-sm'
 								onClick={loadMore}
 								disabled={isLoadingLatest}
 							>

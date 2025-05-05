@@ -3,17 +3,16 @@
 import { ApolloCache, gql } from '@apollo/client'
 import { Search } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
 import { toast } from 'sonner'
 
 import FavoriteCard from '@/components/dashboard/FavoriteCard'
+import LoadingCard from '@/components/dashboard/LoadingCards'
 
 import {
 	GetEventsWhereIParticipateDocument,
 	GetFavoriteEventsDocument,
 	GetMyOrganizedEventsDocument,
 	useAddToFavoritesMutation,
-	useDeleteEventMutation,
 	useGetFavoriteEventsQuery,
 	useLeaveEventMutation,
 	useParticipateInEventMutation,
@@ -122,88 +121,6 @@ const FavoriteEvents = () => {
 		})
 	}
 
-	// const updateParticipationCaches = (
-	// 	cache: ApolloCache<any>,
-	// 	eventId: string,
-	// 	isParticipating: boolean,
-	// 	currentUser: {
-	// 		id: string
-	// 		username: string
-	// 		displayName: string
-	// 		avatar: string
-	// 	}
-	// ) => {
-	// 	cache.updateQuery(
-	// 		{ query: GetEventsWhereIParticipateDocument },
-	// 		oldData => {
-	// 			if (!oldData?.getEventsWhereIParticipate) return oldData
-
-	// 			return {
-	// 				getEventsWhereIParticipate: isParticipating
-	// 					? oldData.getEventsWhereIParticipate.filter(
-	// 							(event: any) => event.id !== eventId
-	// 						)
-	// 					: [
-	// 							...oldData.getEventsWhereIParticipate,
-	// 							{ __typename: 'Event', id: eventId }
-	// 						]
-	// 			}
-	// 		}
-	// 	)
-
-	// Участвует / покинул => меняем participants
-	// 	const updateParticipants = (event: any) => {
-	// 		const userObj = {
-	// 			__typename: 'User',
-	// 			id: currentUser.id,
-	// 			username: currentUser.username,
-	// 			displayName: currentUser.displayName,
-	// 			avatar: currentUser.avatar
-	// 		}
-
-	// 		return {
-	// 			...event,
-	// 			participants: isParticipating
-	// 				? event.participants?.filter(
-	// 						(user: any) => user.id !== currentUser.id
-	// 					) || []
-	// 				: [...(event.participants || []), userObj]
-	// 		}
-	// 	}
-
-	// 	// Обновляем список избранного
-	// 	cache.updateQuery({ query: GetFavoriteEventsDocument }, oldData => {
-	// 		if (!oldData?.getFavoriteEvents) return oldData
-
-	// 		return {
-	// 			getFavoriteEvents: oldData.getFavoriteEvents.map(
-	// 				(event: any) => {
-	// 					if (event.id === eventId) {
-	// 						return updateParticipants(event)
-	// 					}
-	// 					return event
-	// 				}
-	// 			)
-	// 		}
-	// 	})
-
-	// 	// Обновляем организованные
-	// 	cache.updateQuery({ query: GetMyOrganizedEventsDocument }, oldData => {
-	// 		if (!oldData?.getMyOrganizedEvents) return oldData
-
-	// 		return {
-	// 			getMyOrganizedEvents: oldData.getMyOrganizedEvents.map(
-	// 				(event: any) => {
-	// 					if (event.id === eventId) {
-	// 						return updateParticipants(event)
-	// 					}
-	// 					return event
-	// 				}
-	// 			)
-	// 		}
-	// 	})
-	// }
-
 	const updateCaches = (
 		cache: ApolloCache<any>,
 		eventId: string,
@@ -212,54 +129,6 @@ const FavoriteEvents = () => {
 			participants?: any[]
 		}
 	) => {
-		// Обновляем текущее мероприятие
-		// cache.updateQuery(
-		// 	{
-		// 		query: GetEventByIdDocument,
-		// 		variables: { getEventByIdId: eventId }
-		// 	},
-		// 	oldData => {
-		// 		if (!oldData?.getEventById) return oldData
-		// 		return {
-		// 			getEventById: {
-		// 				...oldData.getEventById,
-		// 				...updates
-		// 			}
-		// 		}
-		// 	}
-		// )
-
-		// cache.updateQuery({ query: GetFavoriteEventsDocument }, oldData => {
-		// 	if (!oldData?.getFavoriteEvents) return oldData
-		// 	return {
-		// 		getFavoriteEvents: oldData.getFavoriteEvents.map(
-		// 			(event: any) => {
-		// 				if (event.id === eventId) {
-		// 					return {
-		// 						...event,
-		// 						...updates
-		// 					}
-		// 				}
-		// 				return event
-		// 			}
-		// 		)
-		// 	}
-		// })
-		// cache.updateQuery({ query: GetFavoriteEventsDocument }, oldData => {
-		// 	if (!oldData?.getFavoriteEvents) return oldData
-		// 	return {
-		// 		getFavoriteEvents: updates.participants?.some(
-		// 			p => p.id === userId
-		// 		)
-		// 			? [
-		// 					...oldData.getFavoriteEvents,
-		// 					{ __typename: 'Event', id: eventId }
-		// 				]
-		// 			: oldData.getFavoriteEvents.filter(
-		// 					(e: any) => e.id !== eventId
-		// 				)
-		// 	}
-		// })
 		cache.modify({
 			fields: {
 				getFavoriteEvents(existingEvents = []) {
@@ -286,43 +155,6 @@ const FavoriteEvents = () => {
 				}
 			}
 		})
-		// cache.modify({
-		// 	id: cache.identify({ __typename: 'Event', id: eventId }),
-		// 	fields: {
-		// 		participants() {
-		// 			return updates.participants
-		// 		}
-		// 		//   favoritedBy() {
-		// 		// 	return updates.favoritedBy
-		// 		//   }
-		// 	}
-		// })
-		// update(cache, { data }) {
-		// 	if (!data) return
-		// 	const updatedChat = data.changeChatName
-		// 	cache.modify({
-		// 		id: cache.identify({
-		// 			__typename: 'Event',
-		// 			id: eventId
-		// 		}),
-		// 		fields: {
-		// 			name() {
-		// 				return updatedChat.name
-		// 			}
-		// 		}
-		// 	})
-		// }
-		// cache.updateQuery(
-		// 	{ query: GetEventsWhereIParticipateDocument },
-		// 	oldData => {
-		// 	  if (!oldData?.getEventsWhereIParticipate) return oldData
-		// 	  return {
-		// 		getEventsWhereIParticipate: updates.participants?.some(p => p.id === userId)
-		// 		  ? [...oldData.getEventsWhereIParticipate, { __typename: 'Event', id: eventId }]
-		// 		  : oldData.getEventsWhereIParticipate.filter((e:any) => e.id !== eventId)
-		// 	  }
-		// 	}
-		//   )
 	}
 	// Mutation для избранного
 	const [addToFavorites] = useAddToFavoritesMutation({
@@ -384,19 +216,6 @@ const FavoriteEvents = () => {
 					updateCaches(cache, eventId, {
 						participants: [...(event?.participants || []), userObj]
 					})
-					// cache.modify({
-					// 	fields: {
-					// 		getEventsWhereIParticipate(
-					// 			existingEventRefs = [],
-					// 			{ readField }
-					// 		) {
-					// 			return existingEventRefs.filter(
-					// 				(ref: any) =>
-					// 					readField('id', ref) !== eventId
-					// 			)
-					// 		}
-					// 	}
-					// })
 				}
 			})
 		} else {
@@ -416,45 +235,12 @@ const FavoriteEvents = () => {
 					updateCaches(cache, eventId, {
 						participants: [...(event?.participants || []), userObj]
 					})
-					// cache.modify({
-					// 	fields: {
-					// 		getEventsWhereIParticipate(
-					// 			existingEventRefs = [],
-					// 			{ readField }
-					// 		) {
-					// 			const newEventRef = cache.writeFragment({
-					// 				data: {
-					// 					__typename: 'Event',
-					// 					id: eventId
-					// 				},
-					// 				fragment: gql`
-					// 					fragment NewParticipatedEvent on EventModel {
-					// 						id
-					// 					}
-					// 				`
-					// 			})
-
-					// 			const isAlreadyInList = existingEventRefs.some(
-					// 				(ref: any) =>
-					// 					readField('id', ref) === eventId
-					// 			)
-
-					// 			// Если пользователь присоединяется
-					// 			if (!isAlreadyInList) {
-					// 				return [...existingEventRefs, newEventRef]
-					// 			}
-
-					// 			// Если уже в списке — оставим как есть
-					// 			return existingEventRefs
-					// 		}
-					// 	}
-					// })
 				}
 			})
 		}
 	}
 
-	if (isLoading) return <div className='px-8 pb-5 pt-8'>Загрузка...</div>
+	if (isLoading) return <LoadingCard />
 
 	if (!userId) {
 		return (
@@ -494,7 +280,7 @@ const FavoriteEvents = () => {
 					)
 				})}
 
-				<div className='mb-5 w-full overflow-hidden rounded-xl border-2 border-dashed border-gray-600 bg-black shadow-lg transition-transform hover:scale-[1.02]'>
+				<div className='mb-5 h-[360px] w-full overflow-hidden rounded-xl border-2 border-dashed border-gray-600 bg-black shadow-lg transition-transform hover:scale-[1.02]'>
 					<Link href='/search' className='flex h-full flex-col'>
 						<div className='relative h-48 w-full bg-black'>
 							<div className='flex h-full items-center justify-center'>

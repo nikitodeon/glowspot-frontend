@@ -487,7 +487,7 @@ export default function EnhancedEventModal({
 							{/* Кнопка перехода на страницу */}
 							<Button
 								variant='outline'
-								className='flex-1 border-white/20 text-white hover:bg-white/10 sm:w-auto'
+								className='mb-4 flex-1 border-white/20 text-white hover:bg-white/10 sm:w-auto'
 								onClick={() => {
 									window.location.href = `/search/event/${event.id}`
 								}}

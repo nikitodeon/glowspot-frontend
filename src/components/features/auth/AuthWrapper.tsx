@@ -24,27 +24,21 @@ export function AuthWrapper({
 }: PropsWithChildren<AuthWrapperProps>) {
 	return (
 		<div className='flex h-full items-center justify-center'>
-			<Card className='w-[450px]'>
+			<Card className='w-[350px] sm:w-[450px]'>
 				<CardHeader className='flex-row items-center justify-center gap-x-4'>
-					{/* <Image
-						src='/logos/biglogoblwh.png'
-						alt='Logo'
-						width={200}
-						height={180}
-					/> */}
 					<RotatingLogo
 						backgroundSrc={'/logos/bglogoblwh.png'}
 						foregroundSrc={'/logos/frlogoblwh.png'}
 					/>
-
-					{/* <LogoImage /> */}
-					{/* <CardTitle>{heading}</CardTitle> */}
 				</CardHeader>
 				<CardContent>{children}</CardContent>
 				<CardFooter className='-mt-2'>
 					{backButtonLabel && backButtonHref && (
 						<Link href={backButtonHref} className='w-full'>
-							<Button variant='ghost' className='w-full'>
+							<Button
+								variant='ghost'
+								className='w-full hover:bg-black'
+							>
 								{backButtonLabel}
 							</Button>
 						</Link>

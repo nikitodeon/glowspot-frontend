@@ -257,7 +257,10 @@ const EventDetailsPage = () => {
 	const isParticipant = event.participants?.some(p => p.id === userId)
 
 	return (
-		<div style={{ marginTop: `${NAVBAR_HEIGHT - 40}px` }}>
+		<div
+			style={{ marginTop: `${NAVBAR_HEIGHT - 40}px` }}
+			className='overflow-y-auto'
+		>
 			<div className='min-h-screen bg-black px-4 pb-8 pt-8 text-gray-200 sm:px-8'>
 				<Link
 					href='/search'

@@ -25,9 +25,6 @@ const Map = () => {
 	const resizeObserverRef = useRef<ResizeObserver | null>(null)
 
 	const filters = useAppSelector(state => state.global.filters)
-	// const isFiltersFullOpen = useAppSelector(
-	// 	state => state.global.isFiltersFullOpen
-	// )
 
 	const [shouldInitMap, setShouldInitMap] = useState(false)
 
@@ -146,8 +143,8 @@ const Map = () => {
 				className='map-container h-full w-full rounded-xl'
 				ref={mapContainerRef}
 				style={{
-					minHeight: '400px', // Фиксированная минимальная высота
-					height: '100%'
+					minHeight: '400px' // Фиксированная минимальная высота
+					// height: '100%'
 				}}
 			/>
 		</div>

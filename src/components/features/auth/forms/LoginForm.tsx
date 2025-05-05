@@ -76,6 +76,9 @@ export function LoginForm() {
 			backButtonLabel={t('backButtonLabel')}
 			backButtonHref='/account/create'
 		>
+			<div className='mb-3 border border-yellow-500 p-1 text-center text-sm text-white sm:p-4'>
+				Админ-юзер для теста: логин: admin, пароль: password
+			</div>
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}

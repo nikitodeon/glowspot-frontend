@@ -66,6 +66,7 @@
 		/* --input: 43, 100%, 62%; */
 		--input: 0, 0%, 5%;
 		--radius: 0.5rem;
+		--navbar-height: 64px;
 	}
 }
 

@@ -32,19 +32,6 @@ const Listings = () => {
 	const filters = useAppSelector(state => state.global.filters)
 	const viewMode = useAppSelector(state => state.global.viewMode)
 
-	// const startRaw = filters.dateRange?.[0]
-	// const endRaw = filters.dateRange?.[1]
-
-	// let end: string | null = null
-	// if (endRaw) {
-	// 	const endDate = new Date(endRaw)
-	// 	endDate.setHours(23, 59, 59, 999)
-	// 	end = endDate.toISOString()
-	// }
-
-	// const dateRange: [string | null, string | null] | undefined =
-	// 	startRaw || end ? [startRaw || null, end] : undefined
-
 	console.log('GraphQL dateRange filter being sent:', filters.dateRange)
 	function isValidDate(date: Date): boolean {
 		return !isNaN(date.getTime())
@@ -193,19 +180,18 @@ const Listings = () => {
 		}
 	}
 
-	if (isLoading) return <>Загрузка...</>
+	if (isLoading) return <></>
 
 	if (isError || !events)
 		return <div className='text-white'>Не удалось получить события</div>
-	// if (events.length === 0)
-	// 	return <div className='text-white'>Не удалось получить события</div>
+
 	return (
-		<div className='w-full'>
-			<h3 className='px-4 text-sm font-bold'>
-				<span className='text-gray-700dd font-normal text-white'>
+		<div className='h-full w-full'>
+			<h3 className='mt-4 px-4 text-sm font-bold lg:mt-0'>
+				<span className='font-normal text-white'>
 					Найдено {events.length}{' '}
 				</span>
-				<span className='text-gray-700dd font-normal text-white'>
+				<span className='font-normal text-white'>
 					{events.length === 0
 						? 'мероприятий'
 						: `мероприятий${events.length === 1 ? 'е' : ''}`}{' '}

@@ -40,63 +40,9 @@ const NewEvent = () => {
 	const [createEvent] = useMutation(CreateEventDocument, {
 		refetchQueries: [
 			{ query: GetMyOrganizedEventsDocument },
-			// { query: GetFavoriteEventsDocument },
+
 			{ query: GetEventsWhereIParticipateDocument }
 		]
-		// update: (cache, { data }) => {
-		// 	if (!data?.createEvent) return
-
-		// 	const newEvent = {
-		// 		...data.createEvent,
-		// 		__typename: 'EventModel',
-		// 		updatedAt: new Date().toISOString(),
-		// 		createdAt: new Date().toISOString(),
-		// 		favoritedBy: [],
-		// 		participants: [],
-		// 		eventProperties: [],
-		// 		status: 'UPCOMING',
-		// 		location: {
-		// 			...data.createEvent.location,
-		// 			__typename: 'LocationModel'
-		// 		},
-		// 		organizer: {
-		// 			...data.createEvent.organizer,
-		// 			__typename: 'UserModel'
-		// 		}
-		// 	}
-
-		// 	// Обновляем кэш для организованных мероприятий
-		// 	cache.updateQuery(
-		// 		{ query: GetMyOrganizedEventsDocument },
-		// 		oldData => {
-		// 			return {
-		// 				getMyOrganizedEvents: [
-		// 					data.createEvent,
-		// 					...(oldData?.getMyOrganizedEvents || [])
-		// 				]
-		// 			}
-		// 		}
-		// 	)
-
-		// 	// Обновляем кэш для избранных мероприятий (если новое мероприятие сразу в избранном)
-		// 	cache.updateQuery({ query: GetFavoriteEventsDocument }, oldData => {
-		// 		return {
-		// 			getFavoriteEvents: [...(oldData?.getFavoriteEvents || [])]
-		// 		}
-		// 	})
-
-		// 	// Обновляем кэш для мероприятий, в которых участвуем
-		// 	cache.updateQuery(
-		// 		{ query: GetEventsWhereIParticipateDocument },
-		// 		oldData => {
-		// 			return {
-		// 				getEventsWhereIParticipate: [
-		// 					...(oldData?.getEventsWhereIParticipate || [])
-		// 				]
-		// 			}
-		// 		}
-		// 	)
-		// }
 	})
 	const router = useRouter()
 	const [isSubmitting, setIsSubmitting] = useState(false)
@@ -118,7 +64,9 @@ const NewEvent = () => {
 			isPrivate: false,
 			address: '',
 			city: 'Минск',
-			tags: []
+			tags: [],
+			maxParticipants: undefined,
+			ageRestriction: undefined
 		}
 	})
 

@@ -59,27 +59,6 @@ const EditEvent = () => {
 			{ query: GetEventByIdDocument, variables: { id: id as string } }
 		]
 	})
-	const mapServerEventType = (serverType: string): EventType => {
-		const mapping: Record<string, EventType> = {
-			EXHIBITION: EventType.Exhibition,
-			PARTY: EventType.Party,
-			CONCERT: EventType.Concert,
-			CYBERSPORT: EventType.Cybersport,
-			DANCE: EventType.Dance,
-			FESTIVAL: EventType.Festival,
-			KARAOKE: EventType.Karaoke,
-			KIDS_EVENT: EventType.KidsEvent,
-			LECTURE: EventType.Lecture,
-			MEETUP: EventType.Meetup,
-			MOVIE: EventType.Movie,
-			OTHER: EventType.Other,
-			SPORT: EventType.Sport,
-			STANDUP: EventType.Standup,
-			THEATRE: EventType.Theatre,
-			WALK: EventType.Walk
-		}
-		return mapping[serverType]
-	}
 
 	const form = useForm<EventFormData>({
 		resolver: zodResolver(eventSchema),
@@ -90,7 +69,6 @@ const EditEvent = () => {
 			photos: [],
 			existingPhotos: [],
 
-			// eventType: mapServerEventType(data?.getEventById.eventType || ''),
 			eventType: EventType.Party,
 			eventProperties: [],
 			paymentType: PaymentType.Free,
@@ -102,84 +80,12 @@ const EditEvent = () => {
 			tags: []
 		}
 	})
-	// const getEventType = (type: string): EventType => {
-	// 	return Object.values(EventType).includes(type as EventType)
-	// 		? (type as EventType)
-	// 		: EventType.Party
-	// }
 
-	// const getPaymentType = (type: string): PaymentType => {
-	// 	return Object.values(PaymentType).includes(type as PaymentType)
-	// 		? (type as PaymentType)
-	// 		: PaymentType.Free
-	// }
-
-	// useEffect(() => {
-	// 	if (data?.getEventById) {
-	// 		console.log('Server eventType:', data.getEventById.eventType)
-	// 		console.log('Available EventTypes:', Object.values(EventType))
-	// 		const event = data.getEventById
-	// 		setExistingPhotos(event.photoUrls || [])
-	// 		if (data?.getEventById) {
-	// 			const event = data.getEventById
-	// 			setExistingPhotos(event.photoUrls || [])
-
-	// 			// Преобразуем строковые значения к enum
-	// 			const eventType =
-	// 				Object.values(EventType).find(
-	// 					val => val === event.eventType
-	// 				) ?? EventType.Party
-
-	// 			const paymentType =
-	// 				Object.values(PaymentType).find(
-	// 					val => val === event.paymentType
-	// 				) ?? PaymentType.Free
-	// 			console.log('Client EventType:', Object.values(EventType))
-	// 			console.log('Server EventType:', data?.getEventById?.eventType)
-	// 			console.log('Client PaymentType:', Object.values(PaymentType))
-	// 			console.log(
-	// 				'Server PaymentType:',
-	// 				data?.getEventById?.paymentType
-	// 			)
-	// 			// Полный набор значений для reset
-	// 			const formValues = {
-	// 				title: event.title,
-	// 				description: event.description || '',
-	// 				startTime: event.startTime.slice(0, 16),
-	// 				endTime: event.endTime?.slice(0, 16) || undefined,
-	// 				existingPhotos: event.photoUrls || [],
-	// 				eventType,
-	// 				eventProperties: event.eventProperties || [],
-	// 				paymentType,
-	// 				price: event.price || 0,
-	// 				currency: event.currency || 'BYN',
-	// 				isPrivate: event.isPrivate || false,
-	// 				address: event.location.address || '',
-	// 				city: event.location.city,
-	// 				placeName: event.location.placeName || undefined,
-	// 				maxParticipants: event.maxParticipants || undefined,
-	// 				ageRestriction: event.ageRestriction || undefined,
-	// 				tags: event.tags || [],
-	// 				photos: [] // Новые фото пока пустые
-	// 			}
-	// 			// form.setValue('eventType', event.eventType as EventType)
-	// 			// form.setValue('paymentType', event.paymentType as PaymentType)
-	// 			console.log('Full form values for reset:', formValues)
-	// 			form.reset(formValues)
-	// 		}
-
-	// 		// setTimeout(() => {
-	// 		// 	form.setValue('eventType', event.eventType as EventType)
-	// 		// 	form.setValue('paymentType', event.paymentType as PaymentType)
-	// 		// }, 0)
-	// 	}
-	// }, [data, form])
 	useEffect(() => {
 		if (data?.getEventById) {
 			const event = data.getEventById
 			setExistingPhotos(event.photoUrls || [])
 
-			// Устанавливаем значения по одному вместо reset
 			form.setValue('title', event.title)
 			form.setValue('description', event.description || '')
 			form.setValue('startTime', event.startTime.slice(0, 16))
@@ -242,7 +148,7 @@ const EditEvent = () => {
 					id: id,
 					input: {
 						...input,
-						photoUrls: existingPhotos, // Используем existingPhotos как photoUrls
+						photoUrls: existingPhotos,
 						startTime: new Date(input.startTime).toISOString(),
 						endTime: input.endTime
 							? new Date(input.endTime).toISOString()
@@ -327,16 +233,7 @@ const EditEvent = () => {
 							<h2 className='mb-4 text-lg font-semibold text-white'>
 								Тип мероприятия
 							</h2>
-							{/* <CustomFormField
-								name='eventType'
-								label='Тип мероприятия'
-								type='select-update'
-								options={Object.values(EventType).map(type => ({
-									value: type,
-									label: EventTypeTranslations[type]
-								}))}
-								className=''
-							/> */}
+
 							<Controller
 								name='eventType'
 								control={form.control}

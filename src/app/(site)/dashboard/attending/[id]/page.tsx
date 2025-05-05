@@ -75,13 +75,13 @@ const AttendingEventDetailsPage = () => {
 		}
 	})
 
-	const [deleteEvent] = useDeleteEventMutation({
-		refetchQueries: [
-			'GetMyOrganizedEvents',
-			'GetEventsWhereIParticipate',
-			'GetFavoriteEventsDocument'
-		]
-	})
+	// const [deleteEvent] = useDeleteEventMutation({
+	// 	refetchQueries: [
+	// 		'GetMyOrganizedEvents',
+	// 		'GetEventsWhereIParticipate',
+	// 		'GetFavoriteEventsDocument'
+	// 	]
+	// })
 
 	const [participateInEvent] = useParticipateInEventMutation()
 	const [leaveEvent] = useLeaveEventMutation({
@@ -202,18 +202,6 @@ const AttendingEventDetailsPage = () => {
 			setIsLeaving(false)
 		}
 	}
-	//   const handleLeaveEvent = async () => {
-	//     try {
-	//       await leaveEvent({
-	//         variables: {
-	//           eventId: id as string
-	//         }
-	//       })
-	//       router.push('/dashboard/attending')
-	//     } catch (err) {
-	//       console.error('Error leaving event:', err)
-	//     }
-	//   }
 
 	if (loading) {
 		return (
