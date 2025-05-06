@@ -39,12 +39,12 @@ export function UserSettings() {
 					<TabsTrigger value='account'>
 						{t('header.account')}
 					</TabsTrigger>
-					<TabsTrigger value='appearance'>
+					{/* <TabsTrigger value='appearance'>
 						{t('header.appearance')}
-					</TabsTrigger>
-					<TabsTrigger value='notifications'>
+					</TabsTrigger> */}
+					{/* <TabsTrigger value='notifications'>
 						{t('header.notifications')}
-					</TabsTrigger>
+					</TabsTrigger> */}
 					<TabsTrigger value='sessions'>
 						{t('header.sessions')}
 					</TabsTrigger>
@@ -84,18 +84,18 @@ export function UserSettings() {
 						<DeactivateCard />
 					</div>
 				</TabsContent>
-				<TabsContent value='appearance'>
+				{/* <TabsContent value='appearance'>
 					<div className='mt-5 space-y-6'>
 						<Heading
 							title={t('appearance.header.heading')}
 							description={t('appearance.header.description')}
-						/>
-						{/* <ChangeThemeForm /> */}
-						<ChangeLanguageForm />
-						{/* <ChangeColorForm /> */}
-					</div>
-				</TabsContent>
-				<TabsContent value='notifications'>
+						/> */}
+				{/* <ChangeThemeForm /> */}
+				{/* <ChangeLanguageForm /> */}
+				{/* <ChangeColorForm /> */}
+				{/* </div>
+				</TabsContent> */}
+				{/* <TabsContent value='notifications'>
 					<div className='mt-5 space-y-6'>
 						<Heading
 							title={t('notifications.header.heading')}
@@ -103,7 +103,7 @@ export function UserSettings() {
 						/>
 						<ChangeNotificationsSettingsForm />
 					</div>
-				</TabsContent>
+				</TabsContent> */}
 				<TabsContent value='sessions'>
 					<div className='mt-5 space-y-6'>
 						<Heading

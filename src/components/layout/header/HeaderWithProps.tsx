@@ -77,7 +77,7 @@ export function HeaderWithProps({ text }: HeaderProps) {
 
 	return (
 		<header className='flex h-full items-center justify-between border-b border-white/20 bg-black p-4'>
-			{text === 'Мероприятия на карте' ? (
+			{text === 'Мероприятия на карте' || !text ? (
 				<div className='mr-1 flex h-[37px] w-[150px] items-center justify-center'>
 					<Link href='/search' legacyBehavior>
 						<a>
@@ -138,7 +138,7 @@ export function HeaderWithProps({ text }: HeaderProps) {
 						className='flex items-center rounded-full border border-white/20 bg-black px-3 py-1 text-sm font-medium text-white hover:bg-white/10'
 					>
 						<Plus className='h-4 w-4' />
-						Создать{' '}
+						Создать&nbsp;
 						<span className='hidden md:inline'>мероприятие</span>
 					</Link>
 				)}

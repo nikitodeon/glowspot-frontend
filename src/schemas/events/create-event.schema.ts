@@ -16,7 +16,7 @@ export const eventSchema = z.object({
 	title: z.string().min(1, 'Название обязательно').max(50),
 	description: z.string().min(1, 'Описание обязательно').max(2000),
 	startTime: datetimeLocalSchema,
-	endTime: datetimeLocalSchema.optional(),
+	endTime: datetimeLocalSchema.nullable().optional(),
 	photos: z
 		.array(
 			z.instanceof(File).refine(file => file.size <= MAX_FILE_SIZE, {

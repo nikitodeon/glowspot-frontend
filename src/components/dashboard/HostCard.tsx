@@ -89,7 +89,7 @@ const HostCard = ({
 	}
 
 	return (
-		<div className='mmborder-white mb-5 w-full overflow-hidden rounded-xl border bg-black shadow-lg transition-transform hover:scale-[1.02]'>
+		<div className='mb-5 w-full overflow-hidden rounded-xl border bg-black shadow-lg transition-transform hover:scale-[1.02]'>
 			<div className='relative'>
 				<div className='relative h-48 w-full'>
 					<Image
@@ -116,7 +116,7 @@ const HostCard = ({
 			</div>
 
 			<div className='relative p-4 pb-12'>
-				<h2 className='mb-1 line-clamp-1 text-xl font-bold'>
+				<h2 className='text-md mb-1 line-clamp-1 font-bold sm:text-xl'>
 					<Link
 						href={propertyLink}
 						className='text-white hover:underline'
@@ -126,7 +126,7 @@ const HostCard = ({
 					</Link>
 				</h2>
 
-				<p className='mb-2 line-clamp-1 text-gray-400'>
+				<p className='text-md mb-2 line-clamp-1 text-gray-400 sm:text-xl'>
 					{event?.location?.placeName || event?.location?.address},{' '}
 					{event?.location?.city}
 				</p>

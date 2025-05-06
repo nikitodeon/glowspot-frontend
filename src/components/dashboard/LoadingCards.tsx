@@ -11,7 +11,7 @@ export default function LoadingCards() {
 				{[...Array(4)].map((_, index) => (
 					<div
 						key={index}
-						className='mb-5 w-[350px] animate-pulse overflow-hidden rounded-xl border border-white/10 bg-black shadow-lg transition-transform lg:w-[270px] xl:w-[315px]'
+						className='mb-5 w-[335px] animate-pulse overflow-hidden rounded-xl border border-white/10 bg-black shadow-lg transition-transform lg:w-[270px] xl:w-[315px]'
 					>
 						{/* Image */}
 						<div className='aspecthh-[4/3] relative h-[200px] w-full bg-black sm:h-[200px]'>

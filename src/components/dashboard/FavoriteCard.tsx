@@ -145,7 +145,7 @@ const AttendCard = ({
 			</div>
 
 			<div className='relative p-4 pb-12'>
-				<h2 className='mb-1 line-clamp-1 text-xl font-bold'>
+				<h2 className='text-md mb-1 line-clamp-1 font-bold sm:text-xl'>
 					<Link
 						href={propertyLink}
 						className='text-white hover:underline'
@@ -155,7 +155,7 @@ const AttendCard = ({
 					</Link>
 				</h2>
 
-				<p className='mb-2 line-clamp-1 text-gray-400'>
+				<p className='text-md mb-2 line-clamp-1 text-gray-400 sm:text-xl'>
 					{event?.location?.placeName || event?.location?.address},{' '}
 					{event?.location?.city}
 				</p>

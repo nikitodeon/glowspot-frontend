@@ -35,7 +35,8 @@ export default function SiteLayout({
 		'/dashboard/settings': 'Настройки',
 		'/dashboard/verify': 'Верификация организаторов',
 		'/search': 'Мероприятия на карте',
-
+		'/dashboard/hosting/create': 'Создание мероприятия',
+		'/dashboard/hosting/edit': 'Редактирование мероприятия',
 		...(eventId ? { [`/dashboard/hosting/${eventId}`]: title } : {}),
 		...(eventId ? { [`/dashboard/attending/${eventId}`]: title } : {}),
 		...(eventId ? { [`/dashboard/favorites/${eventId}`]: title } : {})
@@ -44,7 +45,7 @@ export default function SiteLayout({
 	const headerText = headerTexts[pathname]
 
 	return (
-		<div className='flex h-full flex-col overflow-hidden'>
+		<div className='overfhlow-hidden flex h-full flex-col'>
 			<div className='flex-1'>
 				<div className='fixed inset-y-0 z-50 h-[65px] w-full'>
 					<HeaderWithProps text={headerText} />

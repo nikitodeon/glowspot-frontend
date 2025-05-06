@@ -55,6 +55,7 @@ const NewEvent = () => {
 			title: '',
 			description: '',
 			startTime: new Date().toISOString().slice(0, 16),
+			// endTime: '',
 			photos: [],
 			eventType: EventType.Party,
 			eventProperties: [],
@@ -376,7 +377,7 @@ const NewEvent = () => {
 							className='text-l ml-[25%] flex w-[50%] items-center gap-3 rounded-lg border-2 border-white/20 bg-black px-8 py-5 font-medium text-white transition-colors hover:border-white/40 hover:bg-white/10'
 							disabled={isSubmitting}
 						>
-							{isSubmitting ? 'Creating...' : 'Create Event'}
+							{isSubmitting ? 'Создание...' : 'Создать'}
 						</Button>
 					</form>
 				</Form>

@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Button } from '@/components/ui/commonApp/button'
@@ -49,6 +49,39 @@ const HeroSection = () => {
 			console.error('Error searching location:', error)
 		}
 	}
+	const handleKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === 'Enter') {
+			handleLocationSearch()
+		}
+	}
+	const searchPlaceholder = (
+		<>
+			<span className='hidden md:inline'>
+				'Ищите мероприятия поблизости – введите ваш город'
+			</span>
+			<span className='md:hidden'>'Введите ваш город'</span>
+		</>
+	)
+
+	const [placeholder, setPlaceholder] = useState(
+		typeof window !== 'undefined' && window.innerWidth >= 640
+			? 'Ищите мероприятия поблизости – введите ваш город'
+			: 'Введите ваш город'
+	)
+
+	// Обновляем плейсхолдер при изменении размера окна
+	useEffect(() => {
+		const handleResize = () => {
+			setPlaceholder(
+				window.innerWidth >= 640
+					? 'Ищите мероприятия поблизости – введите ваш город'
+					: 'Введите ваш город'
+			)
+		}
+
+		window.addEventListener('resize', handleResize)
+		return () => window.removeEventListener('resize', handleResize)
+	}, [])
 
 	return (
 		<div className='relative mt-16 h-screen w-full overflow-hidden'>
@@ -87,16 +120,20 @@ const HeroSection = () => {
 							/>
 						</span>
 					</h1>
-					<p className='mb-8 text-lg text-white sm:text-xl'>
+					<p className='mb-2 text-lg text-white sm:text-xl'>
 						Каждое событие – новый огонёк на карте!
 					</p>
+					<div className='mx-auto mb-3 max-w-[500px] border border-yellow-500 p-1 text-center text-sm text-white sm:p-4'>
+						Тестовые события созданы в городах : Минск, Москва
+					</div>
 					<div className='flex justify-center'>
 						<Input
 							type='text'
 							value={searchQuery}
 							onChange={e => setSearchQuery(e.target.value)}
-							placeholder='Ищите мероприятия поблизости – введите страну, город или улицу'
+							placeholder={placeholder}
 							className='h-12 w-full max-w-lg rounded-none rounded-l-xl border-none bg-white'
+							onKeyDown={handleKeyDown}
 						/>
 						<Button
 							onClick={handleLocationSearch}

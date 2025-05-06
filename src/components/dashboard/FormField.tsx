@@ -227,7 +227,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 							className={`w-full rounded-md border border-white bg-black p-4 text-white ${inputClassName}`}
 							placeholderText={placeholder}
 							disabled={disabled}
-							calendarClassName='!bg-black !border-white !text-white'
+							calendarClassName='!bg-black !border-white  !text-white no-scroll-x '
 							dayClassName={() => 'hover:bg-gray-800 text-white'}
 							weekDayClassName={() => 'text-white'}
 							monthClassName={() => 'text-white'}
@@ -247,7 +247,11 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 							}) => (
 								<div className='flex items-center justify-between bg-black px-2 py-1'>
 									<button
-										onClick={decreaseMonth}
+										onClick={e => {
+											e.preventDefault()
+											e.stopPropagation()
+											decreaseMonth()
+										}}
 										className='rounded p-1 text-white hover:bg-gray-800'
 									>
 										{'<'}
@@ -259,7 +263,11 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 										})}
 									</span>
 									<button
-										onClick={increaseMonth}
+										onClick={e => {
+											e.preventDefault()
+											e.stopPropagation()
+											increaseMonth()
+										}}
 										className='rounded p-1 text-white hover:bg-gray-800'
 									>
 										{'>'}

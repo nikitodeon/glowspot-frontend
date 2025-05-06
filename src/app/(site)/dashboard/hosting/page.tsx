@@ -169,7 +169,7 @@ const Events = () => {
 
 	return (
 		<div className='px-8 pb-5 pt-8'>
-			<div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+			<div className='grid grid-cols-1 gap-6 sm:w-[600px] md:w-full md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
 				{myEvents?.map(event => {
 					const isFavorite =
 						event.favoritedBy?.some(u => u.id === userId) ?? false
