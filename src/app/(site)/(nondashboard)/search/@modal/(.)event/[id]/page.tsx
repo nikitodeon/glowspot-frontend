@@ -289,7 +289,6 @@ export default function EnhancedEventModal({
 				<DialogContent
 					className='relative z-50 max-h-[90vh] w-full max-w-3xl overflow-y-auto border border-white/10 bg-black p-0 shadow-xl'
 					ref={dialogContentRef}
-					// onClick={(e: any) => e.stopPropagation()}
 				>
 					<button
 						onClick={handleClose}

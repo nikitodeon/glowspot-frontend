@@ -7,7 +7,6 @@ import {
 	Trash,
 	UserMinus,
 	UserPlus,
-	X,
 	XCircle
 } from 'lucide-react'
 import Image from 'next/image'
@@ -75,14 +74,6 @@ const AttendingEventDetailsPage = () => {
 		}
 	})
 
-	// const [deleteEvent] = useDeleteEventMutation({
-	// 	refetchQueries: [
-	// 		'GetMyOrganizedEvents',
-	// 		'GetEventsWhereIParticipate',
-	// 		'GetFavoriteEventsDocument'
-	// 	]
-	// })
-
 	const [participateInEvent] = useParticipateInEventMutation()
 	const [leaveEvent] = useLeaveEventMutation({
 		refetchQueries: ['GetEventsWhereIParticipate']
@@ -110,44 +101,8 @@ const AttendingEventDetailsPage = () => {
 				}
 			}
 		)
-
-		// cache.updateQuery(
-		// 	{ query: GetEventsWhereIParticipateDocument },
-		// 	oldData => {
-		// 		if (!oldData?.getEventsWhereIParticipate) return oldData
-
-		// 		return {
-		// 			getEventsWhereIParticipate:
-		// 				oldData.getEventsWhereIParticipate.map((event: any) => {
-		// 					if (event.id === eventId) {
-		// 						return {
-		// 							...event,
-		// 							...updates
-		// 						}
-		// 					}
-		// 					return event
-		// 				})
-		// 		}
-		// 	}
-		// )
 	}
 
-	// const handleDelete = async () => {
-	// 	setIsDeleting(true)
-	// 	try {
-	// 		await deleteEvent({
-	// 			variables: {
-	// 				id: id as string
-	// 			}
-	// 		})
-	// 		router.push('/dashboard/attending')
-	// 	} catch (err) {
-	// 		console.error('Error deleting event:', err)
-	// 		alert('Не удалось удалить мероприятие')
-	// 	} finally {
-	// 		setIsDeleting(false)
-	// 	}
-	// }
 	const handleJoin = async () => {
 		setIsJoining(true)
 		try {

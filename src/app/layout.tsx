@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 	applicationName: SITE_NAME,
 	authors: [
 		{
-			name: 'Vanya',
+			name: 'Nikita',
 			url: new URL('https://github.com/nikitodeon')
 		}
 	],
@@ -42,13 +42,7 @@ export const metadata: Metadata = {
 	icons: {
 		icon: '/favicon.ico',
 		shortcut: '/favicon.ico',
-		apple: '/touch-icons/256x256.png',
-		other: {
-			rel: 'touch-icons',
-			url: '/touch-icons/256x256.png',
-			sizes: '256x256',
-			type: 'image/png'
-		}
+		apple: '/favicon.ico'
 	},
 	openGraph: {
 		title: SITE_NAME,
@@ -58,7 +52,7 @@ export const metadata: Metadata = {
 		locale: 'ru_RU',
 		images: [
 			{
-				url: '/touch-icons/512x512.png',
+				url: 'favicon.ico',
 				width: 512,
 				height: 512,
 				alt: SITE_NAME
@@ -71,7 +65,7 @@ export const metadata: Metadata = {
 		description: SITE_DESCRIPTION,
 		images: [
 			{
-				url: '/touch-icons/512x512.png',
+				url: 'favicon.ico',
 				width: 512,
 				height: 512,
 				alt: SITE_NAME

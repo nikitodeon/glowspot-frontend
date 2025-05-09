@@ -3,7 +3,6 @@
 import { ApolloCache } from '@apollo/client'
 import { Search } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
 import { toast } from 'sonner'
 
 import AttendCard from '@/components/dashboard/AttendCard'
@@ -26,8 +25,6 @@ const ParticipatingEvents = () => {
 	const { user } = useCurrent()
 	const userId = user?.id
 
-	// const [isJoining, setIsJoining] = useState(false)
-	// const [isLeaving, setIsLeaving] = useState(false)
 	const { data, loading: isLoading } = useGetEventsWhereIParticipateQuery({
 		fetchPolicy: 'cache-and-network',
 		nextFetchPolicy: 'cache-first'

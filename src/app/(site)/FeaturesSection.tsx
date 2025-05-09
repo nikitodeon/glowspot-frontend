@@ -35,8 +35,8 @@ const FeaturesSection = () => {
 					variants={itemVariants}
 					className='mx-auto mb-12 w-full text-center text-3xl font-bold sm:w-2/3'
 				>
-					Быстро найдите нужное мероприятие с помощью удобных
-					фильтров!
+					Быстро найдите нужное мероприятие с помощью удобных фильтров
+					или создайте своё!
 				</motion.h2>
 				<div className='grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-12 xl:gap-16'>
 					{[0, 1, 2].map(index => (
@@ -90,15 +90,6 @@ const FeatureCard = ({
 		</div>
 		<h3 className='mb-2 text-xl font-semibold'>{title}</h3>
 		<p className='mb-4'>{description}</p>
-		{/* {showButton && (
-			<Link
-				href='/search'
-				className='mt-10 inline-block rounded border border-gray-300 px-4 py-2 hover:bg-gray-100'
-				scroll={false}
-			>
-				Искать
-			</Link>
-		)} */}
 	</div>
 )
 

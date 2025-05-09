@@ -1,6 +1,6 @@
 'use client'
 
-import { LayoutDashboard, Loader, LogOut } from 'lucide-react'
+import { CircleUserRound, LayoutDashboard, Loader, LogOut } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -20,7 +20,7 @@ import { useLogoutUserMutation } from '@/graphql/generated/output'
 import { useAuth } from '@/hooks/useAuth'
 import { useCurrent } from '@/hooks/useCurrent'
 
-import { Notifications } from './notifications/Notifications'
+// import { Notifications } from './notifications/Notifications'
 
 export function ProfileMenu() {
 	const t = useTranslations('layout.header.headerMenu.profileMenu')
@@ -47,7 +47,8 @@ export function ProfileMenu() {
 			{/* <Notifications /> */}
 			<DropdownMenu>
 				<DropdownMenuTrigger>
-					<ChannelAvatar channel={user} />
+					{/* <ChannelAvatar channel={user} /> */}
+					<CircleUserRound className='size-7 text-white' />
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align='end' className='w-[230px]'>
 					<div className='flex items-center gap-x-3 p-2'>

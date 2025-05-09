@@ -16,8 +16,7 @@ export default function SiteLayout({
 	const params = useParams()
 	const eventId = params.id as string | undefined
 
-	const [getEventById, { data, loading: eventLoading }] =
-		useGetEventByIdLazyQuery()
+	const [getEventById, { data }] = useGetEventByIdLazyQuery()
 
 	// Вызываем запрос только при изменении eventId
 	useEffect(() => {

@@ -136,56 +136,6 @@ const FiltersFull = () => {
 			}))
 		}
 	}, [])
-	// const handleFilterChange = (key: keyof FiltersState, value: any) => {
-	// 	const newFilters: FiltersState = {
-	// 		...localFilters,
-	// 		[key]: value
-	// 	}
-
-	// 	setLocalFilters(newFilters)
-	// 	updateURL(newFilters)
-	// }
-	// const handlePriceChange = (value: number[]) => {
-	// 	const [newMin, newMax] = value as [number, number]
-
-	// 	// Определяем текущие значения
-	// 	const currentMin = localFilters.priceRange[0]
-	// 	const currentMax = localFilters.priceRange[1]
-
-	// 	let minPrice: number | null = newMin
-	// 	let maxPrice: number | null = newMax
-
-	// 	// Если минимальная цена установлена в 0 - сбрасываем в null
-	// 	if (newMin === 0) {
-	// 		minPrice = null
-	// 	}
-
-	// 	// Если максимальная цена меньше 1000
-	// 	if (newMax < 1000) {
-	// 		// Если минимальная была null (была на 0) - устанавливаем в 0
-	// 		if (minPrice === null) {
-	// 			minPrice = 0
-	// 		}
-	// 		// Иначе оставляем как есть (либо 0, либо текущее значение)
-	// 	}
-
-	// 	// Если максимальная цена 1000 - сбрасываем в null
-	// 	// if (newMax === 1000) {
-	// 	//   maxPrice = null;
-	// 	// }
-
-	// 	const newPriceRange: [number | null, number | null] = [
-	// 		minPrice,
-	// 		maxPrice
-	// 	]
-
-	// const newFilters = {
-	// 	...localFilters,
-	// 	priceRange: newPriceRange
-	// }
-
-	// setLocalFilters(newFilters as FiltersState)
-	// }
 
 	const getCurrencyName = (currencyCode: string | null) => {
 		switch (currencyCode) {
@@ -205,69 +155,16 @@ const FiltersFull = () => {
 	}
 	const currencyName = getCurrencyName(localFilters.currency)
 
-	// const handleLocationSearch = async () => {
-	// 	try {
-	// 		const response = await fetch(
-	// 			`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-	// 				searchInput
-	// 			)}.json?access_token=${
-	// 				process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-	// 			}&fuzzyMatch=true`
-	// 		)
-	// 		const data = await response.json()
-	// 		if (data.features && data.features.length > 0) {
-	// 			const [lng, lat] = data.features[0].center
-	// 			dispatch(
-	// 				setFilters({
-	// 					location: searchInput,
-	// 					coordinates: [lng, lat]
-	// 				})
-	// 			)
-	// 			updateURL({
-	// 				...filters,
-	// 				location: searchInput,
-	// 				coordinates: [lng, lat]
-	// 			})
-	// 		}
-	// 	} catch (err) {
-	// 		console.error('Error search location:', err)
-	// 	}
-	// }
-
-	// useEffect(() => {
-	// 	setSearchInput(filters.location)
-	// }, [filters.location])
 	if (!isFiltersFullOpen) return null
 	return (
 		<div className='h-full overflow-y-auto overflow-x-hidden rounded-lg bg-black px-4 pb-10'>
 			<div className='flex flex-col space-y-6'>
-				{/* Location */}
-				{/* <div>
-					<h4 className='mb-2 font-bold text-white'>Location</h4>
-					<div className='flex items-center'>
-						<Input
-							placeholder='Город / локация'
-							value={searchInput}
-							onChange={e => setSearchInput(e.target.value)}
-							className='border-primary-400 w-40 rounded-l-xl rounded-r-none border-r-0 text-white'
-						/>
-						<Button
-							onClick={handleLocationSearch}
-							className='border-l-none hover:bg-primary-700 hover:text-primary-50 rounded-l-none rounded-r-xl border border-white shadow-none'
-						>
-							<Search className='h-4 w-4' />
-						</Button>
-					</div>
-				</div> */}
-
 				{/* Event Type */}
 				<div>
 					<h4 className='mb-2 font-bold text-white'>
 						Тип мероприятия
 					</h4>
 					<div className='grid grid-cols-3 gap-2'>
-						{' '}
-						{/* Увеличиваем количество колонок и уменьшаем отступы */}
 						<Button
 							key='any'
 							variant='ghost'
@@ -343,7 +240,6 @@ const FiltersFull = () => {
 								</span>
 							</Label>
 							<DatePicker
-								// dateFormat='MM/dd/yyyy, h:mm aa'
 								selected={
 									localFilters.dateRange[0]
 										? new Date(localFilters.dateRange[0])

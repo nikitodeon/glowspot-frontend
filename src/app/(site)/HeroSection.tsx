@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { debounce } from 'lodash'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -63,26 +64,28 @@ const HeroSection = () => {
 		</>
 	)
 
-	const [placeholder, setPlaceholder] = useState(
-		typeof window !== 'undefined' && window.innerWidth >= 640
-			? 'Ищите мероприятия поблизости – введите ваш город'
-			: 'Введите ваш город'
-	)
+	const [placeholder, setPlaceholder] = useState('Введите ваш город')
 
-	// Обновляем плейсхолдер при изменении размера окна
 	useEffect(() => {
-		const handleResize = () => {
+		if (typeof window === 'undefined') return
+
+		const handleResize = debounce(() => {
 			setPlaceholder(
 				window.innerWidth >= 640
 					? 'Ищите мероприятия поблизости – введите ваш город'
 					: 'Введите ваш город'
 			)
-		}
+		}, 200)
+
+		// Устанавливаем начальное значение
+		handleResize()
 
 		window.addEventListener('resize', handleResize)
-		return () => window.removeEventListener('resize', handleResize)
+		return () => {
+			handleResize.cancel()
+			window.removeEventListener('resize', handleResize)
+		}
 	}, [])
-
 	return (
 		<div className='relative mt-16 h-screen w-full overflow-hidden'>
 			{/* Вращающийся логотип */}

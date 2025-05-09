@@ -6,7 +6,6 @@ import {
 	faYoutube
 } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Link from 'next/link'
 import React from 'react'
 
 const FooterSection = () => {
@@ -14,32 +13,11 @@ const FooterSection = () => {
 		<footer className='border-t border-gray-200 py-20'>
 			<div className='mx-auto max-w-4xl px-6 sm:px-8'>
 				<div className='flex flex-col items-center justify-evenly md:flex-row'>
-					{/* <div className='mb-4'>
-						<Link
-							href='/'
-							className='text-xl font-bold text-white'
-							scroll={false}
-						>
-							GLOWSPOTS
-						</Link>
-					</div> */}
 					<nav className='mb-4'>
 						<ul className='flex space-x-6 text-white'>
-							<li>
-								<Link href='/about'>О нас</Link>
-							</li>
-							<li>
-								<Link href='/contact'>Связаться</Link>
-							</li>
-							<li>
-								<Link href='/faq'>FAQ</Link>
-							</li>
-							{/* <li>
-								<Link href='/terms'>Условия использования</Link>
-							</li> */}
-							{/* <li>
-								<Link href='/privacy'>Privacy</Link>
-							</li> */}
+							<li>О нас</li>
+							<li>Связаться</li>
+							<li>FAQ</li>
 						</ul>
 					</nav>
 					<div className='mb-4 flex space-x-4 text-white'>
@@ -97,9 +75,9 @@ const FooterSection = () => {
 				</div>
 				<div className='mt-8 flex justify-center space-x-4 text-center text-sm text-gray-500'>
 					<span>© GLOWSPOT. All rights reserved.</span>
-					{/* <Link href='/privacy'>Privacy Policy</Link> */}
-					<Link href='/terms'>Условия использования</Link>
-					<Link href='/cookies'>Политика файлов сookie </Link>
+
+					<div>Условия использования</div>
+					<div> Политика файлов сookie</div>
 				</div>
 			</div>
 		</footer>

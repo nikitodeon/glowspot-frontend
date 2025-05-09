@@ -197,13 +197,13 @@ const EditEvent = () => {
 							</h2>
 							<CustomFormField
 								name='title'
-								label='Название мероприятия'
+								label='Название мероприятия *'
 								className='border-white/20'
 								type='title'
 							/>
 							<CustomFormField
 								name='description'
-								label='Описание'
+								label='Описание *'
 								type='textarea'
 								className='border-white/20'
 							/>
@@ -217,7 +217,7 @@ const EditEvent = () => {
 							<div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
 								<CustomFormField
 									name='startTime'
-									label='Время начала'
+									label='Время начала *'
 									type='datepicker'
 								/>
 								<CustomFormField
@@ -231,7 +231,7 @@ const EditEvent = () => {
 						{/* Event Type */}
 						<div className='space-y-6 border-b pb-6'>
 							<h2 className='mb-4 text-lg font-semibold text-white'>
-								Тип мероприятия
+								Тип мероприятия *
 							</h2>
 
 							<Controller
@@ -282,11 +282,11 @@ const EditEvent = () => {
 										label: EventPropertyTranslations[type]
 									})
 								)}
-								label='Особенности мероприятия'
+								label='Особенности мероприятия (необязательно)'
 							/>
 							<CustomFormField
 								name='tags'
-								label='Тэги'
+								label='Тэги (необязательно)'
 								type='multi-input'
 								className='border-white/20'
 							/>
@@ -299,7 +299,7 @@ const EditEvent = () => {
 							</h2>
 							<CustomFormField
 								name='paymentType'
-								label='Тип оплаты'
+								label='Тип оплаты *'
 								type='select-update'
 								options={Object.values(PaymentType).map(
 									type => ({
@@ -313,14 +313,14 @@ const EditEvent = () => {
 								<div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
 									<CustomFormField
 										name='price'
-										label='Цена'
+										label='Цена *'
 										type='number'
 										min={0}
 										className='border-white/20'
 									/>
 									<CustomFormField
 										name='currency'
-										label='Валюта'
+										label='Валюта *'
 										type='select'
 										options={[
 											{ value: 'BYN', label: 'BYN' },
@@ -371,13 +371,13 @@ const EditEvent = () => {
 							</h2>
 							<CustomFormField
 								name='address'
-								label='Улица и дом'
+								label='Улица и дом *'
 								className='border-white/20'
 							/>
 							<div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
 								<CustomFormField
 									name='city'
-									label='Город'
+									label='Город *'
 									className='border-white/20'
 								/>
 								<CustomFormField
@@ -391,7 +391,7 @@ const EditEvent = () => {
 						{/* Photos Section */}
 						<div>
 							<h2 className='mb-4 text-lg font-semibold text-white'>
-								Картинки мероприятия
+								Картинки мероприятия *
 							</h2>
 
 							{existingPhotos.length > 0 && (

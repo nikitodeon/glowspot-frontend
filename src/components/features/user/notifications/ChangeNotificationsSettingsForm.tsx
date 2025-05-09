@@ -43,7 +43,7 @@ export function ChangeNotificationsSettingsForm() {
 
 				if (data.changeNotificationsSettings.telegramAuthToken) {
 					window.open(
-						`https://t.me/miodly_bot?start=${data.changeNotificationsSettings.telegramAuthToken}`,
+						`https://t.me/glowspot_bot?start=${data.changeNotificationsSettings.telegramAuthToken}`,
 						'_blank'
 					)
 				}

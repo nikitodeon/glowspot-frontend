@@ -14,14 +14,14 @@ const RotatingLogo = ({
 	return (
 		<div
 			className='relative flex items-center justify-center'
-			style={{ width: 220, height: 220 }}
+			style={{ width: 140, height: 140 }}
 		>
 			{/* Фоновая (вращающаяся) картинка */}
 			<motion.img
 				src={backgroundSrc}
 				alt='Background'
 				className='absolute'
-				style={{ width: 200, height: 200 }}
+				style={{ width: 140, height: 140 }}
 				animate={{ rotate: 360 }}
 				transition={{ repeat: Infinity, duration: 100, ease: 'linear' }}
 			/>
@@ -31,7 +31,7 @@ const RotatingLogo = ({
 				src={foregroundSrc}
 				alt='Foreground'
 				className='absolute'
-				style={{ width: 110, height: 80 }}
+				style={{ width: 88, height: 64 }}
 			/>
 		</div>
 	)

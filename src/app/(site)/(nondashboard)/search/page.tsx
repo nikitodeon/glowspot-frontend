@@ -10,7 +10,6 @@ import FiltersBar from './FiltersBar'
 import FiltersFull from './FiltersFull'
 import Listings from './Listings'
 import Map from './Map'
-import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { cleanParams } from '@/lib/utils'
 
 const SearchPage = () => {
